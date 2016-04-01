@@ -1,4 +1,4 @@
-Uputstvo za upotrebu masinog otkirica:
+# Uputstvo za upotrebu Masinog otkirićca:
 
 1. Quicklisp
 	- file, load, quicklisp.lisp
