@@ -331,17 +331,22 @@
             return Tabla;
         })();
         //# sourceMappingURL=test.js.map
+
+        document.onkeypress = function (e) {
+          e = e || window.event;
+          if (e.keyCode == 100) posaljiPotez(tabla.selektirani, 1);   // d
+          if (e.keyCode == 101) posaljiPotez(tabla.selektirani, 2);   // e
+          if (e.keyCode == 119) posaljiPotez(tabla.selektirani, 3);   // w
+          if (e.keyCode ==  97) posaljiPotez(tabla.selektirani, 4);   // a
+          if (e.keyCode == 122 || e.keyCode == 121) posaljiPotez(tabla.selektirani, 5);   // z, y
+          if (e.keyCode == 120) posaljiPotez(tabla.selektirani, 6);   // x
+        }
+
     </script>
 
 </head>
 
 <body>
-<p>
-    <input id='data' type='text' />
-</p>
-<p>
-    <button type='button' onclick='javascript:onClick()'>Submit!</button>
-</p>
 
 <div id="tabla-id"></div>
 

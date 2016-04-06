@@ -10,7 +10,7 @@
 
 
 ;;; Vraca listu od 6 koordinata tj. susede.
-(defun kreirajSusede (cvor)
+(defun kreiraj-susede (cvor)
   (let* ((x (car cvor))
          (y (cadr cvor))
          (z (caddr cvor)))
@@ -31,7 +31,7 @@
 
 
 ;;; Iz LISTE cvorova izbacuje one cija je bar jedna koordinata veca od GRANICE.
-(defun odbaciElementeVanGranica (lista granica)
+(defun odbaci-elemente-van-granica (lista granica)
   (cond
    ((null lista) '())
    (t (let* ((cvor (car lista))
@@ -40,72 +40,73 @@
              (z (caddr cvor)))
         (cond
           ((or (>= (abs x) granica) (>= (abs y) granica) (>= (abs z) granica))
-               (odbaciElementeVanGranica (cdr lista) granica))
-          (t (cons (car lista) (odbaciElementeVanGranica (cdr lista) granica))))))))
+               (odbaci-elemente-van-granica (cdr lista) granica))
+          (t (cons (car lista) (odbaci-elemente-van-granica (cdr lista) granica))))))))
 
 
 ;;; Na LISTU dodaje SUSEDE tako da elementi LISTE ostanu jedinstveni.
-(defun dopuniListu (susedi lista)
+;;; Ova funkcija se nigde ne poziva.
+(defun dopuni-listu (susedi lista)
   (cond ((null susedi) lista )
-        ((clanp (car susedi) lista) (dopuniListu (cdr susedi) lista))
-        (t (cons (car susedi) (dopuniListu (cdr susedi) lista)))))
+        ((clanp (car susedi) lista) (dopuni-listu (cdr susedi) lista))
+        (t (cons (car susedi) (dopuni-listu (cdr susedi) lista)))))
 
 ;;; Na LISTU dodaje ELEMENTE koji nisu clanovi ni LISTE ni LISTE2
-(defun dodajNeobradjene (elementi lista lista2)
+(defun dodaj-neobradjene (elementi lista lista2)
   (cond ((null elementi) lista )
         ((or (clanp (car elementi) lista) (clanp (car elementi) lista2))
-          (dodajNeobradjene (cdr elementi) lista lista2))
-        (t (cons (car elementi) (dodajNeobradjene (cdr elementi) lista lista2)))))
+          (dodaj-neobradjene (cdr elementi) lista lista2))
+        (t (cons (car elementi) (dodaj-neobradjene (cdr elementi) lista lista2)))))
 
 
 ;;; Vraca listu sa koordinatama table odgovarajuce VELICINE.
 ;;; Treba da se pozove sa NEOBRADJENI = centralni cvor.
 ;;; OBRADJENI su inicijalno prazni.
-;;; (kreirajKoordinate '((0 0 0)) '() 5)
-(defun kreirajKoordinate (neobradjeni obradjeni velicina)
+;;; (kreiraj-koordinate '((0 0 0)) '() 5)
+(defun kreiraj-koordinate (neobradjeni obradjeni velicina)
   (cond ((null neobradjeni) obradjeni)
-        (t (let* ((noviSusedipom (kreirajSusede (car neobradjeni)))
-                  (noviSusedi (odbaciElementeVanGranica noviSusedipom velicina))
+        (t (let* ((noviSusedipom (kreiraj-susede (car neobradjeni)))
+                  (noviSusedi (odbaci-elemente-van-granica noviSusedipom velicina))
                   (noviObradjeni (cons (car neobradjeni) obradjeni))
-                  (noviNeobradjeni (dodajNeobradjene noviSusedi (cdr neobradjeni) noviObradjeni))
+                  (noviNeobradjeni (dodaj-neobradjene noviSusedi (cdr neobradjeni) noviObradjeni))
                   ;;(a (format t "noviObradjeni: ~s~%" noviObradjeni))
                   ;;(a (format t "noviNeobradjeni: ~s~%" noviNeobradjeni))
                  )
-             (kreirajKoordinate noviNeobradjeni noviObradjeni velicina)))))
+             (kreiraj-koordinate noviNeobradjeni noviObradjeni velicina)))))
 
 ;;; Glavna funkcija za kreiranje table.
-(defun kreirajTablu (velicina)
+(defun kreiraj-tablu (velicina)
   (let* (
-        
+
          (k (- velicina 2)) ;
          (-k (- 0 k))       ; zbog citljivosti
-         (praznaTabla (kreirajPraznuTablu velicina))
+         (praznaTabla (kreiraj-praznu-tablu velicina))
          ;; Kreira gornji levi / donji desni X i sve njegove susede.
-         (x1 (append (list (list 0 k -k)) (kreirajSusede (list 0 k -k))))
-         (x2 (append (list (list 0 -k k)) (kreirajSusede (list 0 -k k))))
+         (x1 (append (list (list 0 k -k)) (kreiraj-susede (list 0 k -k))))
+         (x2 (append (list (list 0 -k k)) (kreiraj-susede (list 0 -k k))))
          (x (append x1 x2))
-          
+
          ;; Kreira gornji desni / donji levi O i sve njegove susede.
-         (o1 (append (list (list k 0 -k)) (kreirajSusede (list k 0 -k))))
-         (o2 (append (list (list -k 0 k)) (kreirajSusede (list -k 0 k))))
+         (o1 (append (list (list k 0 -k)) (kreiraj-susede (list k 0 -k))))
+         (o2 (append (list (list -k 0 k)) (kreiraj-susede (list -k 0 k))))
          (o (append o1 o2))
-        
-         (tabla (postaviInicijalneVrednosti x "x" praznaTabla))         
-         (tabla (postaviInicijalneVrednosti o "o" tabla)))
-         
-    (sortiraj tabla 'opPoredjenja)))
+
+         (tabla (postavi-inicijalne-vrednosti x "x" praznaTabla))
+         (tabla (postavi-inicijalne-vrednosti o "o" tabla)))
+
+    (sortiraj tabla 'op-poredjenja)))
 
 ;;; Interfejsna funkcija.
 ;;; Kreira sve koordinate i pozove pomocnu.
-(defun kreirajPraznuTablu(velicina)
-  (kreirajPraznutablu1 (kreirajKoordinate '((0 0 0)) '() velicina)))
+(defun kreiraj-praznu-tablu(velicina)
+  (kreiraj-praznu-tablu1 (kreiraj-koordinate '((0 0 0)) '() velicina)))
 
 ;;; Pomocna funkcija koja pravi cvorove.
 ;;; Na svaku koordinatu stavlja crticu.
 ;;; TABLA je zapravo samo lista koordinata.
-(defun kreirajPraznuTablu1 (tabla)
+(defun kreiraj-praznu-tablu1 (tabla)
   (cond ((null tabla) '())
-        (t (cons (list (car tabla) "-") (kreirajPraznuTablu1 (cdr tabla))))))
+        (t (cons (list (car tabla) "-") (kreiraj-praznu-tablu1 (cdr tabla))))))
 
 (defun postaviVrednost (polje vrednost tabla)
   (cond ((equal (caar tabla) polje) (cons (list (caar tabla) vrednost) (cdr tabla)))
@@ -113,25 +114,25 @@
 
 ;;; Brise nelegalne pozicije iz POZICIJE
 (defun izbaci-nelegalne (pozicije velicina)
-  (cond ((null pozicije) '())        
+  (cond ((null pozicije) '())
         ((cond ((natabli1-p  (car pozicije) velicina) (cons (car pozicije) (izbaci-nelegalne (cdr pozicije) velicina)))
                (t (izbaci-nelegalne (cdr pozicije) velicina))))))
 
 ;;; Svim POLJIMA postavlja istu VREDNOST na TABLI.
-;;; Kopirano je iz leta u drugom null, moze da se sredi!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
-(defun postaviVrednosti (polja vrednost tabla)
+;;; Kopirano je iz leta u drugom null, moze da se sredi!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+(defun postavi-vrednosti (polja vrednost tabla)
   (cond ((null polja) tabla)
         ((null (izbaci-nelegalne polja (velicina-table tabla))) tabla)
         (t (let* ((polja (izbaci-nelegalne polja (velicina-table tabla)))
                   (novaTabla (postaviVrednost (car polja) vrednost tabla)))
-             (postaviVrednosti (cdr polja) vrednost novaTabla)))))
+             (postavi-vrednosti (cdr polja) vrednost novaTabla)))))
 
 ;;; Svim POLJIMA postavlja istu VREDNOST na TABLI.
-;;; funkcija postaviVrednosti ne radi kad se inicijalizuje tabla, nemamo snage da provalimo zasto!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-(defun postaviInicijalneVrednosti (polja vrednost tabla)
+;;; funkcija postavi-vrednosti ne radi kad se inicijalizuje tabla, nemamo snage da provalimo zasto!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+(defun postavi-inicijalne-vrednosti (polja vrednost tabla)
   (cond ((null polja) tabla)
         (t (let* ((novaTabla (postaviVrednost (car polja) vrednost tabla)))
-         (postaviInicijalneVrednosti (cdr polja) vrednost novaTabla)))))
+         (postavi-inicijalne-vrednosti (cdr polja) vrednost novaTabla)))))
 
 ;;; Vraca znak POLJA iz TABLE.
 (defun znak (polje tabla)
@@ -141,7 +142,7 @@
 
 ;;; Poredi po Z koordinati (horizontalno), pa onda po X.
 ;;; Ocekuje i koordinate i znak.
-(defun opPoredjenja (a b)
+(defun op-poredjenja (a b)
   (let* ((ax (caar a))
          (az (caddar a))
          (bx (caar b))
@@ -150,7 +151,7 @@
 
 ;;; Poredi po Z koordinati (horizontalno), pa onda po X.
 ;;; Ocekuje samo koordinate.
-(defun opPoredjenjaKoordSamo (a b)
+(defun op-poredjenja-koord-samo (a b)
   (let* ((ax (car a))
          (az (caddr a))
          (bx (car b))
@@ -171,20 +172,20 @@
   ;; Uzima Z prvog elementa umanjen za jedan.
   (stampaj1 tabla (1- (caddr (caar tabla)))))
 
-;; [ako hoces u cond da dodas stampanje slova (napraviRazmak (abs z)) (format nil "~s" (abs z))]
+;; [ako hoces u cond da dodas stampanje slova (napravi-razmak (abs z)) (format nil "~s" (abs z))]
 ;;;
 (defun stampaj1 (tabla z)
   (cond ((null tabla) '())
         (t (let* ((novoZ (caddr (caar tabla))))
              (cond ((not (= z novoZ))
-                      (concatenate 'string  (format nil "~%") (napraviRazmak (abs novoZ)) (cadar tabla) '" " (stampaj1 (cdr tabla) novoZ)))
+                      (concatenate 'string  (format nil "~%") (napravi-razmak (abs novoZ)) (cadar tabla) '" " (stampaj1 (cdr tabla) novoZ)))
                    (t (concatenate 'string (cadar tabla) '" " (stampaj1 (cdr tabla) novoZ))))))))
 
 ;;; Pomocna funckija za stampanje.
 ;;; Vraca string od N razmaka.
-(defun napraviRazmak (n)
+(defun napravi-razmak (n)
   (cond ((= 0 n) '())
-        (t (concatenate 'string '" " (napraviRazmak (- n 1))))))
+        (t (concatenate 'string '" " (napravi-razmak (- n 1))))))
 
 ;;; TESTIRAJ:
 
@@ -364,7 +365,7 @@
     (cond ((and (equal (car susedi) suprotanZnak)
                 (member (cadr susedi) '("-" '() NIL))) 't)
           ((and (= 3 brojKamena)
-                (equal (car susedi) suprotanZnak)                
+                (equal (car susedi) suprotanZnak)
                 (member (cadr susedi) '("-" '() NIL))) 't)
           ((and (= 3 brojKamena)
                 (equal (car susedi) suprotanZnak)
@@ -388,10 +389,10 @@
 (defun cvorovi-u-pozicije (cvorovi) (mapcar 'car cvorovi))
 
 ;;; Vraca T ili NIL.
-(defun legalanPotez (kameni smer tabla)
+(defun legalan-potez (kameni smer tabla)
   (cond ((not (legalan-unos-p kameni tabla)) '())
         (t (let* ((novaPoz (nova-pozicija kameni smer))
-                  (novaPoz (sortiraj novaPoz 'opPoredjenjaKoordSamo))
+                  (novaPoz (sortiraj novaPoz 'op-poredjenja-koord-samo))
                   (smerGuranja (smer-guranja-p kameni smer))
                   (mojZnak (znak (car kameni) tabla))
                   (a (format t "novaPoz: ~s~%smerGuranja: ~s~%mojZnak: ~s~%" novaPoz smerGuranja mojZnak))
@@ -406,11 +407,11 @@
 ;;; Sluzi za paralelno pomeranje.
 ;;; Kameni se pomeraju na prazno polje.
 (defun potez-zamena (staraPozicija novaPozicija tabla mojZnak)
-  (postaviVrednosti staraPozicija "-" (postaviVrednosti novaPozicija mojZnak tabla)))
+  (postavi-vrednosti staraPozicija "-" (postavi-vrednosti novaPozicija mojZnak tabla)))
 
 ;;; Ne gura, samo se pomeri za jedan.
 (defun potez-pomeraj-usg (staraPozicija novaPozicija tabla mojZnak)
-  (postaviVrednosti novaPozicija mojZnak (postaviVrednosti staraPozicija "-" tabla)))
+  (postavi-vrednosti novaPozicija mojZnak (postavi-vrednosti staraPozicija "-" tabla)))
 
 (defun potez-guranje (staraPozicija novaPozicija tabla smer mojZnak)
   (let* ((prviKamen (polje-usg staraPozicija smer))
@@ -418,9 +419,9 @@
          (susedi (nadji-susedna-n-usg-koord prviKamen smer tabla brojKamena))
          (susedi (sredi-susede-pom susedi))
          (susedi (cvorovi-u-pozicije susedi))
-         (a (FORMAT T "~s~%" tabla))          
+         (a (FORMAT T "~s~%" tabla))
          (tabla (potez-pomeraj-usg susedi (nova-pozicija susedi smer) tabla (kontra-znak mojZnak)))
-         (a (FORMAT T "~s~%" tabla))     
+         (a (FORMAT T "~s~%" tabla))
          (tabla (potez-pomeraj-usg staraPozicija novaPozicija tabla mojZnak))
          (a (FORMAT T "~s~%" tabla))
 )
@@ -437,8 +438,8 @@
 (defun odigraj-potez (kameni smer tabla)
    (cond ((not (legalan-unos-p kameni tabla)) '())
          (t (let* ((novaPoz (nova-pozicija kameni smer))
-                   (novaPoz (sortiraj novaPoz 'opPoredjenjaKoordSamo))
-                   (kameni (sortiraj kameni 'opPoredjenjaKoordSamo))
+                   (novaPoz (sortiraj novaPoz 'op-poredjenja-koord-samo))
+                   (kameni (sortiraj kameni 'op-poredjenja-koord-samo))
                    (smerGuranja (smer-guranja-p kameni smer))
                    (mojZnak (znak (car kameni) tabla))
                    (b (format t "novaPoz: ~s~%smerGuranja: ~s~%mojZnak: ~s~%" novaPoz smerGuranja mojZnak))
@@ -461,7 +462,7 @@
 
 
 (defparameter *tabla*
-  (kreirajTablu 5))
+  (kreiraj-tablu 5))
 
 
 ; Allow cl-who and parenscript to work together
@@ -491,7 +492,7 @@
   )
 
 (defun-ajax reset (data) (*ajax-processor* :callback-data :response-text)
-  (format nil "~S~%" (stampaj (setq *tabla* (kreirajTablu 5))))
+  (format nil "~S~%" (stampaj (setq *tabla* (kreiraj-tablu 5))))
   )
 
 
@@ -514,6 +515,3 @@
 
 (setq *dispatch-table* (list 'dispatch-easy-handlers
                              (create-ajax-dispatcher *ajax-processor*)))
-
-
-
