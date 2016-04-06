@@ -75,19 +75,24 @@
 
 ;;; Glavna funkcija za kreiranje table.
 (defun kreirajTablu (velicina)
-  (let* ((k (- velicina 2)) ;
+  (let* (
+        
+         (k (- velicina 2)) ;
          (-k (- 0 k))       ; zbog citljivosti
          (praznaTabla (kreirajPraznuTablu velicina))
          ;; Kreira gornji levi / donji desni X i sve njegove susede.
          (x1 (append (list (list 0 k -k)) (kreirajSusede (list 0 k -k))))
          (x2 (append (list (list 0 -k k)) (kreirajSusede (list 0 -k k))))
          (x (append x1 x2))
+          
          ;; Kreira gornji desni / donji levi O i sve njegove susede.
          (o1 (append (list (list k 0 -k)) (kreirajSusede (list k 0 -k))))
          (o2 (append (list (list -k 0 k)) (kreirajSusede (list -k 0 k))))
          (o (append o1 o2))
-         (tabla (postaviVrednosti x "x" praznaTabla))
-         (tabla (postaviVrednosti o "o" tabla)))
+        
+         (tabla (postaviInicijalneVrednosti x "x" praznaTabla))         
+         (tabla (postaviInicijalneVrednosti o "o" tabla)))
+         
     (sortiraj tabla 'opPoredjenja)))
 
 ;;; Interfejsna funkcija.
@@ -106,11 +111,27 @@
   (cond ((equal (caar tabla) polje) (cons (list (caar tabla) vrednost) (cdr tabla)))
          (t (append (list (car tabla)) (postaviVrednost polje vrednost (cdr tabla))))))
 
+;;; Brise nelegalne pozicije iz POZICIJE
+(defun izbaci-nelegalne (pozicije velicina)
+  (cond ((null pozicije) '())        
+        ((cond ((natabli1-p  (car pozicije) velicina) (cons (car pozicije) (izbaci-nelegalne (cdr pozicije) velicina)))
+               (t (izbaci-nelegalne (cdr pozicije) velicina))))))
+
 ;;; Svim POLJIMA postavlja istu VREDNOST na TABLI.
+;;; Kopirano je iz leta u drugom null, moze da se sredi!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
 (defun postaviVrednosti (polja vrednost tabla)
   (cond ((null polja) tabla)
-    (t (let* ((novaTabla (postaviVrednost (car polja) vrednost tabla)))
-         (postaviVrednosti (cdr polja) vrednost novaTabla)))))
+        ((null (izbaci-nelegalne polja (velicina-table tabla))) tabla)
+        (t (let* ((polja (izbaci-nelegalne polja (velicina-table tabla)))
+                  (novaTabla (postaviVrednost (car polja) vrednost tabla)))
+             (postaviVrednosti (cdr polja) vrednost novaTabla)))))
+
+;;; Svim POLJIMA postavlja istu VREDNOST na TABLI.
+;;; funkcija postaviVrednosti ne radi kad se inicijalizuje tabla, nemamo snage da provalimo zasto!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+(defun postaviInicijalneVrednosti (polja vrednost tabla)
+  (cond ((null polja) tabla)
+        (t (let* ((novaTabla (postaviVrednost (car polja) vrednost tabla)))
+         (postaviInicijalneVrednosti (cdr polja) vrednost novaTabla)))))
 
 ;;; Vraca znak POLJA iz TABLE.
 (defun znak (polje tabla)
@@ -284,6 +305,8 @@
         ((null (cdr pozicije)) 't)
         ((and (natabli1-p  (car pozicije) velicina) (natabli-p (cdr pozicije) velicina)))))
 
+
+
 ;;; Ocekuje sortiranu tablu.
 (defun velicina-table (tabla) (1+ (abs (caddr (caar tabla)))))
 
@@ -302,8 +325,7 @@
 ;;; samo x, samo o, samo -, ili nesto mesano 'm'
 ;;; pozicija je niz koorindata
 (defun sta-se-nalazi (cvorovi)
-  (cond ((= 1 (length cvorovi)) "m")
-        ((not (istogznaka-p cvorovi)) "m")
+  (cond ((not (istogznaka-p cvorovi)) "m")
         (t (cadar cvorovi)))) ; ako je stigao dovde, znaci da su svi istog znaka,
                               ; pa vraca znak prvog cvora
 
@@ -337,14 +359,17 @@
          (brojKamena (length kameni))
          (susedi (nadji-susedna-n-usg prviKamen smer tabla brojKamena))
          (suprotanZnak (if (equal (znak (car kameni) tabla) "x") "o" "x"))
-         ;(a (format t "prviKamen: ~s~%brojKamena: ~s~%susedi: ~s~%suprotanZnak: ~s~%" prviKamen brojKamena susedi suprotanZnak))
+         (a (format t "prviKamen: ~s~%brojKamena: ~s~%susedi: ~s~%suprotanZnak: ~s~%" prviKamen brojKamena susedi suprotanZnak))
         )
     (cond ((and (equal (car susedi) suprotanZnak)
-                (member (cadr susedi) '("-" '()))) 't)
+                (member (cadr susedi) '("-" '() NIL))) 't)
+          ((and (= 3 brojKamena)
+                (equal (car susedi) suprotanZnak)                
+                (member (cadr susedi) '("-" '() NIL))) 't)
           ((and (= 3 brojKamena)
                 (equal (car susedi) suprotanZnak)
                 (equal (cadr susedi) suprotanZnak)
-                (member (caddr susedi) '("-" '()))) 't)
+                (member (caddr susedi) '("-" '() NIL))) 't)
           (t '()))))
 
 ;;; Proverava da li se KAMENIMA moze odigrati potez.
@@ -393,8 +418,12 @@
          (susedi (nadji-susedna-n-usg-koord prviKamen smer tabla brojKamena))
          (susedi (sredi-susede-pom susedi))
          (susedi (cvorovi-u-pozicije susedi))
+         (a (FORMAT T "~s~%" tabla))          
          (tabla (potez-pomeraj-usg susedi (nova-pozicija susedi smer) tabla (kontra-znak mojZnak)))
-         (tabla (potez-pomeraj-usg staraPozicija novaPozicija tabla mojZnak)))
+         (a (FORMAT T "~s~%" tabla))     
+         (tabla (potez-pomeraj-usg staraPozicija novaPozicija tabla mojZnak))
+         (a (FORMAT T "~s~%" tabla))
+)
     tabla))
 
 ;;; Ostavlja samo listu SUSEDA koji su nekog znaka, eleminise sve '-' i polja van table.
@@ -413,11 +442,12 @@
                    (smerGuranja (smer-guranja-p kameni smer))
                    (mojZnak (znak (car kameni) tabla))
                    (b (format t "novaPoz: ~s~%smerGuranja: ~s~%mojZnak: ~s~%" novaPoz smerGuranja mojZnak))
+                   (c (format t "f-ja:~s~%equal:~s~%"  (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)) (equalp "-" (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)))))
                   )
               (cond ((not (natabli-p novaPoz (velicina-table tabla))) '()) ;nova pozicija je van table
-                    ((and (not smerGuranja) (equal "-" (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)))) (potez-zamena kameni novaPoz tabla mojZnak)) ;ukoliko nije izguravanje mora da se pomeri na prazno polje
-                    ((and smerGuranja (equal "-" (znak (polje-usg novaPoz smer) tabla) )) (potez-pomeraj-usg kameni novaPoz tabla mojZnak)) ;mozes da se pomeris na prazno polje u smeru guranja
-                    ((and smerGuranja (equal mojZnak (znak (polje-usg novaPoz smer) tabla)) ) '()) ;ne mozes da se pomeris ako si ti tamo
+                    ((and (not smerGuranja) (equalp "-" (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)))) (potez-zamena kameni novaPoz tabla mojZnak)) ;ukoliko nije izguravanje mora da se pomeri na prazno polje
+                    ((and smerGuranja (equalp "-" (znak (polje-usg novaPoz smer) tabla) )) (potez-pomeraj-usg kameni novaPoz tabla mojZnak)) ;mozes da se pomeris na prazno polje u smeru guranja
+                    ((and smerGuranja (equalp mojZnak (znak (polje-usg novaPoz smer) tabla)) ) '()) ;ne mozes da se pomeris ako si ti tamo
                     ((and smerGuranja (moguce-guranje-p kameni smer tabla)) (potez-guranje kameni novaPoz tabla smer mojZnak)) ;ako je moguce guranje moguc je i potez
                     ;( t (format t "dovde"))
                     ( t '()))))))
