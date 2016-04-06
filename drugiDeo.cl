@@ -160,7 +160,7 @@
                   (novaPoz (sortiraj novaPoz 'opPoredjenjaKoordSamo))
                   (smerGuranja (smer-guranja-p kameni smer))
                   (mojZnak (znak (car kameni) tabla))
-                  ;(a (format t "novaPoz: ~s~%smerGuranja: ~s~%mojZnak: ~s~%" novaPoz smerGuranja mojZnak))
+                  (a (format t "novaPoz: ~s~%smerGuranja: ~s~%mojZnak: ~s~%" novaPoz smerGuranja mojZnak))
                  )
              (cond ((not (natabli-p novaPoz (velicina-table tabla))) '()) ;nova pozicija je van table
                    ((and (not smerGuranja) (equal "-" (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)))) t) ;ukoliko nije izguravanje mora da se pomeri na prazno polje

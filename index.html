@@ -145,7 +145,7 @@
 
         function callback(response) {
             console.log(response);
-            return tabla.nactajString(response);
+            return tabla.nacrtajString(response);
         };
         function onClick() {
             return smackjack.echo(document.getElementById("data").value, callback);
@@ -214,8 +214,15 @@
                 left += 250;
                 kamen.style.top = top.toString() + 'px';
                 kamen.style.left = left.toString() + 'px';
-                // upis u kamen
-                kamen.innerHTML = '<span class="koordinate">' + this.koordinata.x + ', ' + this.koordinata.y + ', ' + this.koordinata.z + '</span>';
+                // upis u kamen, aksijalne kooridnate
+                var p = this.koordinata.z;
+                p = 2 * tabla.velicina - 1 - p;
+                p = String.fromCharCode(93 + (p - 1));
+                p = p.toUpperCase();
+                console.log(p);
+                var q = (this.koordinata.x) + 2 * tabla.velicina - 5;
+                kamen.innerHTML = '<span class="koordinate">' + p + q + '</span>';
+                //kamen.innerHTML = '<span class="koordinate">' + this.koordinata.x + ', ' + this.koordinata.y + ', ' + this.koordinata.z + '</span>';
                 document.getElementById("tabla-id").appendChild(kamen);
                 this.div = kamen;
                 this.div.onclick = function (e) {
@@ -229,6 +236,7 @@
         })();
         var Tabla = (function () {
             function Tabla(velicina) {
+                this.velicina = velicina;
                 this.polja = new Array(3 * velicina * velicina - 3 * velicina + 1); // 3n² - 3n + 1
                 for (var i = 0; i < this.polja.length; i++) {
                     this.polja[i] = new Kamen(this);
@@ -297,12 +305,27 @@
                 this.selektirani.splice(index, 1);
                 kamen.div.classList.remove('selektiran');
             };
-            Tabla.prototype.nactajString = function (s) {
+            Tabla.prototype.nacrtajString = function (s) {
                 s = s.replace(/\s/g, ''); // skloni sve beline
                 s = s.replace(/\"/g, ''); // skloni navodnike
+                var brojX = 0;
+                var brojO = 0;
                 for (var i = 0; i < Math.min(tabla.polja.length, s.length); i++) {
                     tabla.polja[i].boja = s[i];
+                    if (s[i] == 'x' || s[i] == 'X') {
+                      brojX++;
+                    }
+                    if (s[i] == 'o' || s[i] == 'O') {
+                      brojO++;
+                    }
                 }
+
+                brojX = 14 - brojX;
+                brojO = 14 - brojO;
+                $('#izgurani-x, #izgurani-o').html('');
+                for (var i = 0; i < brojX; i++) $("#izgurani-x").append('<div class="polje polje-x"></div>');
+                for (var i = 0; i < brojO; i++) $("#izgurani-o").append('<div class="polje polje-o"></div>');
+
                 tabla.nacrtaj();
             };
             return Tabla;
@@ -323,6 +346,13 @@
 <div id="tabla-id"></div>
 
 <ul id="selektirani"></ul>
+
+<div id="izgurani">
+  <div id="izgurani-x"><div class="polje polje-o"></div></div>
+  <div id="izgurani-o"><div class="polje polje-x"></div>
+  <div class="polje polje-x"></div>
+  <div class="polje polje-x"></div></div>
+</div>
 
 <ul id="smer-picker">
     <li id="smer1">1</li>

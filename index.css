@@ -9,8 +9,6 @@
 
 .polje {
     position: absolute;
-    top: 50px;
-    left: 50px;
     border-radius: 50%;
     width:  55px;
     height: 55px;
@@ -105,4 +103,23 @@
     left: -70px;
 }
 
+#izgurani {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  height: 400px;
+  width: 130px;
+  justify-content: space-between;
+}
 
+#izgurani > * {
+  width: 50%;
+  display: flex;
+  flex-flow: column;
+}
+
+#izgurani .polje {
+  margin-bottom: 10px;
+  position: static;
+}

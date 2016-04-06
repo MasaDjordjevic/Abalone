@@ -155,3 +155,16 @@
 (defun napraviRazmak (n)
   (cond ((= 0 n) '())
         (t (concatenate 'string '" " (napraviRazmak (- n 1))))))
+
+;;; TESTIRAJ:
+
+;;; Test na ciljno stanje.
+;;; Očekuje čvorove.
+(defun kraj-p (tabla)
+  (or (<= (prebroji "x" tabla) 8) (<= (prebroji "o" tabla) 8)))
+
+;;; Pomoćna funkcija.
+(defun prebroji (znak tabla)
+  (cond ((null tabla) 0)
+        ((equal (cadar tabla) znak) (1+ (prebroji znak (cdr tabla))))
+        (t (prebroji znak (cdr tabla)))))
