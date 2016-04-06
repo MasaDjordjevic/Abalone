@@ -221,8 +221,8 @@
                 p = p.toUpperCase();
                 console.log(p);
                 var q = (this.koordinata.x) + 2 * tabla.velicina - 5;
-                kamen.innerHTML = '<span class="koordinate">' + p + q + '</span>';
-                //kamen.innerHTML = '<span class="koordinate">' + this.koordinata.x + ', ' + this.koordinata.y + ', ' + this.koordinata.z + '</span>';
+                //kamen.innerHTML = '<span class="koordinate">' + p + q + '</span>';
+                kamen.innerHTML = '<span class="koordinate">' + this.koordinata.x + ', ' + this.koordinata.y + ', ' + this.koordinata.z + '</span>';
                 document.getElementById("tabla-id").appendChild(kamen);
                 this.div = kamen;
                 this.div.onclick = function (e) {

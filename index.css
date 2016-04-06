@@ -73,32 +73,32 @@
     text-align: center;
 }
 
-#smer1 {
+#smer4 {
     top: 0px;
     left: -100px;
 }
 
-#smer2 {
+#smer3 {
     top:  -100px;
     left: -70px;
 }
 
-#smer3 {
+#smer2 {
     top:  -100px;
     left:  70px;
 }
 
-#smer4 {
+#smer1 {
     top:    0px;
     left: 100px;
 }
 
-#smer5 {
+#smer6 {
     top:  100px;
     left: 70px;
 }
 
-#smer6 {
+#smer5 {
     top:   100px;
     left: -70px;
 }

@@ -8,6 +8,7 @@
 
 ;(in-package :jank-repl)
 
+
 ;;; Vraca listu od 6 koordinata tj. susede.
 (defun kreirajSusede (cvor)
   (let* ((x (car cvor))
@@ -167,11 +168,11 @@
 ;;; TESTIRAJ:
 
 ;;; Test na ciljno stanje.
-;;; Očekuje čvorove.
+;;; Ocekuje cvorove.
 (defun kraj-p (tabla)
   (or (<= (prebroji "x" tabla) 8) (<= (prebroji "o" tabla) 8)))
 
-;;; Pomoćna funkcija.
+;;; Pomocna funkcija.
 (defun prebroji (znak tabla)
   (cond ((null tabla) 0)
         ((equal (cadar tabla) znak) (1+ (prebroji znak (cdr tabla))))
@@ -199,347 +200,227 @@
 
 
 
-
-
+(defconstant _desno 1)
+(defconstant _goredesno 2)
+(defconstant _gorelevo 3)
+(defconstant _levo 4)
+(defconstant _dolelevo 5)
+(defconstant _doledesno 6)
 
 
 (defun smer (n)
-  (cond
-   ( (= n 1) '(-1 1 0)) ;levo
-   ( (= n 2) '(0 1 -1)) ;gore-levo
-   ( (= n 3) '(1 0 -1)) ;gore-desno
-   ( (= n 4) '(1 -1 0)) ;desno
-   ( (= n 5) '(0 -1 1)) ;dole-desno
-   ( (= n 6) '(-1 0 1)) ;dole-levo
-   )
-  )
+  (cond ((= n _levo) '(-1 1 0))   ; levo
+        ((= n _gorelevo) '(0 1 -1))   ; gore-levo
+        ((= n _goredesno) '(1 0 -1))   ; gore-desno
+        ((= n _desno) '(1 -1 0))   ; desno
+        ((= n _doledesno) '(0 -1 1))   ; dole-desno
+        ((= n _dolelevo) '(-1 0 1)))) ; dole-levo
 
-(defun saberiPokomponentno (a b)
-  (cond
-   ( (or (null a) (null b)) '())
-   (t (cons (+ (car a) (car b)) (saberiPokomponentno (cdr a) (cdr b))))
-   )
-  )
+;;; Ocekuje koordinate
+;;; Npr: (0 1 -1) + (2 -2 0) = (2 -1 -1).
+(defun saberi-pokomponentno (a b)
+  (cond ((or (null a) (null b)) '())
+        (t (cons (+ (car a) (car b)) (saberi-pokomponentno (cdr a) (cdr b))))))
 
 (defun pomeri-kamen (kamen smer)
-  (cond
-   ( (= smer 1) (saberiPokomponentno kamen '(-1 1 0))) ;levo
-   ( (= smer 2) (saberiPokomponentno kamen '(0 1 -1))) ;gore-levo
-   ( (= smer 3) (saberiPokomponentno kamen '(1 0 -1))) ;gore-desno
-   ( (= smer 4) (saberiPokomponentno kamen '(1 -1 0))) ;desno
-   ( (= smer 5) (saberiPokomponentno kamen '(0 -1 1))) ;dole-desno
-   ( (= smer 6) (saberiPokomponentno kamen '(-1 0 1))) ;dole-levo
-   )
-  )
+  (saberi-pokomponentno kamen (smer smer)))
 
-;vraca poziciju na kojoj ce kameni da se nalaze ako se pomere u tom smeru
-(defun novaPozicija (kameni smer)
-  (mapcar (lambda (x) (saberiPokomponentno  x (smer smer))) kameni)
-  )
+;;; Vraca poziciju na kojoj ce KAMENI da se nalaze ako se pomere u datom SMERU.
+(defun nova-pozicija (kameni smer)
+  (mapcar (lambda (x) (saberi-pokomponentno  x (smer smer))) kameni))
 
-;proverava da se kameni nalaze u linij po nekoj osi tj koordinati
+;;; Pomocna funkcija.
+;;; Proverava da se KAMENI nalaze u liniji po zadatoj osi tj. KOORDINATI.
 (defun linijaX-p (kameni koord)
-  (cond
-   ( (null (cdr kameni)) 't)
-   ( (= (nth koord (car kameni)) (nth koord (cadr kameni))) (linijaX-p (cdr kameni) koord))
-   ( t '())
-   )
-  )
+  (cond ((null (cdr kameni)) 't)
+        ((= (nth koord (car kameni)) (nth koord (cadr kameni))) (linijaX-p (cdr kameni) koord))
+        (t '())))
 
-;proverava da li se kameni nalaze u linij
+;;; Proverava da li se KAMENI nalaze u bilo kojoj liniji.
 (defun linija-p (kameni)
-  (or (linijaX-p kameni 0) (linijaX-p kameni 1) (linijaX-p kameni 2))
-  )
+  (or (linijaX-p kameni 0) (linijaX-p kameni 1) (linijaX-p kameni 2)))
 
-;vraca broj koji oznacava po kojoj osi su kameni poredjani
+;;; Vraca broj koji oznacava po kojoj osi su KAMENI poredjani.
 (defun linija (kameni)
-  (cond
-   ((linijaX-p kameni 0) '0)
-   ((linijaX-p kameni 1) '1)
-   ((linijaX-p kameni 2) '2)
-   (t '())
-   )
-  )
+  (cond ((linijaX-p kameni 0) '0) ; x
+        ((linijaX-p kameni 1) '1) ; y
+        ((linijaX-p kameni 2) '2) ; z
+        (t '())))
 
-;proverava da li su kameni susedni
+;;; Proverava da li su kameni A i B susedi.
 (defun susedna2-p (a b)
-  (or (equal a (saberiPokomponentno b (smer 1)))
-      (equal a (saberiPokomponentno b (smer 2)))
-      (equal a (saberiPokomponentno b (smer 3)))
-      (equal a (saberiPokomponentno b (smer 4)))
-      (equal a (saberiPokomponentno b (smer 5)))
-      (equal a (saberiPokomponentno b (smer 6)))
-      )
-  )
+  (or (equal a (saberi-pokomponentno b (smer 1)))
+      (equal a (saberi-pokomponentno b (smer 2)))
+      (equal a (saberi-pokomponentno b (smer 3)))
+      (equal a (saberi-pokomponentno b (smer 4)))
+      (equal a (saberi-pokomponentno b (smer 5)))
+      (equal a (saberi-pokomponentno b (smer 6)))))
 
-;proverava da li su svi kameni iz liste susedi
+;;; Proverava da li su svi KAMENI susedi.
 (defun susedni-p (kameni)
-  (cond
-   ( (null (cdr kameni)) 't)
-   ( (susedna2-p (car kameni) (cadr kameni)) (susedni-p (cdr kameni)))
-   ( t '())
-   )
-  )
+  (cond ((null (cdr kameni)) 't)
+        ((susedna2-p (car kameni) (cadr kameni)) (susedni-p (cdr kameni)))
+        (t '())))
 
-;proverava da li su dva cvora istog znaka
-(defun istogznaka2-p (a b)
-  (equal (cadr a) (cadr b))
-  )
+;;; Proverava da li su dva cvora A i B istog znaka (X, O).
+(defun istogznaka2-p (a b) (equal (cadr a) (cadr b)))
 
-;; znak je xo, da li su svi kamenovi x ili svi o
+;;; Da li su svi KAMENI X ili svi O.
 (defun istogznaka-p (kameni)
-  (cond
-   ( (null (cdr kameni)) 't)
-   ( (istogznaka2-p (car kameni) (cadr kameni)) (istogznaka-p (cdr kameni)))
-   ( t '())
-   )
-  )
+  (cond ((null (cdr kameni)) 't)
+        ((istogznaka2-p (car kameni) (cadr kameni)) (istogznaka-p (cdr kameni)))
+        (t '())))
 
-; proverava da li je legalna pozicija na tabli
-(defun natabliJedan-p (pozicija velicina)
-  (and
-   (not (member '() (mapcar (lambda (x) (<= (abs x) (1- velicina))) pozicija)))
-   (= 0 (+ (car pozicija) (cadr pozicija) (caddr pozicija)))
-   )
-  )
+;;; Proverava da li je KOORDINATA na tabli velicine VELICINA legalna.
+(defun natabli1-p (koord velicina)
+  ;; Za sve tri komponente koordinate proverava da li su po apsolutnoj vrednosti
+  ;; manje od velicina - 1. Zatim proverava da je zbir komponenata jednak nuli.
+  (and (not (member '() (mapcar (lambda (x) (<= (abs x) (1- velicina))) koord)))
+       (= 0 (+ (car koord) (cadr koord) (caddr koord)))))
 
-
-; proverava da li su sve pozicije legalne
+;;; Proverava da li su sve prosledjene POZICIJE legalne.
 (defun natabli-p (pozicije velicina)
-  (cond
-   ( (null pozicije) '())
-   ( (null (cdr pozicije)) 't)
-   ( (and (natabliJedan-p  (car pozicije) velicina) (natabli-p (cdr pozicije) velicina)))
-   )
-  )
+  (cond ((null pozicije) '())
+        ((null (cdr pozicije)) 't)
+        ((and (natabli1-p  (car pozicije) velicina) (natabli-p (cdr pozicije) velicina)))))
 
+;;; Ocekuje sortiranu tablu.
+(defun velicina-table (tabla) (1+ (abs (caddr (caar tabla)))))
 
+;;; Smer guranja = smer u pravcu u kom su poredjani kamencici
+;;; (nije smer paralelnog kretanja).
+;;; Proverava da li su KAMENI poredjani tako da, ako se krecu u zadatom SMERU,
+;;; mogu da guraju.
+(defun smer-guranja-p (kameni smer)
+  ;; Linija je: 0 po x osi, 1 po y, 2 po z.
+  (let* ((linija (linija kameni)))
+    (or (and (= linija 0) (or (= smer _gorelevo) (= smer _doledesno)))    ; x
+        (and (= linija 1) (or (= smer _goredesno) (= smer _dolelevo)))    ; y
+        (and (= linija 2) (or (= smer _levo) (= smer _desno))))))         ; z
 
-;;ocekuje sortiranu tablu
-(defun velicinaTable (tabla)
-  (+ 1 (abs (caddr (caar tabla))))
-  )
+;;; Vraca jedan karakter koji oznacava da li se na tom skupu CVOROVA nalazi:
+;;; samo x, samo o, samo -, ili nesto mesano 'm'
+;;; pozicija je niz koorindata
+(defun sta-se-nalazi (cvorovi)
+  (cond ((= 1 (length cvorovi)) "m")
+        ((not (istogznaka-p cvorovi)) "m")
+        (t (cadar cvorovi)))) ; ako je stigao dovde, znaci da su svi istog znaka,
+                              ; pa vraca znak prvog cvora
 
-; proverava da li su kameni poredjani tako da ako se krecu u smeru smer mogu da guraju
-; smer suprotan od pralelnog kretanja
-(defun smerIzguravanja-p (kameni smer)
-  (let* (
-         (linija (linija kameni)) ; 0 po x osi, 1 po y, 2 po z
-         )
-    (or
-     (and (= linija 0) (or (= smer 2) (= smer 5)))
-     (and (= linija 1) (or (= smer 3) (= smer 6)))
-     (and (= linija 2) (or (= smer 1) (= smer 4)))
-     )
-    )
-  )
+;;; Vraca onaj kamen "koji gura".
+;;; Podrazumeva sortirane kamencice.
+;;; member ne radi ako umesto konkretnih bojeva stavimo parametre!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+(defun polje-usg (kameni smer)
+  (cond ((member smer '(4 3 2)) (car kameni))
+        ((member smer '(1 5 6)) (car (reverse kameni)))
+        (t '())))
 
-; vraca jedan karakter koji oznacava da li se na tom skupu cvorova nalazi
-; samo x, samo o, samo -, ili nesto mesano
-; pozicija je niz koorindata
-(defun staSeNalazi (pozicija)
-  (cond
-   ( (= 1 (length pozicija)) "m")
-   ( (not (istogznaka-p pozicija)) "m")
-   (t (cadar pozicija))
-    )
-  )
+;;; USG = u smeru guranja
+;;; vraca listu od tri elementa
+;;; vraca u obliku ( "x" "o" "-")
+(defun nadji-susedna-n-usg (kamen smer tabla n)
+  (cond ((= 0 n) '())
+        (t (let* ((noviKamen (pomeri-kamen kamen smer)))
+             (cons (znak noviKamen tabla) (nadji-susedna-n-usg noviKamen smer tabla (- n 1)))))))
 
+;;; usg = u smeru guranja
+;;; vraca listu od tri elementa
+;;; vraca cvorove
+(defun nadji-susedna-n-usg-koord (kamen smer tabla n)
+  (cond ((= 0 n) '())
+        (t (let* ((noviKamen (pomeri-kamen kamen smer)))
+             (cons (list noviKamen (znak noviKamen tabla)) (nadji-susedna-n-usg-koord noviKamen smer tabla (- n 1)))))))
 
-;;ocekuje novu poziciju (ne mora da znaci)
-;; vraca onaj kamen "koji gura"
-;;podrazumeva sortirane kamencice
-(defun polje-u-smeru-izguravanja (kameni smer)
-  (cond
-   ( (member smer '(1 2 3)) (car kameni))
-   ( (member smer '(4 5 6)) (car (reverse kameni)))
-   (t '())
-   )
-  )
-
-;; treba da se obrise ali nisam smela
-;;podrazumeva sortirane kamencice
-;;(defun znak-polja-u-smeru-izguravanja (kameni smer)
- ;; (cadr (polje-u-smeru-izguravanja kameni smer))
- ;; )
-
-;;  -oo xxx
-;;  -o xx
-
-;; xx o-
-
-;;usi = u smeru izguravanja
-; vraca listu od tri elementa
-; vraca u obliku ( "x" "o" "-")
-(defun nadji-susedna-n-usi (kamen smer tabla n)
-  (cond
-   ( (= 0 n) '())
-   (t
-    (let* (
-           (noviKamen (pomeri-kamen kamen smer))
-           )
-      (cons (znak noviKamen tabla) (nadji-susedna-n-usi noviKamen smer tabla (- n 1)))
-      )
-    )
-   )
-  )
-
-;;usi = u smeru izguravanja
-; vraca listu od tri elementa
-; vraca cvorove
-(defun nadji-susedna-n-usi-koord (kamen smer tabla n)
-  (cond
-   ( (= 0 n) '())
-   (t
-    (let* (
-           (noviKamen (pomeri-kamen kamen smer))
-           )
-      (cons (list noviKamen (znak noviKamen tabla)) (nadji-susedna-n-usi-koord noviKamen smer tabla (- n 1)))
-      )
-    )
-   )
-  )
-
-
-;; kameni koji igraju potez, smer u kome se krecu, tabla na kojoj se nalaze
+;;; KAMENI koji igraju potez, SMER u kome se krecu, TABLA na kojoj se nalaze.
 (defun moguce-guranje-p (kameni smer tabla)
-  (let* (
-         (prviKamen (polje-u-smeru-izguravanja kameni smer))
+  (let* ((prviKamen (polje-usg kameni smer))
          (brojKamena (length kameni))
-         (susedi (nadji-susedna-n-usi prviKamen smer tabla brojKamena))
+         (susedi (nadji-susedna-n-usg prviKamen smer tabla brojKamena))
          (suprotanZnak (if (equal (znak (car kameni) tabla) "x") "o" "x"))
-
-         (a (format t "prviKamen: ~s~%brojKamena: ~s~%susedi: ~s~%suprotanZnak: ~s~%" prviKamen brojKamena susedi suprotanZnak))
-         )
-    (cond
-     ( (and (equal (car susedi) suprotanZnak) (member (cadr susedi) '("-" '()))) 't)
-     ( (and (= 3 brojKamena) (equal (car susedi) suprotanZnak) (equal (cadr susedi) suprotanZnak) (member (caddr susedi) '("-" '()))) 't)
-     (t '())
-     )
-    )
-  )
-
-
-(defun legalanUnos-p (kameni tabla)
-  (and
-   (natabli-p kameni (velicinaTable tabla))
-   (istogznaka-p (pozicije-u-cvorove kameni tabla))
-   (susedni-p kameni)
-   (linija-p kameni)
-   (<= (length kameni) 3)
-   )
-  )
-
-;transformise (0 4 -4) u ((0 4 -4) "x")
-(defun pozicije-u-cvorove (kameni tabla)
-  (mapcar (lambda (x) (append (list x) (list (znak x tabla)))) kameni)
-  )
-
-;trasformise ((0 4 -4) "x") u (0 4 -4)
-(defun cvorovi-u-pozicije (cvorovi)
-  (mapcar 'car cvorovi)
-  )
-
-
-
-(defun legalanPotez (kameni smer tabla)
-  (cond
-   ( (not (legalanUnos-p kameni tabla)) '())
-   ( (let* (
-            (novaPoz (novaPozicija kameni smer))
-            (novaPoz (sortiraj novaPoz 'opPoredjenjaKoordSamo))
-            (smerIzguravanja (smerIzguravanja-p kameni smer))
-            (mojZnak (znak (car kameni) tabla))
-            ;(a (format t "novaPoz: ~s~%smerIzguravanja: ~s~%mojZnak: ~s~%" novaPoz smerIzguravanja mojZnak))
-            )
-       (cond
-        ( (not (natabli-p novaPoz (velicinaTable tabla))) '()) ;nova pozicija je van table
-        ( (and (not smerIzguravanja) (equal "-" (staSeNalazi (pozicije-u-cvorove novaPoz tabla)))) t) ;ukoliko nije izguravanje mora da se pomeri na prazno polje
-        ( (and smerIzguravanja (equal "-" (znak (polje-u-smeru-izguravanja novaPoz smer) tabla) )) t) ;mozes da se pomeris na prazno polje u smeru izguravanja
-        ( (and smerIzguravanja (equal mojZnak (znak (polje-u-smeru-izguravanja novaPoz smer) tabla)) ) '()) ;ne mozes da se pomeris ako si ti tamo
-
-        ( (and smerIzguravanja (moguce-guranje-p kameni smer tabla)) 't) ;ako je moguce guranje moguc je i potez
-        ;( t (format t "dovde"))
-        ( t '())
+         ;(a (format t "prviKamen: ~s~%brojKamena: ~s~%susedi: ~s~%suprotanZnak: ~s~%" prviKamen brojKamena susedi suprotanZnak))
         )
-       )
-    )
-   )
-  )
+    (cond ((and (equal (car susedi) suprotanZnak)
+                (member (cadr susedi) '("-" '()))) 't)
+          ((and (= 3 brojKamena)
+                (equal (car susedi) suprotanZnak)
+                (equal (cadr susedi) suprotanZnak)
+                (member (caddr susedi) '("-" '()))) 't)
+          (t '()))))
 
-;sluzi za paralelno pomeranje
-;kameni se pomeraju na prazno polje
-(defun potezZamena (staraPozicija novaPozicija tabla mojZnak)
-  (postaviVrednosti staraPozicija "-" (postaviVrednosti novaPozicija mojZnak tabla))
-  )
+;;; Proverava da li se KAMENIMA moze odigrati potez.
+(defun legalan-unos-p (kameni tabla)
+  (and (natabli-p kameni (velicina-table tabla))
+       (istogznaka-p (pozicije-u-cvorove kameni tabla))
+       (susedni-p kameni)
+       (linija-p kameni)
+       (<= (length kameni) 3)))
 
-;usg= u smeru izguravanja
-;ne gura, samo se pomeri za jedan
-(defun potezPomerajUSI (staraPozicija novaPozicija tabla mojZnak)
-  (postaviVrednosti novaPozicija mojZnak (postaviVrednosti staraPozicija "-" tabla))
-  )
+;;; Transformise (0 4 -4) u ((0 4 -4) "x").
+(defun pozicije-u-cvorove (kameni tabla)
+  (mapcar (lambda (x) (append (list x) (list (znak x tabla)))) kameni))
 
-(defun potezGuranje (staraPozicija novaPozicija tabla smer mojZnak)
-  (let* (
-         (prviKamen (polje-u-smeru-izguravanja staraPozicija smer))
+;;; Trasformise ((0 4 -4) "x") u (0 4 -4).
+(defun cvorovi-u-pozicije (cvorovi) (mapcar 'car cvorovi))
+
+;;; Vraca T ili NIL.
+(defun legalanPotez (kameni smer tabla)
+  (cond ((not (legalan-unos-p kameni tabla)) '())
+        (t (let* ((novaPoz (nova-pozicija kameni smer))
+                  (novaPoz (sortiraj novaPoz 'opPoredjenjaKoordSamo))
+                  (smerGuranja (smer-guranja-p kameni smer))
+                  (mojZnak (znak (car kameni) tabla))
+                  (a (format t "novaPoz: ~s~%smerGuranja: ~s~%mojZnak: ~s~%" novaPoz smerGuranja mojZnak))
+                 )
+             (cond ((not (natabli-p novaPoz (velicina-table tabla))) '()) ;nova pozicija je van table
+                   ((and (not smerGuranja) (equal "-" (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)))) t) ;ukoliko nije izguravanje mora da se pomeri na prazno polje
+                   ((and smerGuranja (equal "-" (znak (polje-usg novaPoz smer) tabla) )) t) ;mozes da se pomeris na prazno polje u smeru guranja
+                   ((and smerGuranja (equal mojZnak (znak (polje-usg novaPoz smer) tabla)) ) '()) ;ne mozes da se pomeris ako si ti tamo
+                   ((and smerGuranja (moguce-guranje-p kameni smer tabla)) 't) ;ako je moguce guranje moguc je i potez
+                   (t '()))))))
+
+;;; Sluzi za paralelno pomeranje.
+;;; Kameni se pomeraju na prazno polje.
+(defun potez-zamena (staraPozicija novaPozicija tabla mojZnak)
+  (postaviVrednosti staraPozicija "-" (postaviVrednosti novaPozicija mojZnak tabla)))
+
+;;; Ne gura, samo se pomeri za jedan.
+(defun potez-pomeraj-usg (staraPozicija novaPozicija tabla mojZnak)
+  (postaviVrednosti novaPozicija mojZnak (postaviVrednosti staraPozicija "-" tabla)))
+
+(defun potez-guranje (staraPozicija novaPozicija tabla smer mojZnak)
+  (let* ((prviKamen (polje-usg staraPozicija smer))
          (brojKamena (length staraPozicija))
-         (susedi (nadji-susedna-n-usi-koord prviKamen smer tabla brojKamena))
+         (susedi (nadji-susedna-n-usg-koord prviKamen smer tabla brojKamena))
          (susedi (sredi-susede-pom susedi))
          (susedi (cvorovi-u-pozicije susedi))
-         (tabla (potezPomerajUSI susedi (novaPozicija susedi smer) tabla (kontra-znak mojZnak)))
+         (tabla (potez-pomeraj-usg susedi (nova-pozicija susedi smer) tabla (kontra-znak mojZnak)))
+         (tabla (potez-pomeraj-usg staraPozicija novaPozicija tabla mojZnak)))
+    tabla))
 
-         (tabla (potezPomerajUSI staraPozicija novaPozicija tabla mojZnak))
-         )
-         tabla
-    )
-
-    )
-
-
-;od pozadi skida - sve dok ne dodje do nekog znaka
-;ostavlaj samo listu suseda koji su nekog znako, eleminise sve - i polja van table
+;;; Ostavlja samo listu SUSEDA koji su nekog znaka, eleminise sve '-' i polja van table.
 (defun sredi-susede-pom (susedi)
-  (cond
-   ( (null susedi) '())
-   ( (not (clanp (cadar susedi) '( "-" '())   )) (cons (car susedi) (sredi-susede-pom (cdr susedi))))
-   ( t '())
-   )
-  )
+  (cond ((null susedi) '())
+        ((not (clanp (cadar susedi) '( "-" '())   )) (cons (car susedi) (sredi-susede-pom (cdr susedi))))
+        (t '())))
 
-(defun kontra-znak (znak)
-  (if (equal znak "x") "o" "x")
-  )
+(defun kontra-znak (znak) (if (equal znak "x") "o" "x"))
 
-
-
-
-(defun odigrajPotez (kameni smer tabla)
-   (cond
-   ( (not (legalanUnos-p kameni tabla)) '())
-    ( (let* (
-            ;(a (format t "kameni: ~s~%   smer: ~s~%" kameni smer))
-            (novaPoz (novaPozicija kameni smer))
-            (novaPoz (sortiraj novaPoz 'opPoredjenjaKoordSamo))
-            (kameni (sortiraj kameni 'opPoredjenjaKoordSamo))
-            (smerIzguravanja (smerIzguravanja-p kameni smer))
-            (mojZnak (znak (car kameni) tabla))
-            ;(b (format t "novaPoz: ~s~%smerIzguravanja: ~s~%mojZnak: ~s~%" novaPoz smerIzguravanja mojZnak))
-            )
-       (cond
-        ( (not (natabli-p novaPoz (velicinaTable tabla))) '()) ;nova pozicija je van table
-        ( (and (not smerIzguravanja) (equal "-" (staSeNalazi (pozicije-u-cvorove novaPoz tabla)))) (potezZamena kameni novaPoz tabla mojZnak)) ;ukoliko nije izguravanje mora da se pomeri na prazno polje
-        ( (and smerIzguravanja (equal "-" (znak (polje-u-smeru-izguravanja novaPoz smer) tabla) )) (potezPomerajUSI kameni novaPoz tabla mojZnak)) ;mozes da se pomeris na prazno polje u smeru izguravanja
-        ( (and smerIzguravanja (equal mojZnak (znak (polje-u-smeru-izguravanja novaPoz smer) tabla)) ) '()) ;ne mozes da se pomeris ako si ti tamo
-
-        ( (and smerIzguravanja (moguce-guranje-p kameni smer tabla)) (potezGuranje kameni novaPoz tabla smer mojZnak)) ;ako je moguce guranje moguc je i potez
-        ;( t (format t "dovde"))
-        ( t '())
-        )
-       )
-    )
-   )
-
-  )
+(defun odigraj-potez (kameni smer tabla)
+   (cond ((not (legalan-unos-p kameni tabla)) '())
+         (t (let* ((novaPoz (nova-pozicija kameni smer))
+                   (novaPoz (sortiraj novaPoz 'opPoredjenjaKoordSamo))
+                   (kameni (sortiraj kameni 'opPoredjenjaKoordSamo))
+                   (smerGuranja (smer-guranja-p kameni smer))
+                   (mojZnak (znak (car kameni) tabla))
+                   (b (format t "novaPoz: ~s~%smerGuranja: ~s~%mojZnak: ~s~%" novaPoz smerGuranja mojZnak))
+                  )
+              (cond ((not (natabli-p novaPoz (velicina-table tabla))) '()) ;nova pozicija je van table
+                    ((and (not smerGuranja) (equal "-" (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)))) (potez-zamena kameni novaPoz tabla mojZnak)) ;ukoliko nije izguravanje mora da se pomeri na prazno polje
+                    ((and smerGuranja (equal "-" (znak (polje-usg novaPoz smer) tabla) )) (potez-pomeraj-usg kameni novaPoz tabla mojZnak)) ;mozes da se pomeris na prazno polje u smeru guranja
+                    ((and smerGuranja (equal mojZnak (znak (polje-usg novaPoz smer) tabla)) ) '()) ;ne mozes da se pomeris ako si ti tamo
+                    ((and smerGuranja (moguce-guranje-p kameni smer tabla)) (potez-guranje kameni novaPoz tabla smer mojZnak)) ;ako je moguce guranje moguc je i potez
+                    ;( t (format t "dovde"))
+                    ( t '()))))))
 
 
 
@@ -548,6 +429,9 @@
 
 
 
+
+(defparameter *tabla*
+  (kreirajTablu 5))
 
 
 ; Allow cl-who and parenscript to work together
@@ -565,9 +449,9 @@
         )
     (format nil "~S~%" (stampaj
                         (setq *tabla*
-                              (if (null (odigrajPotez (car d) (cadr d) *tabla*))
+                              (if (null (odigraj-potez (car d) (cadr d) *tabla*))
                                   *tabla*
-                                  (odigrajPotez (car d) (cadr d) *tabla*)
+                                  (odigraj-potez (car d) (cadr d) *tabla*)
                                   )
                             )
                         )
@@ -595,8 +479,6 @@
             ;; and chop the read characters off of the string
             (setq string (subseq string end-position))))))
 
-
-
 (defparameter *server*
   (start (make-instance 'easy-acceptor :address "localhost" :port 8080)))
 
@@ -604,5 +486,4 @@
                              (create-ajax-dispatcher *ajax-processor*)))
 
 
-(defparameter *tabla*
-  (kreirajTablu 5))
+
