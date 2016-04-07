@@ -1,0 +1,157 @@
+@charset 'utf-8';
+
+@import 'ljubenovic-toolkit';
+@import 'palette';
+
+$color-select: rgba(palette($red, 500), 1);
+$color-hover: rgba(palette($yellow, 500), 1);
+$color-main: palette($light-green);
+$color-main-dark: palette($light-green, 700);
+$color-main-light: palette($light-green, 200);
+$background-color: palette($blue-grey, 50);
+$table-color: palette($blue-grey, 100);
+
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+body {
+  background-color: $background-color;
+}
+
+h1 {
+  font-family: 'Satisfy', cursive;
+  position: fixed;
+  top: 55px;
+  left: 50px;
+  margin: 0;
+  padding: 0;
+  font-size: 7em;
+  transform: rotate(-17deg);
+  color: $color-main-dark;
+  text-shadow: 7px 7px 0 $color-main-light;
+}
+
+#tabla-id {
+    position: relative;
+    background-color: $table-color;
+    border-radius: 50%;
+    margin: auto;
+    margin-top: 40px;
+
+    &.axial-visible .koordinate.cubic {
+        display: none;
+    }
+
+    &:not(.axial-visible) .koordinate.axial {
+        display: none;
+    }
+
+    &.sakrij-koordinate .koordinate {
+      display: none;
+    }
+}
+
+
+.polje {
+    position: absolute;
+    border-radius: 50%;
+    width:  65px;
+    height: 65px;
+		cursor: pointer;
+		transition: transform .2s ease;
+
+    &:hover {
+      	//box-shadow: 0px 0px 10px 5px rgba($color-hover, .2);
+				transform: scale(1.1);
+    }
+
+    &.polje-x {
+      	background-color: rgba(black, .85);
+
+				.koordinate {
+					color: rgba(white, .7);
+				}
+    }
+
+    &.polje-o {
+        background-color: rgba(white, .85);
+    }
+
+    &.polje-- {
+        background-color: rgba(black, .12);
+    }
+
+		&.selektiran {
+				box-shadow: 0px 0px 0px 8px $color-select inset;
+		}
+
+		.koordinate {
+		    position: absolute;
+		    bottom: 10%;
+		    width: 100%;
+		    text-align: center;
+		    font-size: .66em;
+		    font-family: Roboto;
+		    font-weight: bold;
+		    color: rgba(black, .5);
+		}
+}
+
+#smer-picker {
+    position: absolute;
+    background-color: red;
+    width: 5px;
+    height: 5px;
+    display: block;
+    bottom: 150px;
+    right: 150px;
+
+		li {
+		    position: absolute;
+		    background-color: $color-main;
+		    color: white;
+		    width: 30px;
+		    height: 30px;
+		    line-height: 30px;
+		    font-family: Roboto;
+		    font-weight: bold;
+		    color: rgba(white, .85);
+		    display: block;
+		    border: solid 1px white;
+		    text-align: center;
+		}
+}
+
+#smer1 { top:    0px; left:  100px; }
+#smer2 { top: -100px; left:   70px; }
+#smer3 { top: -100px; left:  -70px; }
+#smer4 { top:    0px; left: -100px; }
+#smer5 { top:  100px; left:  -70px; }
+#smer6 { top:  100px; left:   70px; }
+
+#izgurani {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  height: 400px;
+  width: 130px;
+  justify-content: space-between;
+
+	* {
+			width: 50%;
+			display: flex;
+			flex-flow: column;
+	}
+
+	.polje {
+		  margin-bottom: 10px;
+		  position: static;
+	}
+}
