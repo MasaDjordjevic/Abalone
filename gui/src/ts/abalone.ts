@@ -53,20 +53,50 @@ class Kamen {
         }
     }
 
+    selektiraj(nacin:string = "-dobro") {
+        this.div.classList.add('selektiran');
+        this.div.classList.add('selektiran' + nacin);
+    }
+
+
+    deselektiraj() {
+      this.div.classList.remove('selektiran');
+      this.div.classList.remove('selektiran-lose');
+      this.div.classList.remove('selektiran-dobro');
+    }
+
     _onclick() {
-        this.tabla.toggleKamen(this);
+        //ako je ukljucen striktni rezim i ako ti nisi na redu oboji -lose
+        if ((<HTMLInputElement>document.getElementsByName("strict-mode")[0]).checked){
+          var naRedu = document.getElementById("stats-x").classList.contains("trenutni-na-redu") ? "x" : "o";
+          if(naRedu == this.boja){
+              this.tabla.toggleKamen(this, "-dobro");
+          }
+          else{
+              this.tabla.toggleKamen(this, "-lose");
+          }
+
+        }
+        else{
+          this.tabla.toggleKamen(this);
+        }
+
+
     }
 }
 
 class Tabla {
     polja: Kamen[];
     selektirani: Kamen[];
+    poslednjeStanje: string;
 
     constructor(public velicina: number) {
         this.polja = new Array<Kamen>(3 * velicina * velicina - 3 * velicina + 1); // 3n² - 3n + 1
         for (var i = 0; i < this.polja.length; i++) {
             this.polja[i] = new Kamen(this);
         }
+
+        this.poslednjeStanje = null;
 
         var index = 0;
         for (var z = -(velicina - 1); z <= (velicina - 1); z++) {
@@ -108,11 +138,11 @@ class Tabla {
         HTMLtabla.style.height = String(width) + "px";
     }
 
-    toggleKamen(kamen: Kamen): void {
+    toggleKamen(kamen: Kamen, nacin:string = "-dobro"): void {
         var index = this.selektirani.indexOf(kamen);
         if (index == -1) {
             // nema ga
-            this.selektirajKamen(kamen);
+            this.selektirajKamen(kamen, nacin);
         } else {
             // ima ga
             this.deselektirajKamen(kamen);
@@ -128,20 +158,20 @@ class Tabla {
         document.getElementById('selektirani').innerHTML = string;
     }
 
-    selektirajKamen(kamen: Kamen): void {
+    selektirajKamen(kamen: Kamen, nacin:string): void {
         // var size = this.selektirani.filter(function(value) {return value !== undefined}).length;
         if (this.selektirani.length >= 3) {
-            this.selektirani[0].div.classList.remove('selektiran');
+            this.selektirani[0].deselektiraj();
             this.selektirani.splice(0, 1);
         }
         this.selektirani.push(kamen);
-        kamen.div.classList.add('selektiran');
+        kamen.selektiraj(nacin);
     }
 
     deselektirajKamen(kamen: Kamen): void {
         var index = this.selektirani.indexOf(kamen);
         this.selektirani.splice(index, 1);
-        kamen.div.classList.remove('selektiran');
+        kamen.deselektiraj();
     }
 
     nacrtajString(s: string): void {

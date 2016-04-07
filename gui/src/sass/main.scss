@@ -3,7 +3,8 @@
 @import 'ljubenovic-toolkit';
 @import 'palette';
 
-$color-select: rgba(palette($red, 500), 1);
+$color-select-red: rgba(palette($red, 500), 1);
+$color-select-green: rgba(palette($green, 500), 1);
 $color-hover: rgba(palette($yellow, 500), 1);
 $color-main: palette($light-green);
 $color-main-dark: palette($light-green, 700);
@@ -204,8 +205,12 @@ h1 {
         background-color: rgba(black, .12);
     }
 
-		&.selektiran {
-				box-shadow: 0px 0px 0px 8px $color-select inset;
+		&.selektiran-lose {
+				box-shadow: 0px 0px 0px 8px $color-select-red inset;
+		}
+
+    &.selektiran-dobro {
+				box-shadow: 0px 0px 0px 8px $color-select-green inset;
 		}
 
 		.koordinate {

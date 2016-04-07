@@ -5,6 +5,9 @@ var tabla;
 
 
 function posaljiPotez(kameni, smer): any {
+    if (document.getElementsByClassName('selektiran-lose').length > 0)
+      return;
+
     var sel = tabla.selektirani;
     var string = '';
     for (var i = 0; i < sel.length; i++) {
@@ -41,6 +44,24 @@ window.onload = function() {
       for(var i=0; i<radioKoord.length;i++ ){radioKoord[i].disabled = !this.checked}
     });
 
+    document.getElementsByName("strict-mode")[0].addEventListener('change', function() {
+        if (!this.checked) {
+          var crveni = document.querySelectorAll('.selektiran-lose');
+          for (let i = 0; i < crveni.length; i++) {
+              crveni[i].classList.remove('selektiran-lose');
+              crveni[i].classList.add('selektiran-dobro');
+          }
+        }
+        else {
+          for (let i = 0; i < tabla.selektirani.length; i++) {
+              var pom = tabla.selektirani[0];
+              tabla.selektirani[0].deselektiraj();
+              tabla.selektirani.splice(0,1);
+              pom._onclick();
+          }
+        }
+    });
+
     radioKoord[0].addEventListener('change', function(event) {
         tablaHTML.classList.toggle('axial-visible');
     });
@@ -60,10 +81,25 @@ document.onkeypress = function (e) {
   if (e.keyCode ==  97) posaljiPotez(tabla.selektirani, 4);   // a
   if (e.keyCode == 122 || e.keyCode == 121) posaljiPotez(tabla.selektirani, 5);   // z, y
   if (e.keyCode == 120) posaljiPotez(tabla.selektirani, 6);   // x
+  if (e.keyCode == 115) deselektirajSve();
+}
+
+function deselektirajSve()
+{
+    for (let i = 0; i < tabla.selektirani.length; i++) {
+        tabla.selektirani[i].deselektiraj();
+    }
+    tabla.selektirani = [];
 }
 
 function callback(response) {
     console.log(response);
+    if(tabla.poslednjeStanje !== null && tabla.poslednjeStanje != response)
+    {
+        document.getElementById("stats-x").classList.toggle("trenutni-na-redu");
+        document.getElementById("stats-o").classList.toggle("trenutni-na-redu");
+    }
+    tabla.poslednjeStanje = response;
     return tabla.nacrtajString(response);
 };
 
