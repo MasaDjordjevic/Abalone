@@ -1,10 +1,26 @@
+body {
+  background-color: rgba(224,242,241 ,1);
+}
+
+h1 {
+  font-family: 'Satisfy', cursive;
+  position: fixed;
+  top: 55px;
+  left: 50px;
+  margin: 0;
+  padding: 0;
+  font-size: 7em;
+  transform: rotate(-17deg);
+  color: rgba(0,121,107 ,1);
+  text-shadow: 7px 7px 0 rgba(178,223,219 ,1);
+}
 
 #tabla-id {
     position: relative;
-    /*margin-left: 600px;*/
-    width: 800px;
-    height: 800px;
-    background-color: tomato;
+    background-color: rgba(128,203,196 ,1);
+    border-radius: 50%;
+    margin: auto;
+    margin-top: 40px;
 }
 
 .polje {
@@ -15,20 +31,20 @@
 }
 
 .polje.polje-x {
-    background-color: #111;
+    background-color: rgba(0, 0, 0, .85);
 }
 
 .polje.polje-o {
-    background-color: #eee;
+    background-color: rgba(255, 255, 255, .85);
 }
 
 .polje.polje-- {
-    background-color: rgba(0, 0, 0, .1);
+    background-color: rgba(0, 0, 0, .12);
 }
 
 .polje:hover {
     cursor: pointer;
-    box-shadow: 0px 0px 10px 5px rgba(255,255,0, .2);
+    box-shadow: 0px 0px 10px 5px rgba(255, 255, 0, .2);
 }
 
 .polje.selektiran {
@@ -43,7 +59,11 @@
     font-size: .66em;
     font-family: Roboto;
     font-weight: bold;
-    color: tomato;
+    color: rgba(0, 77, 64, 1);
+}
+
+.polje.polje-x > .koordinate {
+    color: rgba(128,203,196 ,1);
 }
 
 #smer-picker {
