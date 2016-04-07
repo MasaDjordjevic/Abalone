@@ -1,29 +1,36 @@
+/// <reference path="./server.ts"/>
+
 var tabla;
+
+
+
 
 function posaljiPotez(kameni, smer): any {
     var sel = tabla.selektirani;
     var string = '';
     for (var i = 0; i < sel.length; i++) {
         string += '(' + sel[i].koordinata.x + ' ' + sel[i].koordinata.y + ' ' + sel[i].koordinata.z + ') ';
-    }    
-    string = '(' + string + ')'; // lista koordinata
-    string += ' ' + smer;
-    string = '(' + string + ')'; // konacno okruzivanje zagradama za poziv
+    }
+    string = "(" + string + ") ";
+    string = string + smer + ' *tabla*';
+
+
+    //var string = 'odigrajPotez (caar d) (cadar d) *tabla*';
     //alert(string);
-    // PROBLEM'S
+    return smackjack.echo(string, callback, null);
 }
 
 window.onload = function() {
     tabla = new Tabla(5);
     tabla.nacrtaj();
-
+    smackjack.reset('', callback, null);
     // Event listeneri za smerove
-    document.getElementById('smer1').addEventListener('click', function() {posaljiPotez(tabla.selektirani, 1)});
-    document.getElementById('smer2').addEventListener('click', function() {posaljiPotez(tabla.selektirani, 2)});
-    document.getElementById('smer3').addEventListener('click', function() {posaljiPotez(tabla.selektirani, 3)});
-    document.getElementById('smer4').addEventListener('click', function() {posaljiPotez(tabla.selektirani, 4)});
-    document.getElementById('smer5').addEventListener('click', function() {posaljiPotez(tabla.selektirani, 5)});
-    document.getElementById('smer6').addEventListener('click', function() {posaljiPotez(tabla.selektirani, 6)});
+    document.getElementById('smer1').addEventListener('click', function () { posaljiPotez(tabla.selektirani, 1); });
+    document.getElementById('smer2').addEventListener('click', function () { posaljiPotez(tabla.selektirani, 2); });
+    document.getElementById('smer3').addEventListener('click', function () { posaljiPotez(tabla.selektirani, 3); });
+    document.getElementById('smer4').addEventListener('click', function () { posaljiPotez(tabla.selektirani, 4); });
+    document.getElementById('smer5').addEventListener('click', function () { posaljiPotez(tabla.selektirani, 5); });
+    document.getElementById('smer6').addEventListener('click', function () { posaljiPotez(tabla.selektirani, 6); });
 }
 
 class Koordinata {
@@ -63,8 +70,15 @@ class Kamen {
         kamen.style.top = top.toString() + 'px';
         kamen.style.left = left.toString() + 'px';
 
-        // upis u kamen
-        kamen.innerHTML = '<span class="koordinate">' + this.koordinata.x + ', ' + this.koordinata.y + ', ' + this.koordinata.z + '</span>';
+        // upis u kamen nase koordinate
+        // kamen.innerHTML = '<span class="koordinate">' + this.koordinata.x + ', ' + this.koordinata.y + ', ' + this.koordinata.z + '</span>';
+
+        // upis u kamen, aksijalne kooridnate
+        var pbroj = this.koordinata.z;
+        pbroj = 2 * tabla.velicina - 1 - pbroj;
+        var p = String.fromCharCode(93 + (pbroj - 1)).toUpperCase();
+        var q = (this.koordinata.x) + 2 * tabla.velicina - 5;
+        kamen.innerHTML = '<span class="koordinate">' + p + q + '</span>';
 
         document.getElementById("tabla-id").appendChild(kamen);
         this.div = kamen;
@@ -82,7 +96,7 @@ class Tabla {
     polja: Kamen[];
     selektirani: Kamen[];
 
-    constructor(velicina: number) {
+    constructor(public velicina: number) {
         this.polja = new Array<Kamen>(3 * velicina * velicina - 3 * velicina + 1); // 3n² - 3n + 1
         for (var i = 0; i < this.polja.length; i++) {
             this.polja[i] = new Kamen(this);
@@ -157,11 +171,53 @@ class Tabla {
         kamen.div.classList.remove('selektiran');
     }
 
-    nactajString(s: string): void {
+    nacrtajString(s: string): void {
         s = s.replace(/\s/g, ''); // skloni sve beline
+        s = s.replace(/\"/g, ''); // skloni navodnike
+
+        var brojX = 0;
+        var brojO = 0;
+
         for (var i = 0; i < Math.min(tabla.polja.length, s.length); i++) {
             tabla.polja[i].boja = s[i];
+            if (s[i] == 'x' || s[i] == 'X') {
+              brojX++;
+            }
+            if (s[i] == 'o' || s[i] == 'O') {
+              brojO++;
+            }
         }
+
+        brojX = 14 - brojX;
+        brojO = 14 - brojO;
+
+        var HTMLizguraniX = document.getElementById("izgurani-x");
+        var HTMLizguraniO = document.getElementById("izgurani-o");
+        HTMLizguraniX.innerHTML = '';
+        HTMLizguraniO.innerHTML = '';
+
+        for (var i = 0; i < brojX; i++) HTMLizguraniX.innerHTML += '<div class="polje polje-x"></div>';
+        for (var i = 0; i < brojO; i++) HTMLizguraniO.innerHTML += '<div class="polje polje-o"></div>';
+
         tabla.nacrtaj();
     }
 }
+
+document.onkeypress = function (e) {
+  //e = e || window.event;
+  if (e.keyCode == 100) posaljiPotez(tabla.selektirani, 1);   // d
+  if (e.keyCode == 101) posaljiPotez(tabla.selektirani, 2);   // e
+  if (e.keyCode == 119) posaljiPotez(tabla.selektirani, 3);   // w
+  if (e.keyCode ==  97) posaljiPotez(tabla.selektirani, 4);   // a
+  if (e.keyCode == 122 || e.keyCode == 121) posaljiPotez(tabla.selektirani, 5);   // z, y
+  if (e.keyCode == 120) posaljiPotez(tabla.selektirani, 6);   // x
+}
+
+function callback(response) {
+    console.log(response);
+    return tabla.nacrtajString(response);
+};
+
+function onClick() {
+    return smackjack.echo((<HTMLInputElement>document.getElementById("data")).value, callback, null);
+};
