@@ -23,6 +23,18 @@ h1 {
     margin-top: 40px;
 }
 
+.axial-visible .koordinate.cubic {
+    display: none;
+}
+
+#tabla-id:not(.axial-visible) .koordinate.axial {
+    display: none;
+}
+
+.sakrij-koordinate .koordinate {
+  display: none;
+}
+
 .polje {
     position: absolute;
     border-radius: 50%;
