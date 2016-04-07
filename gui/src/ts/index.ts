@@ -5,7 +5,7 @@ function posaljiPotez(kameni, smer): any {
     var string = '';
     for (var i = 0; i < sel.length; i++) {
         string += '(' + sel[i].koordinata.x + ' ' + sel[i].koordinata.y + ' ' + sel[i].koordinata.z + ') ';
-    }
+    }    
     string = '(' + string + ')'; // lista koordinata
     string += ' ' + smer;
     string = '(' + string + ')'; // konacno okruzivanje zagradama za poziv

@@ -5,10 +5,6 @@
 (in-package :jank-repl)
 
 
-
-;(in-package :jank-repl)
-
-
 ;;; Vraca listu od 6 koordinata tj. susede.
 (defun kreiraj-susede (cvor)
   (let* ((x (car cvor))
