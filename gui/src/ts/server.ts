@@ -120,7 +120,7 @@ var smackjack = {
         return fetchUri(uri, callback, method, body, errorHandler, process);
     };
 
-    function echo(data, callback, errorHandler = null) { 
+    function echo(data, callback, errorHandler = null) {
         return ajaxCall("ECHO", [data], "GET", callback, errorHandler, responseText);
     };
     smackjack.echo = echo;

@@ -2,9 +2,6 @@
 
 var tabla;
 
-
-
-
 function posaljiPotez(kameni, smer): any {
     var sel = tabla.selektirani;
     var string = '';
@@ -54,18 +51,22 @@ class Kamen {
         kamen.classList.add('polje-' + this.boja);
 
         // odredjivanje pozicije
-        var sqrt3 = Math.sqrt(3.0);
-        var size = 55;
+        var size = 65 + 2;
 
         var x = this.koordinata.x * size;
         var y = this.koordinata.y * size;
         var z = this.koordinata.z * size;
 
-        var left = x + (z - (size - (size*sqrt3)/2) * (this.koordinata.z % 2)) / 2;
+        var left = x + z / 2;
         var top  = z;
+        top -= this.koordinata.z * 9;
 
-        top  += 250;
-        left += 250;
+        // Korekcija da bude u centar
+        //var korekcija = -size / 2;
+        //top  += korekcija;
+        //left += korekcija;
+        top += 350;
+        left += 350;
 
         kamen.style.top = top.toString() + 'px';
         kamen.style.left = left.toString() + 'px';

@@ -10,8 +10,8 @@
 .polje {
     position: absolute;
     border-radius: 50%;
-    width:  55px;
-    height: 55px;
+    width:  65px;
+    height: 65px;
 }
 
 .polje.polje-x {
@@ -46,8 +46,6 @@
     color: tomato;
 }
 
-
-
 #smer-picker {
     position: absolute;
     background-color: red;
@@ -73,35 +71,12 @@
     text-align: center;
 }
 
-#smer4 {
-    top: 0px;
-    left: -100px;
-}
-
-#smer3 {
-    top:  -100px;
-    left: -70px;
-}
-
-#smer2 {
-    top:  -100px;
-    left:  70px;
-}
-
-#smer1 {
-    top:    0px;
-    left: 100px;
-}
-
-#smer6 {
-    top:  100px;
-    left: 70px;
-}
-
-#smer5 {
-    top:   100px;
-    left: -70px;
-}
+#smer1 { top:    0px; left:  100px; }
+#smer2 { top: -100px; left:   70px; }
+#smer3 { top: -100px; left:  -70px; }
+#smer4 { top:    0px; left: -100px; }
+#smer5 { top:  100px; left:  -70px; }
+#smer6 { top:  100px; left:   70px; }
 
 #izgurani {
   position: fixed;
