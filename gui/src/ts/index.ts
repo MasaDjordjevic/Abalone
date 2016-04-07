@@ -62,11 +62,8 @@ class Kamen {
         top -= this.koordinata.z * 9;
 
         // Korekcija da bude u centar
-        //var korekcija = -size / 2;
-        //top  += korekcija;
-        //left += korekcija;
-        top += 350;
-        left += 350;
+        top  += (- size / 2 + 5 * size * Math.sqrt(3.0) / 2);
+        left += (- size / 2 + 5 * size);
 
         kamen.style.top = top.toString() + 'px';
         kamen.style.left = left.toString() + 'px';
