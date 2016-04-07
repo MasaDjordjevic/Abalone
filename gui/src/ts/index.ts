@@ -2,6 +2,7 @@
 
 var tabla;
 
+
 function posaljiPotez(kameni, smer): any {
     var sel = tabla.selektirani;
     var string = '';
@@ -18,6 +19,20 @@ function posaljiPotez(kameni, smer): any {
 }
 
 window.onload = function() {
+    document.getElementsByName('prikazi-koordinate')[0].addEventListener('change', function () {alert("masa")});
+    var radioKoord:HTMLInputElement[] = (<HTMLInputElement[]><any>document.getElementsByName('radio-koordinate'));
+    for(var i = 0; i < radioKoord.length; i++)
+    {
+      (function(index){
+        radioKoord[index].addEventListener('change', function(event) {
+            alert(this.value);
+        })
+      })(i);
+
+    }
+
+
+
     tabla = new Tabla(5);
     tabla.nacrtaj();
     smackjack.reset('', callback, null);
