@@ -16,15 +16,32 @@
 
   <body>
     <h1>Abalone</h1>
-    <div id="tabla-id"></div>
-    <ul id="selektirani"></ul>
     <div id="izgurani">
       <div id="izgurani-x"></div>
       <div id="izgurani-o"></div>
     </div>
 
+    <div class="tabla-wrapper">
+      <div id="tabla-id"></div>
+
+      <div id="stats">
+        <div id="na-redu">
+          <div id="stats-x" class="trenutni-na-redu">
+            <input type="text" value="La Plávusha">
+            <span>×</span>
+          </div>
+          <div id="stats-o">
+            <input type="text" value="Zarez">
+            <span>o</span>
+          </div>
+        </div>
+        <ul id="selektirani"></ul>
+      </div>
+    </div>
+
     <div id="config">
       <input type="checkbox" name="prikazi-koordinate" value="Bike" checked>Prikazi koordinate<br>
+      <input type="checkbox" name="strict-mode" value="Bike" checked>Striktni režim<br>
       <input type="radio" name="radio-koordinate" value="cubic"> Cubic<br>
       <input type="radio" name="radio-koordinate" value="axial" checked> Axial<br>
     <div>

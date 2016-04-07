@@ -12,37 +12,49 @@ $background-color: palette($blue-grey, 50);
 $table-color: palette($blue-grey, 100);
 
 * {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin: 0;
+    padding: 0;
+    font-family: Roboto;
 }
 
 body {
-  background-color: $background-color;
+    background-color: $background-color;
 }
 
 h1 {
-  font-family: 'Satisfy', cursive;
-  position: fixed;
-  top: 55px;
-  left: 50px;
-  margin: 0;
-  padding: 0;
-  font-size: 7em;
-  transform: rotate(-17deg);
-  color: $color-main-dark;
-  text-shadow: 7px 7px 0 $color-main-light;
+    font-family: 'Satisfy', cursive;
+    position: fixed;
+    top: 55px;
+    left: 50px;
+    margin: 0;
+    padding: 0;
+    font-size: 7em;
+    transform: rotate(-17deg);
+    color: $color-main-dark;
+    text-shadow: 7px 7px 0 $color-main-light;
+}
+
+.tabla-wrapper {
+    margin: auto;
+    margin-top: 40px;
+    width: 80%;
+    border: black 2px solid;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 #tabla-id {
     position: relative;
     background-color: $table-color;
     border-radius: 50%;
-    margin: auto;
-    margin-top: 40px;
 
     &.axial-visible .koordinate.cubic {
         display: none;
@@ -57,6 +69,111 @@ h1 {
     }
 }
 
+#stats {
+    width: 500px;
+    min-height: 500px;
+
+    display: flex;
+    flex-flow: column;
+    justify-content: space-around;
+    align-items: center;
+
+    #selektirani {
+        min-height: 100px;
+        width: 100%;
+        display: flex;
+        flex-flow: column-reverse;
+        justify-content: flex-start;
+        align-items: center;
+
+        li {
+            display: block;
+        }
+    }
+
+    #na-redu {
+        display: flex;
+        width: 100%;
+
+        & > * {
+            @include force-width(50%);
+            display: flex;
+            flex-flow: column;
+            align-content: center;
+
+            input {
+                width: 85%;
+                margin: auto;
+                background-color: transparent;
+                border: none;
+                outline: none;
+                text-align: center;
+                font-family: Roboto;
+                font-weight: bold;
+                box-shadow: 0px 2px 0 0 rgba(black, .2);
+                font-size: 24px;
+            }
+
+            span {
+                display: block;
+                width: 50px;
+                height: 50px;
+                margin: auto;
+                margin-top: 40px;
+                background-color: gold;
+                text-align: center;
+                font-size: 0.5 * 50px;
+                line-height: 50px;
+                border-radius: 50%;
+                font-weight: bold;
+                position: relative;
+            }
+
+            &.trenutni-na-redu span {
+                transform: scale(1.1);
+
+                &::after {
+                    content: "";
+                    width:  0;
+                    height: 0;
+                    background-color: transparent;
+                    position: absolute;
+                    $top: 50px + 10px - 15px;
+                    top: $top;
+                    left: (50px - 30px)/2;
+                    border: 15px solid palette($green, 400);
+                    border-top-color: transparent;
+                    border-left-color: transparent;
+                    border-right-color: transparent;
+                    transform: scaleY(1.4);
+                    animation: masu-nervira 1s ease infinite;
+
+                    @keyframes masu-nervira {
+                        0% {
+                            top: $top;
+                        }
+                        66% {
+                            top: $top + 10px;
+                        }
+                        100% {
+                            top: $top;
+                        }
+                    }
+                }
+            }
+        }
+
+        #stats-x span {
+            background-color: rgba(black, .9);
+            color: rgba(white, .7);
+        }
+
+        #stats-o span {
+            background-color: rgba(white, .9);
+            color: rgba(black, .7);
+        }
+    }
+}
 
 .polje {
     position: absolute;
@@ -105,7 +222,6 @@ h1 {
 
 #smer-picker {
     position: absolute;
-    background-color: red;
     width: 5px;
     height: 5px;
     display: block;
@@ -136,22 +252,22 @@ h1 {
 #smer6 { top:  100px; left:   70px; }
 
 #izgurani {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  height: 400px;
-  width: 130px;
-  justify-content: space-between;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    height: 400px;
+    width: 130px;
+    justify-content: space-between;
 
 	* {
-			width: 50%;
-			display: flex;
-			flex-flow: column;
+		width: 50%;
+		display: flex;
+	    flex-flow: column;
 	}
 
 	.polje {
-		  margin-bottom: 10px;
-		  position: static;
+	  margin-bottom: 10px;
+	  position: static;
 	}
 }
