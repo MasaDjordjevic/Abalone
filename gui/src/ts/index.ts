@@ -43,15 +43,12 @@ class Kamen {
         public boja: string = '-'
     ) { }
 
-    stampaj(): void {
+    stampaj(size:number = 67): void {
         var kamen = document.createElement('div');
 
         // koji je znak na kamenu
         kamen.classList.add('polje');
         kamen.classList.add('polje-' + this.boja);
-
-        // odredjivanje pozicije
-        var size = 65 + 2;
 
         var x = this.koordinata.x * size;
         var y = this.koordinata.y * size;
@@ -62,7 +59,8 @@ class Kamen {
         top -= this.koordinata.z * 9;
 
         // Korekcija da bude u centar
-        top  += (- size / 2 + 5 * size * Math.sqrt(3.0) / 2);
+        //top  += (- size / 2 + 5 * size * Math.sqrt(3.0) / 2);
+        top  += (- size / 2 + 5 * size);
         left += (- size / 2 + 5 * size);
 
         kamen.style.top = top.toString() + 'px';
@@ -127,10 +125,17 @@ class Tabla {
     nacrtaj(): void {
         this.selektirani = [];
         document.getElementById('selektirani').innerHTML = '';
-        document.getElementById('tabla-id').innerHTML = '';
+        var HTMLtabla = document.getElementById('tabla-id');
+        HTMLtabla.innerHTML = '';
+        var size:number = 70; // velicina kamencica
         for (var i = 0; i < this.polja.length; i++) {
-            this.polja[i].stampaj();
+            this.polja[i].stampaj(size);
         }
+
+        var width:number  = 2 * 5 * size;
+        //var height:number = 5 * size * Math.sqrt(3.0);
+        HTMLtabla.style.width  = String(width) + "px";
+        HTMLtabla.style.height = String(width) + "px";
     }
 
     toggleKamen(kamen: Kamen): void {
