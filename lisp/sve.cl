@@ -41,7 +41,6 @@
 
 
 ;;; Na LISTU dodaje SUSEDE tako da elementi LISTE ostanu jedinstveni.
-;;; Ova funkcija se nigde ne poziva.
 (defun dopuni-listu (susedi lista)
   (cond ((null susedi) lista )
         ((clanp (car susedi) lista) (dopuni-listu (cdr susedi) lista))
@@ -379,8 +378,7 @@
 
 ;;; Transformise (0 4 -4) u ((0 4 -4) "x").
 (defun pozicije-u-cvorove (kameni tabla)
-  (mapcar (lambda (x) (append (list x) (list (znak x tabla)))) kameni))
-
+  (mapcar (lambda (x) (list x (znak x tabla))) kameni))
 
 ;;; Trasformise ((0 4 -4) "x") u (0 4 -4).
 (defun cvorovi-u-pozicije (cvorovi) (mapcar 'car cvorovi))
@@ -452,12 +450,14 @@
 
 
 ;;; ocekuje cvorove
-(defun nadji-sve-moguce-poteze (tabla znak)
+(defun nadji-sve-potezabilne-kamenove (tabla znak)
   (let* ((jedan (izdvoji-sve-istog-znaka tabla znak))
          (a (format t "Jedan: ~s~%" jedan))
          (dva (jedni-sa-susedima jedan tabla))
-         (a (format t "Dva: ~s~%" dva))) 
-  ))
+         (a (format t "Dva: ~s~%" dva))
+         (tri (dodaj-sve-trece dva tabla))
+         (a (format t "Tri: ~s~%" tri)))
+    (append jedan dva tri)))
 
 
 ;;; lista moze da bude i tabla
@@ -471,27 +471,52 @@
          (susedi (pozicije-u-cvorove susedi tabla)))         
     (izdvoji-sve-istog-znaka susedi (cadr cvor))))
 
-(defun jedni-sa-susedima (lista tabla)
+(defun jedan-sa-svakim (el lista)
   (cond ((null lista) '())
-        (t (dopuni-listu (jedan-sa-susedima (car lista) tabla) (jedni-sa-susedima (cdr lista) tabla)))))
+        (t (append (list (list el (car lista))) (jedan-sa-svakim el (cdr lista))))))
 
 (defun jedan-sa-susedima (cvor tabla)
   (let* ((susedi (susedi-istog-znaka tabla cvor))
          (resenje (jedan-sa-svakim cvor susedi)))
     (mapcar (lambda (x) (sortiraj x 'op-poredjenja)) resenje))) 
-    
-         
 
-(defun jedan-sa-svakim (el lista)
+(defun jedni-sa-susedima (lista tabla)
   (cond ((null lista) '())
-        (t (append (list (list el (car lista))) (jedan-sa-svakim el (cdr lista))))))
+        (t (dopuni-listu (jedan-sa-susedima (car lista) tabla) (jedni-sa-susedima (cdr lista) tabla)))))
+
+;;; ocekuje listu ciji su elementi liste od po dva susedna cvora istog znaka
+(defun dodaj-sve-trece (lista tabla)
+  (cond ((null lista) '())
+        ((istogznaka-p (car (dodaj-trece (car lista) tabla))) (dopuni-listu (list (car (dodaj-trece (car lista) tabla))) (dodaj-sve-trece (cdr lista) tabla)))
+        ((istogznaka-p (cadr (dodaj-trece (car lista) tabla))) (dopuni-listu (cdr (dodaj-trece (car lista) tabla)) (dodaj-sve-trece (cdr lista) tabla)))
+        (t (dodaj-sve-trece (cdr lista) tabla))))
+
+
+  
+
+;;; lista je lista od dva susedna cvora istog znaka
+(defun dodaj-trece (lista tabla)
+  (let* ((a (caar lista))
+         (b (caadr lista))        
+         (resenje1 (loop for p in a
+                         for q in b
+                       collect (+ p (- p q))))
+         (resenje2 (loop for q in a
+                         for p in b
+                       collect  (+ p (- p q))))
+         (resenje1 (pozicije-u-cvorove (list resenje1) tabla))
+         (resenje2 (pozicije-u-cvorove (list resenje2) tabla))
+         (resenje (list (append lista resenje1) (append lista resenje2))))
+    (mapcar (lambda (x) (sortiraj x 'op-poredjenja)) resenje))) 
+
+  
+         
+     
+  
   
          
        
   
-
-
-                  
 
 
 
