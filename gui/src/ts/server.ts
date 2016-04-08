@@ -1,17 +1,17 @@
 var smackjack = {
-  echo: function(data, callback, errorHandler):any {},
-  reset: function(data, callback, errorHandler):any {}
+    echo: function(data, callback, errorHandler): any { },
+    reset: function(data, callback, errorHandler): any { }
 };
 
-(function () {
+(function() {
     var httpFactory = null;
-    var httpFactories = [function () {
+    var httpFactories = [function() {
         return new XMLHttpRequest();
-    }, function () {
-        return new ActiveXObject("Msxml2.XMLHTTP");
-    }, function () {
-        return new ActiveXObject("Microsoft.XMLHTTP");
-    }];
+    }, function() {
+            return new ActiveXObject("Msxml2.XMLHTTP");
+        }, function() {
+            return new ActiveXObject("Microsoft.XMLHTTP");
+        }];
     function httpNewRequest() {
         if (httpFactory) {
             return httpFactory();
@@ -24,7 +24,7 @@ var smackjack = {
                 };
             };
             if (request === null) {
-                httpFactory = function () {
+                httpFactory = function() {
                     throw new Error("XMLHttpRequest not supported");
                 };
                 return httpFactory();
@@ -70,7 +70,7 @@ var smackjack = {
             console.log("Browser couldn\'t make a request object.");
         };
         request.open(method, uri, true);
-        request.onreadystatechange = function () {
+        request.onreadystatechange = function() {
             if (4 == request.readyState) {
                 if (request.status >= 200 && request.status < 300 || request.status == 304) {
                     if (callback != null) {

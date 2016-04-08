@@ -1,8 +1,6 @@
 @charset 'utf-8';
-
 @import 'ljubenovic-toolkit';
 @import 'palette';
-
 $color-select-red: rgba(palette($red, 500), 1);
 $color-select-green: rgba(palette($green, 500), 1);
 $color-hover: rgba(palette($yellow, 500), 1);
@@ -14,14 +12,14 @@ $table-color: palette($blue-grey, 100);
 
 * {
     -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    margin: 0;
-    padding: 0;
-    font-family: Roboto;
+    -webkit-user-select  : none;
+    -khtml-user-select   : none;
+    -moz-user-select     : none;
+    -ms-user-select      : none;
+    user-select          : none;
+    margin               : 0;
+    padding              : 0;
+    font-family          : Roboto;
 }
 
 body {
@@ -30,32 +28,30 @@ body {
 
 h1 {
     font-family: 'Satisfy', cursive;
-    position: fixed;
-    top: 55px;
-    left: 50px;
-    margin: 0;
-    padding: 0;
-    font-size: 7em;
-    transform: rotate(-17deg);
-    color: $color-main-dark;
+    position   : fixed;
+    top        : 55px;
+    left       : 50px;
+    margin     : 0;
+    padding    : 0;
+    font-size  : 7em;
+    transform  : rotate(-17deg);
+    color      : $color-main-dark;
     text-shadow: 7px 7px 0 $color-main-light;
 }
 
 .tabla-wrapper {
-    margin: auto;
-    margin-top: 40px;
-    width: 80%;
-    border: black 2px solid;
-
-    display: flex;
+    margin         : 40px auto auto;
+    width          : 80%;
+    border         : black 2px solid;
+    display        : flex;
     justify-content: space-between;
-    align-items: center;
+    align-items    : center;
 }
 
 #tabla-id {
-    position: relative;
+    position        : relative;
     background-color: $table-color;
-    border-radius: 50%;
+    border-radius   : 50%;
 
     &.axial-visible .koordinate.cubic {
         display: none;
@@ -66,26 +62,25 @@ h1 {
     }
 
     &.sakrij-koordinate .koordinate {
-      display: none;
+        display: none;
     }
 }
 
 #stats {
-    width: 500px;
-    min-height: 500px;
-
-    display: flex;
-    flex-flow: column;
+    width          : 500px;
+    min-height     : 500px;
+    display        : flex;
+    flex-flow      : column;
     justify-content: space-around;
-    align-items: center;
+    align-items    : center;
 
     #selektirani {
-        min-height: 100px;
-        width: 100%;
-        display: flex;
-        flex-flow: column-reverse;
+        min-height     : 100px;
+        width          : 100%;
+        display        : flex;
+        flex-flow      : column-reverse;
         justify-content: flex-start;
-        align-items: center;
+        align-items    : center;
 
         li {
             display: block;
@@ -94,68 +89,68 @@ h1 {
 
     #na-redu {
         display: flex;
-        width: 100%;
+        width  : 100%;
 
         & > * {
             @include force-width(50%);
-            display: flex;
-            flex-flow: column;
+            display      : flex;
+            flex-flow    : column;
             align-content: center;
 
             input {
-                width: 85%;
-                margin: auto;
+                width           : 85%;
+                margin          : auto;
                 background-color: transparent;
-                border: none;
-                outline: none;
-                text-align: center;
-                font-family: Roboto;
-                font-weight: bold;
-                box-shadow: 0px 2px 0 0 rgba(black, .2);
-                font-size: 24px;
+                border          : none;
+                outline         : none;
+                text-align      : center;
+                font-family     : Roboto;
+                font-weight     : bold;
+                box-shadow      : 0 2px 0 0 rgba(black, .2);
+                font-size       : 24px;
             }
 
             span {
-                display: block;
-                width: 50px;
-                height: 50px;
-                margin: auto;
-                margin-top: 40px;
+                display         : block;
+                width           : 50px;
+                height          : 50px;
+                margin          : 40px auto auto;
                 background-color: gold;
-                text-align: center;
-                font-size: 0.5 * 50px;
-                line-height: 50px;
-                border-radius: 50%;
-                font-weight: bold;
-                position: relative;
+                text-align      : center;
+                font-size       : 0.5 * 50px;
+                line-height     : 50px;
+                border-radius   : 50%;
+                font-weight     : bold;
+                position        : relative;
             }
 
             &.trenutni-na-redu span {
                 transform: scale(1.1);
 
                 &::after {
-                    content: "";
-                    width:  0;
-                    height: 0;
-                    background-color: transparent;
-                    position: absolute;
-                    $top: 50px + 10px - 15px;
-                    top: $top;
-                    left: (50px - 30px)/2;
-                    border: 15px solid palette($green, 400);
-                    border-top-color: transparent;
-                    border-left-color: transparent;
+                    content           : "";
+                    width             : 0;
+                    height            : 0;
+                    background-color  : transparent;
+                    position          : absolute;
+                    $top              : 50px + 10px - 15px;
+                    top               : $top;
+                    left              : (50px - 30px)/2;
+                    border            : 15px solid palette($green, 400);
+                    border-top-color  : transparent;
+                    border-left-color : transparent;
                     border-right-color: transparent;
-                    transform: scaleY(1.4);
-                    animation: masu-nervira 1s ease infinite;
-
+                    transform         : scaleY(1.4);
+                    animation         : masu-nervira 1s ease infinite;
                     @keyframes masu-nervira {
                         0% {
                             top: $top;
                         }
+
                         66% {
                             top: $top + 10px;
                         }
+
                         100% {
                             top: $top;
                         }
@@ -166,35 +161,35 @@ h1 {
 
         #stats-x span {
             background-color: rgba(black, .9);
-            color: rgba(white, .7);
+            color           : rgba(white, .7);
         }
 
         #stats-o span {
             background-color: rgba(white, .9);
-            color: rgba(black, .7);
+            color           : rgba(black, .7);
         }
     }
 }
 
 .polje {
-    position: absolute;
+    position     : absolute;
     border-radius: 50%;
-    width:  65px;
-    height: 65px;
-		cursor: pointer;
-		transition: transform .2s ease;
+    width        : 65px;
+    height       : 65px;
+    cursor       : pointer;
+    transition   : transform 0.2s ease;
 
     &:hover {
-      	//box-shadow: 0px 0px 10px 5px rgba($color-hover, .2);
-				transform: scale(1.1);
+        //box-shadow: 0px 0px 10px 5px rgba($color-hover, .2);
+        transform: scale(1.1);
     }
 
     &.polje-x {
-      	background-color: rgba(black, .85);
+        background-color: rgba(black, .85);
 
-				.koordinate {
-					color: rgba(white, .7);
-				}
+        .koordinate {
+            color: rgba(white, .7);
+        }
     }
 
     &.polje-o {
@@ -205,74 +200,97 @@ h1 {
         background-color: rgba(black, .12);
     }
 
-		&.selektiran-lose {
-				box-shadow: 0px 0px 0px 8px $color-select-red inset;
-		}
+    &.selektiran-lose {
+        box-shadow: 0 0 0 8px $color-select-red inset;
+    }
 
     &.selektiran-dobro {
-				box-shadow: 0px 0px 0px 8px $color-select-green inset;
-		}
+        box-shadow: 0 0 0 8px $color-select-green inset;
+    }
 
-		.koordinate {
-		    position: absolute;
-		    bottom: 10%;
-		    width: 100%;
-		    text-align: center;
-		    font-size: .66em;
-		    font-family: Roboto;
-		    font-weight: bold;
-		    color: rgba(black, .5);
-		}
+    .koordinate {
+        position   : absolute;
+        bottom     : 10%;
+        width      : 100%;
+        text-align : center;
+        font-size  : 0.66em;
+        font-family: Roboto;
+        font-weight: bold;
+        color      : rgba(black, .5);
+    }
 }
 
 #smer-picker {
     position: absolute;
-    width: 5px;
-    height: 5px;
-    display: block;
-    bottom: 150px;
-    right: 150px;
+    width   : 5px;
+    height  : 5px;
+    display : block;
+    bottom  : 150px;
+    right   : 150px;
 
-		li {
-		    position: absolute;
-		    background-color: $color-main;
-		    color: white;
-		    width: 30px;
-		    height: 30px;
-		    line-height: 30px;
-		    font-family: Roboto;
-		    font-weight: bold;
-		    color: rgba(white, .85);
-		    display: block;
-		    border: solid 1px white;
-		    text-align: center;
-		}
+    li {
+        position        : absolute;
+        background-color: $color-main;
+        color           : white;
+        width           : 30px;
+        height          : 30px;
+        line-height     : 30px;
+        font-family     : Roboto;
+        font-weight     : bold;
+        color           : rgba(white, .85);
+        display         : block;
+        border          : solid 1px white;
+        text-align      : center;
+    }
 }
 
-#smer1 { top:    0px; left:  100px; }
-#smer2 { top: -100px; left:   70px; }
-#smer3 { top: -100px; left:  -70px; }
-#smer4 { top:    0px; left: -100px; }
-#smer5 { top:  100px; left:  -70px; }
-#smer6 { top:  100px; left:   70px; }
+#smer1 {
+    top : 0;
+    left: 100px;
+}
+
+#smer2 {
+    top : -100px;
+    left: 70px;
+}
+
+#smer3 {
+    top : -100px;
+    left: -70px;
+}
+
+#smer4 {
+    top : 0;
+    left: -100px;
+}
+
+#smer5 {
+    top : 100px;
+    left: -70px;
+}
+
+#smer6 {
+    top : 100px;
+    left: 70px;
+}
 
 #izgurani {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    height: 400px;
-    width: 130px;
+    position       : fixed;
+    top            : 10px;
+    right          : 10px;
+    display        : flex;
+    height         : 400px;
+    width          : 130px;
     justify-content: space-between;
 
-	* {
-		width: 50%;
-		display: flex;
-	    flex-flow: column;
-	}
+    * {
+        width    : 50%;
+        display  : flex;
+        flex-flow: column;
+    }
 
-	.polje {
-	  margin-bottom: 10px;
-	  position: static;
-	}
+    .polje {
+        margin-bottom: 10px;
+        position     : static;
+    }
 }

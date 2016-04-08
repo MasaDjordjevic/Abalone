@@ -1,5 +1,5 @@
 class Koordinata {
-    constructor (public x: number = 0, public y: number = 0, public z: number = 0) { }
+    constructor(public x: number = 0, public y: number = 0, public z: number = 0) { }
 }
 
 class Kamen {
@@ -9,9 +9,9 @@ class Kamen {
         public tabla: Tabla,
         public koordinata: Koordinata = new Koordinata(),
         public boja: string = '-'
-    ) { }
+        ) { }
 
-    stampaj(size:number = 67): void {
+    stampaj(size: number = 67): void {
         var kamen = document.createElement('div');
 
         // koji je znak na kamenu
@@ -23,12 +23,12 @@ class Kamen {
         var z = this.koordinata.z * size;
 
         var left = x + z / 2;
-        var top  = z;
+        var top = z;
         top -= this.koordinata.z * 9;
 
         // Korekcija da bude u centar
         //top  += (- size / 2 + 5 * size * Math.sqrt(3.0) / 2);
-        top  += (- size / 2 + 5 * size);
+        top += (- size / 2 + 5 * size);
         left += (- size / 2 + 5 * size);
 
         kamen.style.top = top.toString() + 'px';
@@ -53,32 +53,32 @@ class Kamen {
         }
     }
 
-    selektiraj(nacin:string = "-dobro") {
+    selektiraj(nacin: string = "-dobro") {
         this.div.classList.add('selektiran');
         this.div.classList.add('selektiran' + nacin);
     }
 
 
     deselektiraj() {
-      this.div.classList.remove('selektiran');
-      this.div.classList.remove('selektiran-lose');
-      this.div.classList.remove('selektiran-dobro');
+        this.div.classList.remove('selektiran');
+        this.div.classList.remove('selektiran-lose');
+        this.div.classList.remove('selektiran-dobro');
     }
 
     _onclick() {
         //ako je ukljucen striktni rezim i ako ti nisi na redu oboji -lose
-        if ((<HTMLInputElement>document.getElementsByName("strict-mode")[0]).checked){
-          var naRedu = document.getElementById("stats-x").classList.contains("trenutni-na-redu") ? "x" : "o";
-          if(naRedu == this.boja){
-              this.tabla.toggleKamen(this, "-dobro");
-          }
-          else{
-              this.tabla.toggleKamen(this, "-lose");
-          }
+        if ((<HTMLInputElement>document.getElementsByName("strict-mode")[0]).checked) {
+            var naRedu = document.getElementById("stats-x").classList.contains("trenutni-na-redu") ? "x" : "o";
+            if (naRedu == this.boja) {
+                this.tabla.toggleKamen(this, "-dobro");
+            }
+            else {
+                this.tabla.toggleKamen(this, "-lose");
+            }
 
         }
-        else{
-          this.tabla.toggleKamen(this);
+        else {
+            this.tabla.toggleKamen(this);
         }
 
 
@@ -127,18 +127,18 @@ class Tabla {
         document.getElementById('selektirani').innerHTML = '';
         var HTMLtabla = document.getElementById('tabla-id');
         HTMLtabla.innerHTML = '';
-        var size:number = 70; // velicina kamencica
+        var size: number = 70; // velicina kamencica
         for (var i = 0; i < this.polja.length; i++) {
             this.polja[i].stampaj(size);
         }
 
-        var width:number  = 2 * 5 * size;
+        var width: number = 2 * 5 * size;
         //var height:number = 5 * size * Math.sqrt(3.0);
-        HTMLtabla.style.width  = String(width) + "px";
+        HTMLtabla.style.width = String(width) + "px";
         HTMLtabla.style.height = String(width) + "px";
     }
 
-    toggleKamen(kamen: Kamen, nacin:string = "-dobro"): void {
+    toggleKamen(kamen: Kamen, nacin: string = "-dobro"): void {
         var index = this.selektirani.indexOf(kamen);
         if (index == -1) {
             // nema ga
@@ -158,7 +158,7 @@ class Tabla {
         document.getElementById('selektirani').innerHTML = string;
     }
 
-    selektirajKamen(kamen: Kamen, nacin:string): void {
+    selektirajKamen(kamen: Kamen, nacin: string): void {
         // var size = this.selektirani.filter(function(value) {return value !== undefined}).length;
         if (this.selektirani.length >= 3) {
             this.selektirani[0].deselektiraj();
@@ -184,10 +184,10 @@ class Tabla {
         for (var i = 0; i < Math.min(tabla.polja.length, s.length); i++) {
             tabla.polja[i].boja = s[i];
             if (s[i] == 'x' || s[i] == 'X') {
-              brojX++;
+                brojX++;
             }
             if (s[i] == 'o' || s[i] == 'O') {
-              brojO++;
+                brojO++;
             }
         }
 
