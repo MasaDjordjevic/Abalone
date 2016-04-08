@@ -186,8 +186,8 @@
 ;;; ultimate brisanje nilova
 (defun obrisi-nil (lista)
   (cond ((null lista) '())
-        ((and (listp (car lista)) (=(length (car lista)))) (obrisi '() (cdr lista)))
-        (t (cons (car lista) (obrisi '() (cdr lista))))))
+        ((and (listp (car lista)) (=(length (car lista)))) (obrisi-nil (cdr lista)))
+        (t (cons (car lista) (obrisi-nil (cdr lista))))))
 
 ;;; Test na ciljno stanje.
 ;;; Ocekuje cvorove.
