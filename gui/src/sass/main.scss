@@ -41,11 +41,12 @@ h1 {
 
 .tabla-wrapper {
     margin         : 40px auto auto;
-    width          : 80%;
+    width          : 1280px;
     border         : black 2px solid;
     display        : flex;
     justify-content: space-between;
-    align-items    : center;
+    align-items    : stretch;
+    position       : relative;
 }
 
 #tabla-id {
@@ -63,6 +64,11 @@ h1 {
 
     &.sakrij-koordinate .koordinate {
         display: none;
+    }
+
+    .polje:hover {
+        //box-shadow: 0px 0px 10px 5px rgba($color-hover, .2);
+        transform: scale(1.1);
     }
 }
 
@@ -179,11 +185,6 @@ h1 {
     cursor       : pointer;
     transition   : transform 0.2s ease;
 
-    &:hover {
-        //box-shadow: 0px 0px 10px 5px rgba($color-hover, .2);
-        transform: scale(1.1);
-    }
-
     &.polje-x {
         background-color: rgba(black, .85);
 
@@ -219,59 +220,81 @@ h1 {
         color      : rgba(black, .5);
     }
 }
+$smer-picker-size: 110px;
+$smer-picker-li-size: 45px;
+
+#smer-picker-wrapper {
+    width          : 2 * $smer-picker-size + $smer-picker-li-size;
+    height         : 2 * $smer-picker-size + $smer-picker-li-size;
+    padding        : 10px;
+    position       : relative;
+    display        : flex;
+    justify-content: center;
+    align-items    : center;
+}
 
 #smer-picker {
-    position: absolute;
-    width   : 5px;
-    height  : 5px;
+    width   : 0;
+    height  : 0;
     display : block;
-    bottom  : 150px;
-    right   : 150px;
+    position: relative;
 
     li {
         position        : absolute;
         background-color: $color-main;
         color           : white;
-        width           : 30px;
-        height          : 30px;
-        line-height     : 30px;
+        width           : $smer-picker-li-size;
+        height          : $smer-picker-li-size;
+        line-height     : $smer-picker-li-size;
         font-family     : Roboto;
         font-weight     : bold;
         color           : rgba(white, .85);
         display         : block;
         border          : solid 1px white;
         text-align      : center;
+        border-radius   : 50%;
+        cursor          : pointer;
+
+        &:hover {
+            background-color: lighten($color-main, 10);
+        }
     }
 }
 
 #smer1 {
     top : 0;
     left: 100px;
+    @include fingertip(7, 0, 0, $smer-picker-size, 0deg, $smer-picker-li-size, $smer-picker-li-size);
 }
 
 #smer2 {
     top : -100px;
     left: 70px;
+    @include fingertip(7, 0, 0, $smer-picker-size, -60deg, $smer-picker-li-size, $smer-picker-li-size);
 }
 
 #smer3 {
     top : -100px;
     left: -70px;
+    @include fingertip(7, 0, 0, $smer-picker-size, -120deg, $smer-picker-li-size, $smer-picker-li-size);
 }
 
 #smer4 {
     top : 0;
     left: -100px;
+    @include fingertip(7, 0, 0, $smer-picker-size, 180deg, $smer-picker-li-size, $smer-picker-li-size);
 }
 
 #smer5 {
     top : 100px;
     left: -70px;
+    @include fingertip(7, 0, 0, $smer-picker-size, 120deg, $smer-picker-li-size, $smer-picker-li-size);
 }
 
 #smer6 {
     top : 100px;
     left: 70px;
+    @include fingertip(7, 0, 0, $smer-picker-size, 60deg, $smer-picker-li-size, $smer-picker-li-size);
 }
 
 #izgurani {
