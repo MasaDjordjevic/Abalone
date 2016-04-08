@@ -381,6 +381,7 @@
 (defun pozicije-u-cvorove (kameni tabla)
   (mapcar (lambda (x) (append (list x) (list (znak x tabla)))) kameni))
 
+
 ;;; Trasformise ((0 4 -4) "x") u (0 4 -4).
 (defun cvorovi-u-pozicije (cvorovi) (mapcar 'car cvorovi))
 
@@ -450,11 +451,59 @@
                     ( t '()))))))
 
 
+;;; ocekuje cvorove
+(defun nadji-sve-moguce-poteze (tabla znak)
+  (let* ((jedan (izdvoji-sve-istog-znaka tabla znak))
+         (a (format t "Jedan: ~s~%" jedan))
+         (dva (jedni-sa-susedima jedan tabla))
+         (a (format t "Dva: ~s~%" dva))) 
+  ))
+
+
+;;; lista moze da bude i tabla
+(defun izdvoji-sve-istog-znaka (lista znak)
+  (cond ((null lista) '())
+        ((equal (cadar lista) znak) (cons (car lista) (izdvoji-sve-istog-znaka (cdr lista) znak)))
+        (t (izdvoji-sve-istog-znaka (cdr lista) znak))))
+
+(defun susedi-istog-znaka (tabla cvor)
+  (let* ((susedi (kreiraj-susede (car cvor)))
+         (susedi (pozicije-u-cvorove susedi tabla)))         
+    (izdvoji-sve-istog-znaka susedi (cadr cvor))))
+
+(defun jedni-sa-susedima (lista tabla)
+  (cond ((null lista) '())
+        (t (dopuni-listu (jedan-sa-susedima (car lista) tabla) (jedni-sa-susedima (cdr lista) tabla)))))
+
+(defun jedan-sa-susedima (cvor tabla)
+  (let* ((susedi (susedi-istog-znaka tabla cvor))
+         (resenje (jedan-sa-svakim cvor susedi)))
+    (mapcar (lambda (x) (sortiraj x 'op-poredjenja)) resenje))) 
+    
+         
+
+(defun jedan-sa-svakim (el lista)
+  (cond ((null lista) '())
+        (t (append (list (list el (car lista))) (jedan-sa-svakim el (cdr lista))))))
+  
+         
+       
+  
+
+
+                  
 
 
 
 
+(defun stampa1 (i n lp)
+  (cond ((null lp) '())
+        ((equal i n) (progn (format t "~%") (stampa1 0 n lp)))
+        (t (progn (format t "~a " (car lp)) (stampa1 (1+ i) n (cdr lp))))))
 
+
+(defun stampa (l)
+  (stampa1 0 7 l))
 
 
 (defparameter *tabla*
