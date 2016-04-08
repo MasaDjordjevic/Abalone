@@ -41,7 +41,6 @@
 
 
 ;;; Na LISTU dodaje SUSEDE tako da elementi LISTE ostanu jedinstveni.
-;;; Ova funkcija se nigde ne poziva.
 (defun dopuni-listu (susedi lista)
   (cond ((null susedi) lista )
         ((clanp (car susedi) lista) (dopuni-listu (cdr susedi) lista))
@@ -183,7 +182,12 @@
   (cond ((= 0 n) '())
         (t (concatenate 'string '" " (napravi-razmak (- n 1))))))
 
-;;; TESTIRAJ:
+
+;;; ultimate brisanje nilova
+(defun obrisi-nil (lista)
+  (cond ((null lista) '())
+        ((and (listp (car lista)) (=(length (car lista)))) (obrisi '() (cdr lista)))
+        (t (cons (car lista) (obrisi '() (cdr lista))))))
 
 ;;; Test na ciljno stanje.
 ;;; Ocekuje cvorove.
@@ -356,9 +360,10 @@
          (brojKamena (length kameni))
          (susedi (nadji-susedna-n-usg prviKamen smer tabla brojKamena))
          (suprotanZnak (if (equal (znak (car kameni) tabla) "x") "o" "x"))
-         (a (format t "prviKamen: ~s~%brojKamena: ~s~%susedi: ~s~%suprotanZnak: ~s~%" prviKamen brojKamena susedi suprotanZnak))
+         ;(a (format t "prviKamen: ~s~%brojKamena: ~s~%susedi: ~s~%suprotanZnak: ~s~%" prviKamen brojKamena susedi suprotanZnak))
         )
-    (cond ((and (equal (car susedi) suprotanZnak)
+    (cond ((= 1 brojKamena) '())
+          ((and (equal (car susedi) suprotanZnak)
                 (member (cadr susedi) '("-" '() NIL))) 't)
           ((and (= 3 brojKamena)
                 (equal (car susedi) suprotanZnak)
@@ -379,7 +384,7 @@
 
 ;;; Transformise (0 4 -4) u ((0 4 -4) "x").
 (defun pozicije-u-cvorove (kameni tabla)
-  (mapcar (lambda (x) (append (list x) (list (znak x tabla)))) kameni))
+  (mapcar (lambda (x) (list x (znak x tabla))) kameni))
 
 ;;; Trasformise ((0 4 -4) "x") u (0 4 -4).
 (defun cvorovi-u-pozicije (cvorovi) (mapcar 'car cvorovi))
@@ -415,11 +420,11 @@
          (susedi (nadji-susedna-n-usg-koord prviKamen smer tabla brojKamena))
          (susedi (sredi-susede-pom susedi))
          (susedi (cvorovi-u-pozicije susedi))
-         (a (FORMAT T "~s~%" tabla))
+         ;(a (FORMAT T "~s~%" tabla))
          (tabla (potez-pomeraj-usg susedi (nova-pozicija susedi smer) tabla (kontra-znak mojZnak)))
-         (a (FORMAT T "~s~%" tabla))
+         ;(a (FORMAT T "~s~%" tabla))
          (tabla (potez-pomeraj-usg staraPozicija novaPozicija tabla mojZnak))
-         (a (FORMAT T "~s~%" tabla))
+         ;(a (FORMAT T "~s~%" tabla))
 )
     tabla))
 
@@ -438,8 +443,8 @@
                    (kameni (sortiraj kameni 'op-poredjenja-koord-samo))
                    (smerGuranja (smer-guranja-p kameni smer))
                    (mojZnak (znak (car kameni) tabla))
-                   (b (format t "novaPoz: ~s~%smerGuranja: ~s~%mojZnak: ~s~%" novaPoz smerGuranja mojZnak))
-                   (c (format t "f-ja:~s~%equal:~s~%"  (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)) (equalp "-" (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)))))
+                   ;(b (format t "novaPoz: ~s~%smerGuranja: ~s~%mojZnak: ~s~%" novaPoz smerGuranja mojZnak))
+                   ;(c (format t "f-ja:~s~%equal:~s~%"  (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)) (equalp "-" (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)))))
                   )
               (cond ((not (natabli-p novaPoz (velicina-table tabla))) '()) ;nova pozicija je van table
                     ((and (not smerGuranja) (equalp "-" (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)))) (potez-zamena kameni novaPoz tabla mojZnak)) ;ukoliko nije izguravanje mora da se pomeri na prazno polje
@@ -451,10 +456,99 @@
 
 
 
+;;; lista moze da bude i tabla
+(defun izdvoji-sve-istog-znaka (lista znak)
+  (cond ((null lista) '())
+        ((equal (cadar lista) znak) (cons (car lista) (izdvoji-sve-istog-znaka (cdr lista) znak)))
+        (t (izdvoji-sve-istog-znaka (cdr lista) znak))))
+
+(defun susedi-istog-znaka (tabla cvor)
+  (let* ((susedi (kreiraj-susede (car cvor)))
+         (susedi (pozicije-u-cvorove susedi tabla)))         
+    (izdvoji-sve-istog-znaka susedi (cadr cvor))))
+
+(defun jedan-sa-svakim (el lista)
+  (cond ((null lista) '())
+        (t (append (list (list el (car lista))) (jedan-sa-svakim el (cdr lista))))))
+
+(defun jedan-sa-susedima (cvor tabla)
+  (let* ((susedi (susedi-istog-znaka tabla cvor))
+         (resenje (jedan-sa-svakim cvor susedi)))
+    (mapcar (lambda (x) (sortiraj x 'op-poredjenja)) resenje))) 
+
+(defun jedni-sa-susedima (lista tabla)
+  (cond ((null lista) '())
+        (t (dopuni-listu (jedan-sa-susedima (caar lista) tabla) (jedni-sa-susedima (cdr lista) tabla)))))
+
+;;; ocekuje listu ciji su elementi liste od po dva susedna cvora istog znaka
+(defun dodaj-sve-trece (lista tabla)
+  (cond ((null lista) '())
+        ((istogznaka-p (car (dodaj-trece (car lista) tabla))) (dopuni-listu (list (car (dodaj-trece (car lista) tabla))) (dodaj-sve-trece (cdr lista) tabla)))
+        ((istogznaka-p (cadr (dodaj-trece (car lista) tabla))) (dopuni-listu (cdr (dodaj-trece (car lista) tabla)) (dodaj-sve-trece (cdr lista) tabla)))
+        (t (dodaj-sve-trece (cdr lista) tabla))))  
+
+;;; lista je lista od dva susedna cvora istog znaka
+(defun dodaj-trece (lista tabla)
+  (let* ((a (caar lista))
+         (b (caadr lista))        
+         (resenje1 (loop for p in a
+                         for q in b
+                       collect (+ p (- p q))))
+         (resenje2 (loop for q in a
+                         for p in b
+                       collect  (+ p (- p q))))
+         (resenje1 (pozicije-u-cvorove (list resenje1) tabla))
+         (resenje2 (pozicije-u-cvorove (list resenje2) tabla))
+         (resenje (list (append lista resenje1) (append lista resenje2))))
+    (mapcar (lambda (x) (sortiraj x 'op-poredjenja)) resenje))) 
+
+;;; ocekuje cvorove
+(defun nadji-sve-potezabilne-kamenove (tabla znak)
+  (let* ((jedan (izdvoji-sve-istog-znaka tabla znak))
+         (jedan (mapcar (lambda (x) (list x)) jedan))
+         ;(a (format t "Jedan: ~s~%" jedan))
+         (dva (jedni-sa-susedima jedan tabla))
+         ;(a (format t "Dva: ~s~%" dva))
+         (tri (dodaj-sve-trece dva tabla))         
+         ;(a (format t "Tri: ~s~%" tri))
+         )
+    (append jedan dva tri)))
+
+
+(defun nadji-sve-poteze (tabla znak)
+  (let* ((potezabilni (nadji-sve-potezabilne-kamenove tabla znak))
+         (potezabilni (mapcar (lambda (x) (cvorovi-u-pozicije x)) potezabilni))
+         ;(potezabilni (last potezabilni '6))
+         ;(a (format t "Potezabilni: ~s~%" potezabilni))
+         (stanja (loop for smer in '(1 2 3 4 5 6)                       
+                     append (mapcar (lambda (x) (odigraj-potez x smer tabla)) potezabilni)))
+         (stanja (remove NIL stanja))         
+         ;(a (format t "stanja: ~s~%" stanja))      
+         )
+    (dolist (stanje stanja)
+           (print (stampaj stanje)))))
+          
+
+  
+         
+     
+  
+  
+         
+       
+  
 
 
 
 
+(defun stampa1 (i n lp)
+  (cond ((null lp) '())
+        ((equal i n) (progn (format t "~%") (stampa1 0 n lp)))
+        (t (progn (format t "~a " (car lp)) (stampa1 (1+ i) n (cdr lp))))))
+
+
+(defun stampa (l)
+  (stampa1 0 6 l))
 
 
 (defparameter *tabla*
