@@ -15,8 +15,10 @@ $color-white-marble: palette($blue-grey, 50);
 $color-black-marble: palette($blue-grey, 900);
 $color-no-marble: palette($blue-grey, 200);
 /**/
-$color-select-disallowed: rgba(palette($red, 400), 1);
-$color-select-allowed: rgba(palette($green, 400), 1);
+$color-select-disallowed: rgba(palette($red, 300), .7);
+$color-select-allowed: rgba(palette($green, 300), .7);
+/**/
+$marble-size: 65px;
 
 * {
     -webkit-touch-callout: none;
@@ -209,7 +211,6 @@ input:disabled {
     }
 
     .polje:hover {
-        //box-shadow: 0px 0px 10px 5px rgba($color-hover, .2);
         transform: scale(1.1);
     }
 }
@@ -285,7 +286,7 @@ input:disabled {
                     $top              : 50px + 10px - 15px;
                     top               : $top;
                     left              : (50px - 30px)/2;
-                    border            : 15px solid palette($green, 400);
+                    border            : 15px solid $color-main;
                     border-top-color  : transparent;
                     border-left-color : transparent;
                     border-right-color: transparent;
@@ -323,16 +324,33 @@ input:disabled {
 .polje {
     position     : absolute;
     border-radius: 50%;
-    width        : 65px;
-    height       : 65px;
+    width        : $marble-size;
+    height       : $marble-size;
     cursor       : pointer;
-    transition   : transform 0.2s ease;
+    transition   : all 0.2s ease;
+
+    .koordinate {
+        position   : absolute;
+        width      : $marble-size;
+        height     : $marble-size;
+        line-height: $marble-size;
+        text-align : center;
+        font-size  : 0.66em;
+        font-family: Roboto;
+        font-weight: bold;
+        color      : rgba(black, .35);
+
+        &.axial::first-letter {
+            display     : inline-block;
+            margin-right: 1px;
+        }
+    }
 
     &.polje-x {
         background-color: $color-black-marble;
 
         .koordinate {
-            color: rgba(white, .7);
+            color: rgba(white, .5);
         }
     }
 
@@ -352,8 +370,8 @@ input:disabled {
 
     &.selektiran::before {
         content      : "";
-        width        : 65px;
-        height       : 65px;
+        width        : $marble-size;
+        height       : $marble-size;
         position     : absolute;
         top          : 0;
         left         : 0;
@@ -388,17 +406,6 @@ input:disabled {
         &.polje--::before {
             box-shadow: 0 0 0 $small-circle $color-no-marble inset, 0 0 0 $big-circle $color-select-allowed inset;
         }
-    }
-
-    .koordinate {
-        position   : absolute;
-        bottom     : 10%;
-        width      : 100%;
-        text-align : center;
-        font-size  : 0.66em;
-        font-family: Roboto;
-        font-weight: bold;
-        color      : rgba(black, .5);
     }
 }
 $smer-picker-size: 110px;
