@@ -201,7 +201,8 @@
         (t (prebroji znak (cdr tabla)))))
 
 
-
+;;; Vrati suprotan znak.
+(defun suprotan-znak (znak) (if (equal znak "x") "o" "x"))
 
 
 
@@ -421,7 +422,7 @@
          (susedi (sredi-susede-pom susedi))
          (susedi (cvorovi-u-pozicije susedi))
          ;(a (FORMAT T "~s~%" tabla))
-         (tabla (potez-pomeraj-usg susedi (nova-pozicija susedi smer) tabla (kontra-znak mojZnak)))
+         (tabla (potez-pomeraj-usg susedi (nova-pozicija susedi smer) tabla (suprotan-znak mojZnak)))
          ;(a (FORMAT T "~s~%" tabla))
          (tabla (potez-pomeraj-usg staraPozicija novaPozicija tabla mojZnak))
          ;(a (FORMAT T "~s~%" tabla))
@@ -433,8 +434,6 @@
   (cond ((null susedi) '())
         ((not (clanp (cadar susedi) '( "-" '())   )) (cons (car susedi) (sredi-susede-pom (cdr susedi))))
         (t '())))
-
-(defun kontra-znak (znak) (if (equal znak "x") "o" "x"))
 
 (defun odigraj-potez (kameni smer tabla)
    (cond ((not (legalan-unos-p kameni tabla)) '())
@@ -527,16 +526,126 @@
          )
     (dolist (stanje stanja)
            (print (stampaj stanje)))))
-          
 
-  
-         
-     
-  
-  
-         
-       
-  
+
+
+
+
+
+(defun string-u-tabla (string) 
+     (string-u-tabla-1 string (kreiraj-koordinate '((0 0 0)) '() 5)))
+            
+(defun string-u-tabla-1 (string tabla)
+  (cond ((null tabla) '())
+        (t (cons (list (car tabla) (format nil "~a" (char string 0)))
+                 (string-u-tabla-1 (subseq string 1 (length string)) (cdr tabla))))))
+
+
+
+
+
+
+
+
+
+;;; heuristika
+
+;;; Ocekuje koordinate.
+(defun rastojanje (kamen1 kamen2)
+  (max (abs (- (car kamen1) (car kamen2)))
+       (abs (- (cadr kamen1) (cadr kamen2)))
+       (abs (- (caddr kamen1) (caddr kamen2)))))
+
+;;; Ocekuje koordinate.
+(defun rastojanje-centar (kamen)
+  (rastojanje kamen '(0 0 0)))
+
+;;; Ocekuje koordinate.
+(defun rastojanje-do-svih (kamen lista)
+  (cond ((null lista) '0)
+        (t (+ (rastojanje kamen (car lista)) (rastojanje-do-svih kamen (cdr lista))))))
+
+;;; Ocekuje koordinate.
+(defun prosecno-rastojanje-do-svih (kamen lista)
+  (cond ((= (length lista) 0) 0)
+        ((= (length lista) 1) (rastojanje kamen (car lista)))
+        (t (/ (rastojanje-do-svih kamen lista) (if (member kamen lista)
+                                          (1- (length lista))
+                                        (length lista))))))
+
+;;; Ocekuje koordinate.
+(defun prosecno-rastojanje-do-centra (lista)  
+  (cond ((= (length lista) 0) 0)
+        ((= (length lista) 1) (rastojanje-centar (car lista)))
+        (t (/ (rastojanje-do-svih '(0 0 0) lista) (length lista)))))
+
+;;; Ocekuje cvorove.
+(defun broj-izguranih (znak tabla)
+  (- 14 (prebroji znak tabla)))
+
+;;; Ocekuje cvorove.
+(defun pobeda-p (znak tabla)
+  (<= (prebroji znak tabla) 8))
+
+;;; Ocekuje cvorove.
+(defun h-pobeda (znak tabla faktor)
+  (cond ((pobeda-p znak tabla) faktor)
+        ((pobeda-p (suprotan-znak znak) tabla) (- 0 faktor))
+        (t 0)))
+
+;;; Ocekuje cvorove.
+(defun h-izgurani (znak tabla faktor)
+  (* (- (broj-izguranih (suprotan-znak znak) tabla) (broj-izguranih znak tabla)) faktor))
+
+;;; Ocekuje cvorove.
+(defun h-centar (znak tabla faktor)
+  (* (- (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla znak)))
+        (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla (suprotan-znak znak))))) faktor))
+
+;;; Ocekuje cvorove.
+(defun h-grupisanje-1 (lista svi)
+  (cond ((null lista) '0)
+        (t (+ (prosecno-rastojanje-do-svih (car lista) svi) (h-grupisanje-1 (cdr lista) svi)))))
+
+;;; Ocekuje cvorove.
+(defun h-grupisanje (znak tabla faktor)
+  (let* ((svi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla znak)))
+         (svi-njegovi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla (suprotan-znak znak)))))
+    (* (- (h-grupisanje-1 svi svi) (h-grupisanje-1 svi-njegovi svi-njegovi)) faktor)))
+      
+
+;;; Ocekuje cvorove.
+(defun heuristika-parametri (znak tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
+  (+ (h-pobeda znak tabla faktor-pobeda)
+     (h-izgurani znak tabla faktor-izgurani)
+     (h-centar znak tabla faktor-centar)
+     (h-grupisanje znak tabla faktor-grupisanje)))
+
+(defun deskriptivna-heuristika (znak tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
+  (format t "Pobeda: ~s~%Izgurani: ~s~%Centar: ~s~%Grupisanje: ~s~%Zbir: ~s~%"
+    (float (h-pobeda znak tabla faktor-pobeda))
+    (float (h-izgurani znak tabla faktor-izgurani))
+    (float (h-centar znak tabla faktor-centar))
+    (float (h-grupisanje znak tabla faktor-grupisanje))
+    (float (heuristika-parametri znak tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje))))
+
+(defun heuristika (znak tabla)
+  (float (heuristika-parametri znak tabla 999999999 100 10 30)))
+
+
+(defun heuristika-ajax-1 (znak tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
+  (let* ((tabla (string-u-tabla tabla)))
+    (format t "Pobeda: ~s~%Izgurani: ~s~%Centar: ~s~%Grupisanje: ~s~%Zbir: ~s~%"
+      (float (h-pobeda znak tabla faktor-pobeda))
+      (float (h-izgurani znak tabla faktor-izgurani))
+      (float (h-centar znak tabla faktor-centar))
+      (float (h-grupisanje znak tabla faktor-grupisanje))
+      (float (heuristika-parametri znak tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)))))
+
+
+
+
+
 
 
 
@@ -560,6 +669,23 @@
 
 (defparameter *ajax-processor*
   (make-instance 'ajax-processor :server-uri "/repl-api"))
+
+
+(defun-ajax heuristikaAJAX (data) (*ajax-processor* :callback-data :response-text)
+  (let* ((znak data)
+         (tabla *tabla*)
+         (faktor-pobeda 1)
+         (faktor-izgurani 1)
+         (faktor-centar 1)
+         (faktor-grupisanje 1))
+    (format nil "Znak: ~s~%Pobeda: ~s~%Izgurani: ~s~%Centar: ~s~%Grupisanje: ~s~%Zbir: ~s~%"
+      znak
+      (float (h-pobeda znak tabla faktor-pobeda))
+      (float (h-izgurani znak tabla faktor-izgurani))
+      (float (h-centar znak tabla faktor-centar))
+      (float (h-grupisanje znak tabla faktor-grupisanje))
+      (float (heuristika-parametri znak tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)))))
+
 
 (defun-ajax echo (data) (*ajax-processor* :callback-data :response-text)
   (let (
