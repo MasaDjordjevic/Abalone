@@ -1,14 +1,22 @@
 @charset 'utf-8';
 @import 'ljubenovic-toolkit';
 @import 'palette';
-$color-select-red: rgba(palette($red, 500), 1);
-$color-select-green: rgba(palette($green, 500), 1);
+/**/
+$color: $light-green;
+$background: $blue-grey;
+/**/
 $color-hover: rgba(palette($yellow, 500), 1);
-$color-main: palette($light-green);
-$color-main-dark: palette($light-green, 700);
-$color-main-light: palette($light-green, 200);
-$background-color: palette($blue-grey, 50);
-$table-color: palette($blue-grey, 100);
+$color-main: palette($color);
+$color-main-dark: palette($color, 700);
+$color-main-light: palette($color, 200);
+$background-color: palette($background, 50);
+$table-color: palette($background, 100);
+$color-white-marble: palette($blue-grey, 50);
+$color-black-marble: palette($blue-grey, 900);
+$color-no-marble: palette($blue-grey, 200);
+/**/
+$color-select-disallowed: rgba(palette($red, 400), 1);
+$color-select-allowed: rgba(palette($green, 400), 1);
 
 * {
     -webkit-touch-callout: none;
@@ -24,6 +32,12 @@ $table-color: palette($blue-grey, 100);
 
 body {
     background-color: $background-color;
+    display         : flex;
+    flex-direction  : column;
+    justify-content : flex-start;
+    align-content   : center;
+    width           : 1280px;
+    margin          : 40px auto auto;
 }
 
 h1 {
@@ -39,10 +53,138 @@ h1 {
     text-shadow: 7px 7px 0 $color-main-light;
 }
 
+#config-button {
+    position   : absolute;
+    bottom     : 10px;
+    left       : 10px;
+    $s         : 60px;
+    width      : $s;
+    height     : $s;
+    color      : rgba(white, 1);
+    text-shadow: 0 1px 2px rgba(black, .15);
+    transition : all 1s;
+    cursor     : pointer;
+
+    & > i {
+        display    : block;
+        width      : $s;
+        height     : $s;
+        line-height: $s;
+        font-size  : 0.66 * $s;
+        text-align : center;
+    }
+
+    &:hover {
+        animation-name           : vrti-se;
+        animation-duration       : 4s;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+        text-shadow              : 0 0 2px rgba(black, .2);
+        @keyframes vrti-se {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    }
+}
+
+#config {
+    width           : 100%;
+    background-color: rgba(white, .3);
+    box-shadow      : 0 0 0 3px rgba(white, .6);
+    overflow        : hidden;
+    transition      : height 0.33s, opacity 0.33s;
+    height          : 80px;
+    border-radius   : 15px;
+    opacity         : 1;
+    margin          : 30px 10px 10px;
+    padding         : 10px;
+    box-sizing      : border-box;
+
+    &.hidden {
+        height : 0;
+        opacity: 0;
+    }
+
+    input[name="radio-koordinate"] {
+        margin-left: 20px;
+    }
+}
+$input-button-size: 22px;
+$ratio: 0.6;
+
+input:not([type="text"]) {
+    display: none;
+
+    &+label {
+        padding    : 3px 6px;
+        margin-left: $input-button-size;
+        height     : $input-button-size;
+        line-height: $input-button-size;
+        display    : inline-block;
+        position   : relative;
+        transition : opacity 0.33s; // zbog disablovanja
+        color      : rgba(black, .7);
+
+        &::before {
+            content    : "";
+            display    : block;
+            position   : absolute;
+            left       : -$input-button-size;
+            width      : $ratio * $input-button-size;
+            height     : $ratio * $input-button-size;
+            margin-left: (1 - $ratio) / 2 * $input-button-size;
+            margin-top : (1 - $ratio) / 2 * $input-button-size;
+            transition : all 0.33s;
+        }
+    }
+
+    &:checked+label::before {}
+}
+
+input[type="checkbox"] {
+    &+label::before {
+        box-shadow: 0 0 0 2px rgba(black, .2) inset;
+    }
+
+    &:checked+label::before {
+        transform : rotate(-45deg);
+        height    : $ratio * $input-button-size * 0.5;
+        margin-top: (1 - $ratio) / 2 * $input-button-size + 2px;
+        box-shadow: 3px -3px 0 0 rgba($color-main, 1) inset;
+    }
+}
+
+input[type="radio"] {
+    &+label {
+        font-style: italic;
+    }
+
+    &+label::before {
+        border-radius: 50%;
+        box-shadow   : 0 0 0 2px rgba(black, .2) inset;
+    }
+
+    &:checked+label::before {
+        box-shadow: 0 0 0 1px+$ratio*$input-button-size/2 rgba($color-main, 1) inset;
+    }
+}
+
+input:disabled {
+    opacity: 0.5;
+
+    &+label {
+        opacity: 0.5;
+    }
+}
+
 .tabla-wrapper {
-    margin         : 40px auto auto;
-    width          : 1280px;
-    border         : black 2px solid;
+    width          : 100%;
+    //border         : black 2px solid;
     display        : flex;
     justify-content: space-between;
     align-items    : stretch;
@@ -117,6 +259,7 @@ h1 {
             }
 
             span {
+                @include z-depth(1);
                 display         : block;
                 width           : 50px;
                 height          : 50px;
@@ -186,7 +329,7 @@ h1 {
     transition   : transform 0.2s ease;
 
     &.polje-x {
-        background-color: rgba(black, .85);
+        background-color: $color-black-marble;
 
         .koordinate {
             color: rgba(white, .7);
@@ -194,19 +337,25 @@ h1 {
     }
 
     &.polje-o {
-        background-color: rgba(white, .85);
+        background-color: $color-white-marble;
+    }
+
+    &.polje-o,
+    &.polje-x {
+        @include z-depth(1);
     }
 
     &.polje-- {
-        background-color: rgba(black, .12);
+        background-color: $color-no-marble;
+        opacity         : 0.5;
     }
 
     &.selektiran-lose {
-        box-shadow: 0 0 0 8px $color-select-red inset;
+        box-shadow: 0 0 0 8px $color-select-disallowed inset, 0 0 0 12px black inset;
     }
 
     &.selektiran-dobro {
-        box-shadow: 0 0 0 8px $color-select-green inset;
+        box-shadow: 0 0 0 8px $color-select-allowed inset;
     }
 
     .koordinate {
@@ -298,22 +447,28 @@ $smer-picker-li-size: 45px;
 }
 
 #izgurani {
-    position       : fixed;
-    top            : 10px;
-    right          : 10px;
     display        : flex;
-    height         : 400px;
-    width          : 130px;
     justify-content: space-between;
+    width          : 100%;
+    @include force-height(50px);
 
-    * {
+    & > * {
         width    : 50%;
         display  : flex;
-        flex-flow: column;
+        flex-flow: row;
+        flex-wrap: wrap;
+    }
+
+    #izgurani-o {
+        justify-content: flex-end;
     }
 
     .polje {
-        margin-bottom: 10px;
-        position     : static;
+        $s      : 40px;
+        width   : $s;
+        height  : $s;
+        margin  : 3px;
+        position: static;
+        cursor  : default;
     }
 }

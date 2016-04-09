@@ -124,7 +124,10 @@ class Tabla {
 
     nacrtaj(): void {
         this.selektirani = [];
-        document.getElementById('selektirani').innerHTML = '';
+        var HTMLselektirani = document.getElementById('selektirani');
+        if (HTMLselektirani !== null) {
+            HTMLselektirani.innerHTML = '';
+        }
         var HTMLtabla = document.getElementById('tabla-id');
         HTMLtabla.innerHTML = '';
         var size: number = 70; // velicina kamencica
@@ -155,7 +158,8 @@ class Tabla {
             string += tabla.selektirani[i].koordinata.x + ', ' + tabla.selektirani[i].koordinata.y + ', ' + tabla.selektirani[i].koordinata.z;
             string += '</li>';
         }
-        document.getElementById('selektirani').innerHTML = string;
+        if (document.getElementById('selektirani') !== null)
+            document.getElementById('selektirani').innerHTML = string;
     }
 
     selektirajKamen(kamen: Kamen, nacin: string): void {

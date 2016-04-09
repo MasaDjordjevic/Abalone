@@ -69,6 +69,10 @@ window.onload = function() {
     radioKoord[1].addEventListener('change', function(event) {
         tablaHTML.classList.toggle('axial-visible');
     });
+
+    document.getElementById("config-button").addEventListener('click', function() {
+        document.getElementById("config").classList.toggle("hidden");
+    });
 }
 
 document.onkeypress = function(e) {

@@ -5,8 +5,9 @@
       <meta charset="utf-8">
       <title>Projekat Školjka -- GUI</title>
       <!-- External -->
-      <link href='https://fonts.googleapis.com/css?family=Roboto:400,700|Satisfy&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+      <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,400italic|Satisfy&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
       <!-- CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
       <link rel="stylesheet" type="text/css" href="compiled/index.css">
       <!-- JS -->
       <script type="text/javascript" src="compiled/server.js"></script>
@@ -16,13 +17,11 @@
 
   <body>
     <h1>Abalone</h1>
-    <div id="izgurani">
-      <div id="izgurani-x"><div class="polje polje-x"></div><div class="polje polje-x"></div><div class="polje polje-x"></div></div>
-      <div id="izgurani-o"><div class="polje polje-x"></div></div>
-    </div>
 
     <div class="tabla-wrapper">
       <div id="tabla-id"></div>
+
+      <div id="config-button"><i class="fa fa-cog"></i></div>
 
       <div id="stats">
         <div id="na-redu">
@@ -35,7 +34,11 @@
             <span>o</span>
           </div>
         </div>
-        <ul id="selektirani"></ul>
+        <div id="izgurani">
+          <div id="izgurani-x"></div>
+          <div id="izgurani-o"></div>
+        </div>
+        <!--<ul id="selektirani"></ul>-->
         <div id="smer-picker-wrapper">
             <ul id="smer-picker">
                 <li id="smer1">1</li>
@@ -49,11 +52,16 @@
       </div>
     </div>
 
-    <div id="config">
-      <input type="checkbox" name="prikazi-koordinate" value="Bike" checked>Prikazi koordinate<br>
-      <input type="checkbox" name="strict-mode" value="Bike" checked>Striktni režim<br>
-      <input type="radio" name="radio-koordinate" value="cubic"> Cubic<br>
-      <input type="radio" name="radio-koordinate" value="axial" checked> Axial<br>
+    <div id="config"> <!-- dodaj .hidden na kraju -->
+        <input type="checkbox" name="strict-mode" id="strict-mode" value="Bike" checked/>
+        <label for="strict-mode">Striktni režim</label>
+        <br/>
+        <input type="checkbox" name="prikazi-koordinate" id="prikazi-koordinate" value="Bike" checked/>
+        <label for="prikazi-koordinate">Prikaži koordinate:</label>
+        <input type="radio" name="radio-koordinate" id="radio-koordinate-cubic" value="cubic">
+        <label for="radio-koordinate-cubic">Cubic</label>
+        <input type="radio" name="radio-koordinate" id="radio-koordinate-axial" value="axial" checked>
+        <label for="radio-koordinate-axial">Axial</label>
     <div>
   </body>
 
