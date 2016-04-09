@@ -82,14 +82,14 @@ window.onload = function() {
 }
 
 document.onkeypress = function(e) {
-    //e = e || window.event;
-    if (e.keyCode == 100) posaljiPotez(tabla.selektirani, 1);   // d
-    if (e.keyCode == 101) posaljiPotez(tabla.selektirani, 2);   // e
-    if (e.keyCode == 119) posaljiPotez(tabla.selektirani, 3);   // w
-    if (e.keyCode == 97) posaljiPotez(tabla.selektirani, 4);   // a
-    if (e.keyCode == 122 || e.keyCode == 121) posaljiPotez(tabla.selektirani, 5);   // z, y
-    if (e.keyCode == 120) posaljiPotez(tabla.selektirani, 6);   // x
-    if (e.keyCode == 115) deselektirajSve();
+    var c = e.keyCode;
+    if (c == 100 || c == 54) posaljiPotez(tabla.selektirani, 1);   // d, 6
+    if (c == 101 || c == 57) posaljiPotez(tabla.selektirani, 2);   // e, 9
+    if (c == 119 || c == 55) posaljiPotez(tabla.selektirani, 3);   // w, 7
+    if (c == 97 || c == 52) posaljiPotez(tabla.selektirani, 4);   // a, 4
+    if (c == 122 || c == 121 || c == 49) posaljiPotez(tabla.selektirani, 5);   // z, y, 1
+    if (c == 120 || c == 51) posaljiPotez(tabla.selektirani, 6);   // x, 3
+    if (c == 115 || c == 53) deselektirajSve(); // s, 5
 }
 
 function deselektirajSve() {
