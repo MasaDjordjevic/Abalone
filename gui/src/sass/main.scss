@@ -350,12 +350,44 @@ input:disabled {
         opacity         : 0.5;
     }
 
+    &.selektiran::before {
+        content      : "";
+        width        : 65px;
+        height       : 65px;
+        position     : absolute;
+        top          : 0;
+        left         : 0;
+        border-radius: 50%;
+    }
+    $big-circle  : 12px;
+    $small-circle: 6px;
+
     &.selektiran-lose {
-        box-shadow: 0 0 0 8px $color-select-disallowed inset, 0 0 0 12px black inset;
+        &.polje-x::before {
+            box-shadow: 0 0 0 $small-circle $color-black-marble inset, 0 0 0 $big-circle $color-select-disallowed inset;
+        }
+
+        &.polje-o::before {
+            box-shadow: 0 0 0 $small-circle $color-white-marble inset, 0 0 0 $big-circle $color-select-disallowed inset;
+        }
+
+        &.polje--::before {
+            box-shadow: 0 0 0 $small-circle $color-no-marble inset, 0 0 0 $big-circle $color-select-disallowed inset;
+        }
     }
 
     &.selektiran-dobro {
-        box-shadow: 0 0 0 8px $color-select-allowed inset;
+        &.polje-x::before {
+            box-shadow: 0 0 0 $small-circle $color-black-marble inset, 0 0 0 $big-circle $color-select-allowed inset;
+        }
+
+        &.polje-o::before {
+            box-shadow: 0 0 0 $small-circle $color-white-marble inset, 0 0 0 $big-circle $color-select-allowed inset;
+        }
+
+        &.polje--::before {
+            box-shadow: 0 0 0 $small-circle $color-no-marble inset, 0 0 0 $big-circle $color-select-allowed inset;
+        }
     }
 
     .koordinate {
