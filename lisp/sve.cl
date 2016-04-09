@@ -513,8 +513,7 @@
          )
     (append jedan dva tri)))
 
-
-(defun nadji-sve-poteze (tabla znak)
+(defun nova-stanja (tabla znak) 
   (let* ((potezabilni (nadji-sve-potezabilne-kamenove tabla znak))
          (potezabilni (mapcar (lambda (x) (cvorovi-u-pozicije x)) potezabilni))
          ;(potezabilni (last potezabilni '6))
@@ -524,8 +523,9 @@
          (stanja (remove NIL stanja))         
          ;(a (format t "stanja: ~s~%" stanja))      
          )
-    (dolist (stanje stanja)
-           (print (stampaj stanje)))))
+    ;(dolist (stanje stanja)
+    ;  (print (stampaj stanje)))))
+    stanja))
 
 
 
@@ -533,22 +533,15 @@
 
 
 (defun string-u-tabla (string) 
-     (string-u-tabla-1 string (kreiraj-koordinate '((0 0 0)) '() 5)))
+     (string-u-tabla-1 string (mapcar 'car (kreiraj-tablu 5)))) 
             
 (defun string-u-tabla-1 (string tabla)
   (cond ((null tabla) '())
         (t (cons (list (car tabla) (format nil "~a" (char string 0)))
                  (string-u-tabla-1 (subseq string 1 (length string)) (cdr tabla))))))
 
-
-
-
-
-
-
-
-
-;;; heuristika
+;;; Heuristika.
+;;; X je MAX igrac.
 
 ;;; Ocekuje koordinate.
 (defun rastojanje (kamen1 kamen2)
@@ -570,8 +563,8 @@
   (cond ((= (length lista) 0) 0)
         ((= (length lista) 1) (rastojanje kamen (car lista)))
         (t (/ (rastojanje-do-svih kamen lista) (if (member kamen lista)
-                                          (1- (length lista))
-                                        (length lista))))))
+                                                   (1- (length lista))
+                                                   (length lista))))))
 
 ;;; Ocekuje koordinate.
 (defun prosecno-rastojanje-do-centra (lista)  
@@ -588,19 +581,19 @@
   (<= (prebroji znak tabla) 8))
 
 ;;; Ocekuje cvorove.
-(defun h-pobeda (znak tabla faktor)
-  (cond ((pobeda-p znak tabla) faktor)
-        ((pobeda-p (suprotan-znak znak) tabla) (- 0 faktor))
+(defun h-pobeda (tabla faktor)
+  (cond ((pobeda-p "x" tabla) faktor)
+        ((pobeda-p "o" tabla) (- 0 faktor))
         (t 0)))
 
 ;;; Ocekuje cvorove.
-(defun h-izgurani (znak tabla faktor)
-  (* (- (broj-izguranih (suprotan-znak znak) tabla) (broj-izguranih znak tabla)) faktor))
+(defun h-izgurani (tabla faktor)
+  (* (- (broj-izguranih "o" tabla) (broj-izguranih "x" tabla)) faktor))
 
 ;;; Ocekuje cvorove.
-(defun h-centar (znak tabla faktor)
-  (* (- (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla znak)))
-        (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla (suprotan-znak znak))))) faktor))
+(defun h-centar (tabla faktor)
+  (* (- (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "x")))
+        (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "o")))) faktor))
 
 ;;; Ocekuje cvorove.
 (defun h-grupisanje-1 (lista svi)
@@ -608,41 +601,126 @@
         (t (+ (prosecno-rastojanje-do-svih (car lista) svi) (h-grupisanje-1 (cdr lista) svi)))))
 
 ;;; Ocekuje cvorove.
-(defun h-grupisanje (znak tabla faktor)
-  (let* ((svi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla znak)))
-         (svi-njegovi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla (suprotan-znak znak)))))
-    (* (- (h-grupisanje-1 svi svi) (h-grupisanje-1 svi-njegovi svi-njegovi)) faktor)))
+(defun h-grupisanje (tabla faktor)
+  (let* ((svi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "x")))
+         (svi-njegovi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "o"))))
+    (* (- (h-grupisanje-1 svi-njegovi svi-njegovi) (h-grupisanje-1 svi svi)) faktor)))
       
 
 ;;; Ocekuje cvorove.
-(defun heuristika-parametri (znak tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
-  (+ (h-pobeda znak tabla faktor-pobeda)
-     (h-izgurani znak tabla faktor-izgurani)
-     (h-centar znak tabla faktor-centar)
-     (h-grupisanje znak tabla faktor-grupisanje)))
+(defun heuristika-parametri (tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
+  (+ (h-pobeda     tabla faktor-pobeda)
+     (h-izgurani   tabla faktor-izgurani)
+     (h-centar     tabla faktor-centar)
+     (h-grupisanje tabla faktor-grupisanje)))
 
-(defun deskriptivna-heuristika (znak tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
+(defun deskriptivna-heuristika (tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
   (format t "Pobeda: ~s~%Izgurani: ~s~%Centar: ~s~%Grupisanje: ~s~%Zbir: ~s~%"
-    (float (h-pobeda znak tabla faktor-pobeda))
-    (float (h-izgurani znak tabla faktor-izgurani))
-    (float (h-centar znak tabla faktor-centar))
-    (float (h-grupisanje znak tabla faktor-grupisanje))
-    (float (heuristika-parametri znak tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje))))
+    (float (h-pobeda     tabla faktor-pobeda))
+    (float (h-izgurani   tabla faktor-izgurani))
+    (float (h-centar     tabla faktor-centar))
+    (float (h-grupisanje tabla faktor-grupisanje))
+    (float (heuristika-parametri tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje))))
 
-(defun heuristika (znak tabla)
-  (float (heuristika-parametri znak tabla 999999999 100 10 30)))
-
-
-(defun heuristika-ajax-1 (znak tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
-  (let* ((tabla (string-u-tabla tabla)))
-    (format t "Pobeda: ~s~%Izgurani: ~s~%Centar: ~s~%Grupisanje: ~s~%Zbir: ~s~%"
-      (float (h-pobeda znak tabla faktor-pobeda))
-      (float (h-izgurani znak tabla faktor-izgurani))
-      (float (h-centar znak tabla faktor-centar))
-      (float (h-grupisanje znak tabla faktor-grupisanje))
-      (float (heuristika-parametri znak tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)))))
+(defun heuristika (tabla)
+  (float (heuristika-parametri tabla 999999999 100 10 30)))
 
 
+
+
+
+
+;;; Minimax algoritam 
+;;; X je MAX, O je MIN 
+
+;;; Od prosledjene lista STANJA napravi listu ciji su elementi (stanje heuristika). 
+(defun dodaj-heuristike (stanja) 
+  (cond ((null stanja) '()) 
+        (t (cons (list (car stanja) (heuristika (car stanja))) 
+                 (dodaj-heuristike (cdr stanja)))))) 
+
+;;; Iz LISTE ciji su elementi (stanje heuristika) izaberi stanje sa najvecom/najmanjom (>/<) heuristikom. 
+;; Pomocna funkcija 
+(defun minmax-stanje-i (lista max-stanje znak)  
+  (cond ((null lista) max-stanje) 
+        ((apply znak (list (cadar lista) (cadr max-stanje))) (minmax-stanje-i (cdr lista) (car lista) znak)) ; nadjen novi maksimum, on se prosledjuje dalje 
+        (t (minmax-stanje-i (cdr lista) max-stanje znak)))) ; trenutni maksimum se prosledjuje dalje 
+;; Glavna funkcija (polazi od pretpostavke da je prvi element najveci/najmanji. 
+(defun minmax-stanje (lista znak) 
+  (minmax-stanje-i (cdr lista) (car lista) znak))
+
+;;; Konkretne funkcije za min i max
+(defun min-stanje (lista) (minmax-stanje lista '<))
+(defun max-stanje (lista) (minmax-stanje lista '>))
+
+;;; Glavna funkcija za minimax algoritam.
+;;; Proceni stanje na osnovu procene potomaka (tj. poteza u koje moze da se stigne iz STANJE) i igraca koji je na potezu.
+;;; "x" = max, "o" = min.
+;;; Pretraga se okocava kada se dosegne zadatak DUBINA, i tada se kao procena stanja vraca njegova heuristika.
+(defun minimax (stanje dubina igrac)
+  (let* ((igrac-sad (if (equalp igrac "x") 'max-stanje 'min-stanje))
+         (igrac-posle (if (equalp igrac "x") 'min-stanje 'max-stanje))
+         (lista-potomaka (nova-stanja stanje igrac)))
+    (cond ((or (zerop dubina) (null lista-potomaka))
+           (list stanje (heuristika stanje)))
+          (t (apply igrac-sad (list (mapcar (lambda (x) (minimax x (1- dubina) igrac-posle)) lista-potomaka)))))))
+
+
+
+
+
+
+
+
+
+
+;;; paljevina
+(defun paljevina ()
+  (progn (setq *tabla* (kreiraj-tablu 5))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x"))))) 
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x"))))) 
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x"))))) 
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x"))))) 
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
+    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))))
+
+  
 
 
 
@@ -670,6 +748,14 @@
 (defparameter *ajax-processor*
   (make-instance 'ajax-processor :server-uri "/repl-api"))
 
+(defun heuristika-ajax-1 (tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
+  (let* ((tabla (string-u-tabla tabla)))
+    (format t "Pobeda: ~s~%Izgurani: ~s~%Centar: ~s~%Grupisanje: ~s~%Zbir: ~s~%"
+      (float (h-pobeda     tabla faktor-pobeda))
+      (float (h-izgurani   tabla faktor-izgurani))
+      (float (h-centar     tabla faktor-centar))
+      (float (h-grupisanje tabla faktor-grupisanje))
+      (float (heuristika-parametri tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)))))
 
 (defun-ajax heuristikaAJAX (data) (*ajax-processor* :callback-data :response-text)
   (let* ((znak data)
@@ -680,12 +766,11 @@
          (faktor-grupisanje 1))
     (format nil "Znak: ~s~%Pobeda: ~s~%Izgurani: ~s~%Centar: ~s~%Grupisanje: ~s~%Zbir: ~s~%"
       znak
-      (float (h-pobeda znak tabla faktor-pobeda))
-      (float (h-izgurani znak tabla faktor-izgurani))
-      (float (h-centar znak tabla faktor-centar))
-      (float (h-grupisanje znak tabla faktor-grupisanje))
-      (float (heuristika-parametri znak tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)))))
-
+      (float (h-pobeda     tabla faktor-pobeda))
+      (float (h-izgurani   tabla faktor-izgurani))
+      (float (h-centar     tabla faktor-centar))
+      (float (h-grupisanje tabla faktor-grupisanje))
+      (float (heuristika-parametri tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)))))
 
 (defun-ajax echo (data) (*ajax-processor* :callback-data :response-text)
   (let (
@@ -706,6 +791,13 @@
     ;;(concatenate 'string "echo: " (eval d))
     )
   )
+
+;;; Neka AI razmisli 
+(defun ai-odigraj-potez-1 (tabla znak) 
+  (car (minimax tabla 20 znak))) 
+(defun-ajax ai-odigraj-potez (data) (*ajax-processor* :callback-data :response-text)
+  (format nil "~S~%" (stampaj (ai-odigraj-potez-1 (string-u-tabla (subseq data 1 (length data)))
+                                                  (subseq data 0 1)))))
 
 (defun-ajax reset (data) (*ajax-processor* :callback-data :response-text)
   (format nil "~S~%" (stampaj (setq *tabla* (kreiraj-tablu 5))))
