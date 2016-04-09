@@ -19,13 +19,16 @@ function posaljiPotez(kameni, smer): any {
 
     //var string = 'odigrajPotez (caar d) (cadar d) *tabla*';
     //alert(string);
-    return smackjack.echo(string, callback, null);
+    smackjack.echo(string, callback, null);
+    smackjack.heuristikaAJAX('x', prikaziHeuristike, null);
+    smackjack.heuristikaAJAX('o', prikaziHeuristike, null);
 }
 
 window.onload = function() {
     tabla = new Tabla(5);
     tabla.nacrtaj();
     smackjack.reset('', callback, null);
+
     // Event listeneri za smerove
     document.getElementById('smer1').addEventListener('click', function() { posaljiPotez(tabla.selektirani, 1); });
     document.getElementById('smer2').addEventListener('click', function() { posaljiPotez(tabla.selektirani, 2); });
@@ -75,7 +78,6 @@ window.onload = function() {
     });
 
     document.addEventListener("mouseup", function() {
-        console.log("Mouseup");
         isMouseDown = false;
     });
 
@@ -109,6 +111,11 @@ function callback(response) {
     return tabla.nacrtajString(response);
 };
 
-function onClick() {
+function prikaziHeuristike(response) {
+    // TODO dodaj heuristike
+    console.log(response);
+}
+
+/*function onClick() {
     return smackjack.echo((<HTMLInputElement>document.getElementById("data")).value, callback, null);
-};
+};*/

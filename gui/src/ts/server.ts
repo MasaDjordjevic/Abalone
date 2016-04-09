@@ -1,6 +1,7 @@
 var smackjack = {
     echo: function(data, callback, errorHandler): any { },
-    reset: function(data, callback, errorHandler): any { }
+    reset: function(data, callback, errorHandler): any { },
+    heuristikaAJAX: function(data, callback, errorHandler): any { }
 };
 
 (function() {
@@ -129,6 +130,11 @@ var smackjack = {
         return ajaxCall("RESET", [data], "GET", callback, errorHandler, responseText);
     };
     smackjack.reset = reset;
+
+    function heuristikaAJAX(data, callback, errorHandler = null) {
+        return ajaxCall("HEURISTIKAAJAX", [data], "GET", callback, errorHandler, responseText);
+    };
+    smackjack.heuristikaAJAX = heuristikaAJAX;
 
     return null;
 })();
