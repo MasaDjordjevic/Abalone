@@ -2,7 +2,7 @@
 @import 'ljubenovic-toolkit';
 @import 'palette';
 /**/
-$color: $light-green;
+$color: $teal;
 $background: $blue-grey;
 /**/
 $color-hover: rgba(palette($yellow, 500), 1);
@@ -10,10 +10,10 @@ $color-main: palette($color);
 $color-main-dark: palette($color, 700);
 $color-main-light: palette($color, 200);
 $background-color: palette($background, 50);
-$table-color: palette($background, 100);
+$table-color: palette($background, 200);
 $color-white-marble: palette($blue-grey, 50);
 $color-black-marble: palette($blue-grey, 900);
-$color-no-marble: palette($blue-grey, 200);
+$color-no-marble: palette($blue-grey, 100);
 /**/
 $color-select-disallowed: rgba(palette($red, 300), .7);
 $color-select-allowed: rgba(palette($green, 300), .7);
@@ -52,7 +52,7 @@ h1 {
     font-size  : 7em;
     transform  : rotate(-17deg);
     color      : $color-main-dark;
-    text-shadow: 7px 7px 0 $color-main-light;
+    text-shadow: 5px 5px 0 $color-main-light;
 }
 
 #config-button {

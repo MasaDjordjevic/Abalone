@@ -1,3 +1,5 @@
+var isMouseDown = false;
+
 class Koordinata {
     constructor(public x: number = 0, public y: number = 0, public z: number = 0) { }
 }
@@ -48,9 +50,22 @@ class Kamen {
 
         document.getElementById("tabla-id").appendChild(kamen);
         this.div = kamen;
-        this.div.onclick = (e) => {
+        /*this.div.onclick = (e) => {
+            this._onclick();
+        }*/
+
+        this.div.onmousedown = (e) => {
+            isMouseDown = true;
             this._onclick();
         }
+
+        this.div.onmouseenter = (e) => {
+            if (isMouseDown) {
+                this._onclick();
+            }
+        }
+
+
     }
 
     selektiraj(nacin: string = "-dobro") {

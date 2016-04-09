@@ -73,6 +73,12 @@ window.onload = function() {
     document.getElementById("config-button").addEventListener('click', function() {
         document.getElementById("config").classList.toggle("hidden");
     });
+
+    document.addEventListener("mouseup", function() {
+        console.log("Mouseup");
+        isMouseDown = false;
+    });
+
 }
 
 document.onkeypress = function(e) {
