@@ -46,7 +46,7 @@ window.onload = function() {
 
     document.getElementsByName("strict-mode")[0].addEventListener('change', function() {
         if (!this.checked) {
-            var crveni = document.querySelectorAll('.selektiran-lose');
+            var crveni = document.getElementsByClassName('selektiran-lose');
             for (let i = 0; i < crveni.length; i++) {
                 crveni[i].classList.remove('selektiran-lose');
                 crveni[i].classList.add('selektiran-dobro');
