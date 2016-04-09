@@ -1,7 +1,8 @@
 var smackjack = {
     echo: function(data, callback, errorHandler): any { },
     reset: function(data, callback, errorHandler): any { },
-    heuristikaAJAX: function(data, callback, errorHandler): any { }
+    heuristikaAJAX: function(data, callback, errorHandler): any { },
+    AIodigrajPotez: function(data, callback, errorHandler): any { }
 };
 
 (function() {
@@ -135,6 +136,11 @@ var smackjack = {
         return ajaxCall("HEURISTIKAAJAX", [data], "GET", callback, errorHandler, responseText);
     };
     smackjack.heuristikaAJAX = heuristikaAJAX;
+
+    function AIodigrajPotez(data, callback, errorHandler = null) {
+        return ajaxCall("AI-ODIGRAJ-POTEZ", [data], "GET", callback, errorHandler, responseText);
+    };
+    smackjack.AIodigrajPotez = AIodigrajPotez;
 
     return null;
 })();

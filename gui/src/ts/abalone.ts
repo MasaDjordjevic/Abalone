@@ -137,6 +137,14 @@ class Tabla {
         this.selektirani = [];
     }
 
+    trenutnoStanje(): string {
+        var returnValue: string = "";
+        for (let i = 0; i < this.polja.length; i++) {
+            returnValue += this.polja[i].boja;
+        }
+        return returnValue;
+    }
+
     nacrtaj(): void {
         this.selektirani = [];
         var HTMLselektirani = document.getElementById('selektirani');

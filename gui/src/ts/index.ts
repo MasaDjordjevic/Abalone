@@ -3,6 +3,10 @@
 
 var tabla;
 
+function AIodigrajPotezCallback(response) {
+    console.log("AI odgovara sa: " + response);
+    tabla.nacrtajString(response);
+}
 
 function posaljiPotez(kameni, smer): any {
     if (document.getElementsByClassName('selektiran-lose').length > 0)
@@ -23,6 +27,7 @@ function posaljiPotez(kameni, smer): any {
     smackjack.heuristikaAJAX('x', prikaziHeuristike, null);
     smackjack.heuristikaAJAX('o', prikaziHeuristike, null);
 }
+
 
 window.onload = function() {
     tabla = new Tabla(5);
@@ -107,12 +112,17 @@ function callback(response) {
         document.getElementById("stats-x").classList.toggle("trenutni-na-redu");
         document.getElementById("stats-o").classList.toggle("trenutni-na-redu");
     }
-    tabla.poslednjeStanje = response;
-    return tabla.nacrtajString(response);
+    tabla.poslednjeStanje = response.replace(/[^xo-]/g, '');
+    tabla.nacrtajString(response);
+    var naRedu = document.getElementById("stats-x").classList.contains("trenutni-na-redu") ? "x" : "o";
+    console.log("AI-ju se postavlja zadatak!\nPotez treba da odigra igrac" + naRedu + "\nTabla je:\n"  + tabla.poslednjeStanje);
+    setTimeout(function() {
+        smackjack.AIodigrajPotez(naRedu + tabla.poslednjeStanje, callback, null);
+    }, 750);
 };
 
 function prikaziHeuristike(response) {
-    // TODO dodaj heuristike
+    // TODO dodaj heuristike u stranicu
     console.log(response);
 }
 
