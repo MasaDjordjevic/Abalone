@@ -83,8 +83,9 @@ class Kamen {
     _onclick() {
         //ako je ukljucen striktni rezim i ako ti nisi na redu oboji -lose
         if ((<HTMLInputElement>document.getElementsByName("strict-mode")[0]).checked) {
-            var naRedu = document.getElementById("stats-x").classList.contains("trenutni-na-redu") ? "x" : "o";
-            if (naRedu == this.boja) {
+            var naRedu = tabla.naRedu;
+            var naReduZnak = tabla.naRedu == 0 ? "x" : "o";
+            if (naReduZnak == this.boja) {
                 this.tabla.toggleKamen(this, "-dobro");
             }
             else {
@@ -100,12 +101,23 @@ class Kamen {
     }
 }
 
+enum Igrac {
+    Human,
+    AI
+};
+
 class Tabla {
     polja: Kamen[];
     selektirani: Kamen[];
+    velicina: number;
     poslednjeStanje: string;
+    igraci: Igrac[] = new Array<Igrac>(Igrac.Human, Igrac.Human);
+    naRedu: number = 0;
 
-    constructor(public velicina: number) {
+    constructor(velicina: number, igrac0: Igrac = Igrac.Human, igrac1: Igrac = Igrac.Human) {
+        this.velicina = velicina;
+        this.igraci[0] = igrac0;
+        this.igraci[1] = igrac1;
         this.polja = new Array<Kamen>(3 * velicina * velicina - 3 * velicina + 1); // 3n² - 3n + 1
         for (var i = 0; i < this.polja.length; i++) {
             this.polja[i] = new Kamen(this);
@@ -135,6 +147,16 @@ class Tabla {
         }
 
         this.selektirani = [];
+    }
+
+    toggleNaRedu(): void {
+        this.naRedu ^= 1;
+        document.getElementById("stats-x").classList.toggle("trenutni-na-redu");
+        document.getElementById("stats-o").classList.toggle("trenutni-na-redu");
+    }
+
+    setPoslednjeStanje(s: string): void {
+        this.poslednjeStanje = s.replace(/[^XxOo\-\_]/g, '');
     }
 
     trenutnoStanje(): string {
@@ -175,14 +197,15 @@ class Tabla {
         }
 
         // Apdejtovanje DIV-a
-        var string = '';
-        for (var i = 0; i < tabla.selektirani.length; i++) {
-            string += '<li>';
-            string += tabla.selektirani[i].koordinata.x + ', ' + tabla.selektirani[i].koordinata.y + ', ' + tabla.selektirani[i].koordinata.z;
-            string += '</li>';
-        }
-        if (document.getElementById('selektirani') !== null)
+        if (document.getElementById('selektirani') !== null) {
+            var string = '';
+            for (var i = 0; i < tabla.selektirani.length; i++) {
+                string += '<li>';
+                string += tabla.selektirani[i].koordinata.x + ', ' + tabla.selektirani[i].koordinata.y + ', ' + tabla.selektirani[i].koordinata.z;
+                string += '</li>';
+            }
             document.getElementById('selektirani').innerHTML = string;
+        }
     }
 
     selektirajKamen(kamen: Kamen, nacin: string): void {
@@ -202,8 +225,7 @@ class Tabla {
     }
 
     nacrtajString(s: string): void {
-        s = s.replace(/\s/g, ''); // skloni sve beline
-        s = s.replace(/\"/g, ''); // skloni navodnike
+        s = s.replace(/[^XxOo\-\_]/g, '');
 
         var brojX = 0;
         var brojO = 0;

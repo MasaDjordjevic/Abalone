@@ -3,11 +3,6 @@
 
 var tabla;
 
-function AIodigrajPotezCallback(response) {
-    console.log("AI odgovara sa: " + response);
-    tabla.nacrtajString(response);
-}
-
 function posaljiPotez(kameni, smer): any {
     if (document.getElementsByClassName('selektiran-lose').length > 0)
         return;
@@ -20,17 +15,13 @@ function posaljiPotez(kameni, smer): any {
     string = "(" + string + ") ";
     string = string + smer + ' *tabla*';
 
-
-    //var string = 'odigrajPotez (caar d) (cadar d) *tabla*';
-    //alert(string);
     smackjack.echo(string, callback, null);
-    smackjack.heuristikaAJAX('x', prikaziHeuristike, null);
-    smackjack.heuristikaAJAX('o', prikaziHeuristike, null);
+    smackjack.heuristika('x', prikaziHeuristike, null);
 }
 
 
 window.onload = function() {
-    tabla = new Tabla(5);
+    tabla = new Tabla(5, Igrac.Human, Igrac.Human);
     tabla.nacrtaj();
     smackjack.reset('', callback, null);
 
@@ -108,24 +99,24 @@ function deselektirajSve() {
 
 function callback(response) {
     console.log(response);
-    if (tabla.poslednjeStanje !== null && tabla.poslednjeStanje != response) {
-        document.getElementById("stats-x").classList.toggle("trenutni-na-redu");
-        document.getElementById("stats-o").classList.toggle("trenutni-na-redu");
+    if (tabla.poslednjeStanje !== null && tabla.poslednjeStanje != response.replace(/[^XxOo\-\_]/g, '')) {
+        tabla.toggleNaRedu();
     }
-    tabla.poslednjeStanje = response.replace(/[^xo-]/g, '');
+    tabla.setPoslednjeStanje(response);
     tabla.nacrtajString(response);
-    var naRedu = document.getElementById("stats-x").classList.contains("trenutni-na-redu") ? "x" : "o";
-    console.log("AI-ju se postavlja zadatak!\nPotez treba da odigra igrac" + naRedu + "\nTabla je:\n"  + tabla.poslednjeStanje);
-    setTimeout(function() {
-        smackjack.AIodigrajPotez(naRedu + tabla.poslednjeStanje, callback, null);
-    }, 750);
+
+    var naRedu = tabla.igraci[tabla.naRedu];
+    console.log("Potez treba da odigra " + (naRedu == Igrac.Human ? "čovek" : "AI") + ".");
+
+    if (naRedu == Igrac.AI) {
+        console.log("AI-ju se postavlja zadatak!\nTabla je:\n"  + tabla.poslednjeStanje);
+        setTimeout(function() {
+            var znakIgracaNaRedu = tabla.naRedu == 0 ? "x" : "o";
+            smackjack.AIodigrajPotez(znakIgracaNaRedu + tabla.poslednjeStanje, callback, null);
+        }, 750);
+    }
 };
 
 function prikaziHeuristike(response) {
-    // TODO dodaj heuristike u stranicu
     console.log(response);
 }
-
-/*function onClick() {
-    return smackjack.echo((<HTMLInputElement>document.getElementById("data")).value, callback, null);
-};*/
