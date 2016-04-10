@@ -25,7 +25,6 @@
    ((equal el (car lista)) t)
    (t (clanp el (cdr lista)))))
 
-
 ;;; Iz LISTE cvorova izbacuje one cija je bar jedna koordinata veca od GRANICE.
 (defun odbaci-elemente-van-granica (lista granica)
   (cond
@@ -289,9 +288,9 @@
 (defun istogznaka2-p (a b) (equal (cadr a) (cadr b)))
 
 ;;; Da li su svi KAMENI X ili svi O.
-(defun istogznaka-p (kameni)
+(defun istog-znaka-p (kameni)
   (cond ((null (cdr kameni)) 't)
-        ((istogznaka2-p (car kameni) (cadr kameni)) (istogznaka-p (cdr kameni)))
+        ((istogznaka2-p (car kameni) (cadr kameni)) (istog-znaka-p (cdr kameni)))
         (t '())))
 
 ;;; Proverava da li je KOORDINATA na tabli velicine VELICINA legalna.
@@ -327,7 +326,7 @@
 ;;; samo x, samo o, samo -, ili nesto mesano 'm'
 ;;; pozicija je niz koorindata
 (defun sta-se-nalazi (cvorovi)
-  (cond ((not (istogznaka-p cvorovi)) "m")
+  (cond ((not (istog-znaka-p cvorovi)) "m")
         (t (cadar cvorovi)))) ; ako je stigao dovde, znaci da su svi istog znaka,
                               ; pa vraca znak prvog cvora
 
@@ -335,9 +334,10 @@
 ;;; Podrazumeva sortirane kamencice.
 ;;; member ne radi ako umesto konkretnih bojeva stavimo parametre!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 (defun polje-usg (kameni smer)
-  (cond ((member smer '(4 3 2)) (car kameni))
-        ((member smer '(1 5 6)) (car (reverse kameni)))
-        (t '())))
+  (let* ((kameni (sortiraj kameni 'op-poredjenja-koord-samo)))
+    (cond ((member smer '(4 3 2)) (car kameni))
+          ((member smer '(1 5 6)) (car (reverse kameni)))
+          (t '()))))
 
 ;;; USG = u smeru guranja
 ;;; vraca listu od tri elementa
@@ -365,20 +365,20 @@
         )
     (cond ((= 1 brojKamena) '())
           ((and (equal (car susedi) suprotanZnak)
-                (member (cadr susedi) '("-" '() NIL))) 't)
+                (member (cadr susedi) '("-" '() NIL) :test 'equalp)) 't)
           ((and (= 3 brojKamena)
                 (equal (car susedi) suprotanZnak)
-                (member (cadr susedi) '("-" '() NIL))) 't)
+                (member (cadr susedi) '("-" '() NIL) :test 'equalp)) 't)
           ((and (= 3 brojKamena)
                 (equal (car susedi) suprotanZnak)
                 (equal (cadr susedi) suprotanZnak)
-                (member (caddr susedi) '("-" '() NIL))) 't)
+                (member (caddr susedi) '("-" '() NIL) :test 'equalp)) 't)
           (t '()))))
 
 ;;; Proverava da li se KAMENIMA moze odigrati potez.
 (defun legalan-unos-p (kameni tabla)
   (and (natabli-p kameni (velicina-table tabla))
-       (istogznaka-p (pozicije-u-cvorove kameni tabla))
+       (istog-znaka-p (pozicije-u-cvorove kameni tabla))
        (susedni-p kameni)
        (linija-p kameni)
        (<= (length kameni) 3)))
@@ -432,23 +432,23 @@
 ;;; Ostavlja samo listu SUSEDA koji su nekog znaka, eleminise sve '-' i polja van table.
 (defun sredi-susede-pom (susedi)
   (cond ((null susedi) '())
-        ((not (clanp (cadar susedi) '( "-" '())   )) (cons (car susedi) (sredi-susede-pom (cdr susedi))))
+        ((not (clanp (cadar susedi) '( "-" '()))) (cons (car susedi) (sredi-susede-pom (cdr susedi))))
         (t '())))
 
 (defun odigraj-potez (kameni smer tabla)
-   (cond ((not (legalan-unos-p kameni tabla)) '())
-         (t (let* ((novaPoz (nova-pozicija kameni smer))
+   (cond ((not (legalan-unos-p (sortiraj kameni 'op-poredjenja-koord-samo) tabla)) '())
+         (t (let* ((kameni (sortiraj kameni 'op-poredjenja-koord-samo))
+                   (novaPoz (nova-pozicija kameni smer))
                    (novaPoz (sortiraj novaPoz 'op-poredjenja-koord-samo))
-                   (kameni (sortiraj kameni 'op-poredjenja-koord-samo))
                    (smerGuranja (smer-guranja-p kameni smer))
                    (mojZnak (znak (car kameni) tabla))
-                   ;(b (format t "novaPoz: ~s~%smerGuranja: ~s~%mojZnak: ~s~%" novaPoz smerGuranja mojZnak))
-                   ;(c (format t "f-ja:~s~%equal:~s~%"  (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)) (equalp "-" (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)))))
+                   ;(b (format t "novaPoz: ~s~%smerGuranja: ~s~%mojZnak: ~s~%(polje-usg novaPoz smer): ~s~%" novaPoz smerGuranja mojZnak (polje-usg novaPoz smer)))
+                   ;(c (format t "sta-se-nalazi: ~s~%"  (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla))))
                   )
               (cond ((not (natabli-p novaPoz (velicina-table tabla))) '()) ;nova pozicija je van table
                     ((and (not smerGuranja) (equalp "-" (sta-se-nalazi (pozicije-u-cvorove novaPoz tabla)))) (potez-zamena kameni novaPoz tabla mojZnak)) ;ukoliko nije izguravanje mora da se pomeri na prazno polje
-                    ((and smerGuranja (equalp "-" (znak (polje-usg novaPoz smer) tabla) )) (potez-pomeraj-usg kameni novaPoz tabla mojZnak)) ;mozes da se pomeris na prazno polje u smeru guranja
-                    ((and smerGuranja (equalp mojZnak (znak (polje-usg novaPoz smer) tabla)) ) '()) ;ne mozes da se pomeris ako si ti tamo
+                    ((and smerGuranja (equalp "-" (znak (polje-usg novaPoz smer) tabla))) (potez-pomeraj-usg kameni novaPoz tabla mojZnak)) ;mozes da se pomeris na prazno polje u smeru guranja
+                    ((and smerGuranja (equalp mojZnak (znak (polje-usg novaPoz smer) tabla))) '()) ;ne mozes da se pomeris ako si ti tamo
                     ((and smerGuranja (moguce-guranje-p kameni smer tabla)) (potez-guranje kameni novaPoz tabla smer mojZnak)) ;ako je moguce guranje moguc je i potez
                     ;( t (format t "dovde"))
                     ( t '()))))))
@@ -463,7 +463,7 @@
 
 (defun susedi-istog-znaka (tabla cvor)
   (let* ((susedi (kreiraj-susede (car cvor)))
-         (susedi (pozicije-u-cvorove susedi tabla)))         
+         (susedi (pozicije-u-cvorove susedi tabla)))
     (izdvoji-sve-istog-znaka susedi (cadr cvor))))
 
 (defun jedan-sa-svakim (el lista)
@@ -473,7 +473,7 @@
 (defun jedan-sa-susedima (cvor tabla)
   (let* ((susedi (susedi-istog-znaka tabla cvor))
          (resenje (jedan-sa-svakim cvor susedi)))
-    (mapcar (lambda (x) (sortiraj x 'op-poredjenja)) resenje))) 
+    (mapcar (lambda (x) (sortiraj x 'op-poredjenja)) resenje)))
 
 (defun jedni-sa-susedima (lista tabla)
   (cond ((null lista) '())
@@ -482,14 +482,14 @@
 ;;; ocekuje listu ciji su elementi liste od po dva susedna cvora istog znaka
 (defun dodaj-sve-trece (lista tabla)
   (cond ((null lista) '())
-        ((istogznaka-p (car (dodaj-trece (car lista) tabla))) (dopuni-listu (list (car (dodaj-trece (car lista) tabla))) (dodaj-sve-trece (cdr lista) tabla)))
-        ((istogznaka-p (cadr (dodaj-trece (car lista) tabla))) (dopuni-listu (cdr (dodaj-trece (car lista) tabla)) (dodaj-sve-trece (cdr lista) tabla)))
-        (t (dodaj-sve-trece (cdr lista) tabla))))  
+        ((istog-znaka-p (car (dodaj-trece (car lista) tabla))) (dopuni-listu (list (car (dodaj-trece (car lista) tabla))) (dodaj-sve-trece (cdr lista) tabla)))
+        ((istog-znaka-p (cadr (dodaj-trece (car lista) tabla))) (dopuni-listu (cdr (dodaj-trece (car lista) tabla)) (dodaj-sve-trece (cdr lista) tabla)))
+        (t (dodaj-sve-trece (cdr lista) tabla))))
 
 ;;; lista je lista od dva susedna cvora istog znaka
 (defun dodaj-trece (lista tabla)
   (let* ((a (caar lista))
-         (b (caadr lista))        
+         (b (caadr lista))
          (resenje1 (loop for p in a
                          for q in b
                        collect (+ p (- p q))))
@@ -499,7 +499,7 @@
          (resenje1 (pozicije-u-cvorove (list resenje1) tabla))
          (resenje2 (pozicije-u-cvorove (list resenje2) tabla))
          (resenje (list (append lista resenje1) (append lista resenje2))))
-    (mapcar (lambda (x) (sortiraj x 'op-poredjenja)) resenje))) 
+    (mapcar (lambda (x) (sortiraj x 'op-poredjenja)) resenje)))
 
 ;;; ocekuje cvorove
 (defun nadji-sve-potezabilne-kamenove (tabla znak)
@@ -508,20 +508,20 @@
          ;(a (format t "Jedan: ~s~%" jedan))
          (dva (jedni-sa-susedima jedan tabla))
          ;(a (format t "Dva: ~s~%" dva))
-         (tri (dodaj-sve-trece dva tabla))         
+         (tri (dodaj-sve-trece dva tabla))
          ;(a (format t "Tri: ~s~%" tri))
          )
     (append jedan dva tri)))
 
-(defun nova-stanja (tabla znak) 
+(defun nova-stanja (tabla znak)
   (let* ((potezabilni (nadji-sve-potezabilne-kamenove tabla znak))
          (potezabilni (mapcar (lambda (x) (cvorovi-u-pozicije x)) potezabilni))
          ;(potezabilni (last potezabilni '6))
          ;(a (format t "Potezabilni: ~s~%" potezabilni))
-         (stanja (loop for smer in '(1 2 3 4 5 6)                       
+         (stanja (loop for smer in '(1 2 3 4 5 6)
                      append (mapcar (lambda (x) (odigraj-potez x smer tabla)) potezabilni)))
-         (stanja (remove NIL stanja))         
-         ;(a (format t "stanja: ~s~%" stanja))      
+         (stanja (remove NIL stanja))
+         ;(a (format t "stanja: ~s~%" stanja))
          )
     ;(dolist (stanje stanja)
     ;  (print (stampaj stanje)))))
@@ -532,9 +532,9 @@
 
 
 
-(defun string-u-tabla (string) 
-     (string-u-tabla-1 string (mapcar 'car (kreiraj-tablu 5)))) 
-            
+(defun string-u-tabla (string)
+     (string-u-tabla-1 string (mapcar 'car (kreiraj-tablu 5))))
+
 (defun string-u-tabla-1 (string tabla)
   (cond ((null tabla) '())
         (t (cons (list (car tabla) (format nil "~a" (char string 0)))
@@ -567,7 +567,7 @@
                                                    (length lista))))))
 
 ;;; Ocekuje koordinate.
-(defun prosecno-rastojanje-do-centra (lista)  
+(defun prosecno-rastojanje-do-centra (lista)
   (cond ((= (length lista) 0) 0)
         ((= (length lista) 1) (rastojanje-centar (car lista)))
         (t (/ (rastojanje-do-svih '(0 0 0) lista) (length lista)))))
@@ -578,7 +578,7 @@
 
 ;;; Ocekuje cvorove.
 (defun pobeda-p (znak tabla)
-  (<= (prebroji znak tabla) 8))
+  (< (prebroji znak tabla) 8))
 
 ;;; Ocekuje cvorove.
 (defun h-pobeda (tabla faktor)
@@ -592,8 +592,8 @@
 
 ;;; Ocekuje cvorove.
 (defun h-centar (tabla faktor)
-  (* (- (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "x")))
-        (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "o")))) faktor))
+  (* (- (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "o")))
+        (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "x")))) faktor))
 
 ;;; Ocekuje cvorove.
 (defun h-grupisanje-1 (lista svi)
@@ -605,7 +605,7 @@
   (let* ((svi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "x")))
          (svi-njegovi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "o"))))
     (* (- (h-grupisanje-1 svi-njegovi svi-njegovi) (h-grupisanje-1 svi svi)) faktor)))
-      
+
 
 ;;; Ocekuje cvorove.
 (defun heuristika-parametri (tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
@@ -622,31 +622,36 @@
     (float (h-grupisanje tabla faktor-grupisanje))
     (float (heuristika-parametri tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje))))
 
+
+;;; 1. pobeda
+;;; 2. izgurani
+;;; 3. centar
+;;; 4. grupisanje
 (defun heuristika (tabla)
-  (float (heuristika-parametri tabla 999999999 100 10 30)))
+  (float (heuristika-parametri tabla 999999999 100 10 10)))
 
 
 
 
 
 
-;;; Minimax algoritam 
-;;; X je MAX, O je MIN 
+;;; Minimax algoritam
+;;; X je MAX, O je MIN
 
-;;; Od prosledjene lista STANJA napravi listu ciji su elementi (stanje heuristika). 
-(defun dodaj-heuristike (stanja) 
-  (cond ((null stanja) '()) 
-        (t (cons (list (car stanja) (heuristika (car stanja))) 
-                 (dodaj-heuristike (cdr stanja)))))) 
+;;; Od prosledjene lista STANJA napravi listu ciji su elementi (stanje heuristika).
+(defun dodaj-heuristike (stanja)
+  (cond ((null stanja) '())
+        (t (cons (list (car stanja) (heuristika (car stanja)))
+                 (dodaj-heuristike (cdr stanja))))))
 
-;;; Iz LISTE ciji su elementi (stanje heuristika) izaberi stanje sa najvecom/najmanjom (>/<) heuristikom. 
-;; Pomocna funkcija 
-(defun minmax-stanje-i (lista max-stanje znak)  
-  (cond ((null lista) max-stanje) 
-        ((apply znak (list (cadar lista) (cadr max-stanje))) (minmax-stanje-i (cdr lista) (car lista) znak)) ; nadjen novi maksimum, on se prosledjuje dalje 
-        (t (minmax-stanje-i (cdr lista) max-stanje znak)))) ; trenutni maksimum se prosledjuje dalje 
-;; Glavna funkcija (polazi od pretpostavke da je prvi element najveci/najmanji. 
-(defun minmax-stanje (lista znak) 
+;;; Iz LISTE ciji su elementi (stanje heuristika) izaberi stanje sa najvecom/najmanjom (>/<) heuristikom.
+;; Pomocna funkcija
+(defun minmax-stanje-i (lista max-stanje znak)
+  (cond ((null lista) max-stanje)
+        ((apply znak (list (cadar lista) (cadr max-stanje))) (minmax-stanje-i (cdr lista) (car lista) znak)) ; nadjen novi maksimum, on se prosledjuje dalje
+        (t (minmax-stanje-i (cdr lista) max-stanje znak)))) ; trenutni maksimum se prosledjuje dalje
+;; Glavna funkcija (polazi od pretpostavke da je prvi element najveci/najmanji.
+(defun minmax-stanje (lista znak)
   (minmax-stanje-i (cdr lista) (car lista) znak))
 
 ;;; Konkretne funkcije za min i max
@@ -657,13 +662,106 @@
 ;;; Proceni stanje na osnovu procene potomaka (tj. poteza u koje moze da se stigne iz STANJE) i igraca koji je na potezu.
 ;;; "x" = max, "o" = min.
 ;;; Pretraga se okocava kada se dosegne zadatak DUBINA, i tada se kao procena stanja vraca njegova heuristika.
-(defun minimax (stanje dubina igrac)
-  (let* ((igrac-sad (if (equalp igrac "x") 'max-stanje 'min-stanje))
-         (igrac-posle (if (equalp igrac "x") 'min-stanje 'max-stanje))
-         (lista-potomaka (nova-stanja stanje igrac)))
-    (cond ((or (zerop dubina) (null lista-potomaka))
-           (list stanje (heuristika stanje)))
-          (t (apply igrac-sad (list (mapcar (lambda (x) (minimax x (1- dubina) igrac-posle)) lista-potomaka)))))))
+;;; Podrazumevano se kao funkcija koja vraca nova stanja zove "nove-stanja", a za procenu stanja se zove "heuristika", 
+;;;   ali se moze promeniti proslednjivanjem opcionih parametara.
+(defun minimax (stanje dubina igrac &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
+  (let* ((igrac-sad      (if (equalp igrac "x") 'max-stanje 'min-stanje))
+         (lista-potomaka (apply fja-nova-stanja (list stanje igrac))))
+    (cond ((or (zerop dubina) (null lista-potomaka)) (list stanje (apply fja-proceni-stanje (list stanje))))
+          (t (apply igrac-sad (list (mapcar (lambda (x) (minimax x (1- dubina) (suprotan-znak igrac) fja-nova-stanja fja-proceni-stanje)) lista-potomaka)))))))
+
+
+;;; Alfa-beta odsecanje
+;; Mora jednako da bismo vratili levi cvor (nebitno za alfa/beta, ngo zbog vracanja cvora)
+(defun manje-stanje (stanje1 stanje2)
+  (if (<= (cadr stanje1) (cadr stanje2))
+      stanje1 stanje2))
+(defun vece-stanje (stanje1 stanje2)
+  (if (>= (cadr stanje1) (cadr stanje2))
+      stanje1 stanje2))
+
+
+(defparameter *ALPHA* '('() -999999999))
+(defparameter *BETA*  '('() +999999999))
+(defun alpha-beta-max (stanje alpha beta dubina maxdubina &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
+  (if (zerop dubina)
+      (list stanje (apply fja-proceni-stanje (list stanje)))
+    (loop for sledbenik in (apply fja-nova-stanja (list stanje "x"))
+        do (if (>= (cadr (setq alpha (vece-stanje alpha
+                                                  (alpha-beta-min sledbenik alpha beta (1- dubina) maxdubina fja-nova-stanja fja-proceni-stanje))))
+                   (cadr beta))
+               ;; vraca sebe:
+               ;(return (list stanje (cadr beta))))
+               ;finally (return (list stanje (cadr alpha))))))
+               ;; vraca najdublji dokle je stigo pa je skontao da je najbolje resenje:   
+               ;(return beta))
+               ;finally (return alpha))))
+               ;; vraca sledeci potez koji treba da se odigra
+               (return (if (= dubina maxdubina) beta (list stanje (cadr beta)))))
+        finally (return (if (= dubina maxdubina) alpha (list stanje (cadr alpha)))))))
+               
+
+(defun alpha-beta-min (stanje alpha beta dubina maxdubina &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
+  (if (zerop dubina)
+      (list stanje (apply fja-proceni-stanje (list stanje)))
+    (loop for sledbenik in (apply fja-nova-stanja (list stanje "o"))
+        do (if (<= (cadr (setq beta (manje-stanje beta
+                                                  (alpha-beta-max sledbenik alpha beta (1- dubina) maxdubina fja-nova-stanja fja-proceni-stanje))))
+                   (cadr alpha))
+               ;; vraca sebe:
+               ;(return (list stanje (cadr alpha))))
+               ;finally (return (list stanje (cadr beta))))))
+               ;; vraca najdublji dokle je stigo pa je skontao da je najbolje resenje:   
+               ;(return alpha))
+               ;finally (return beta))))
+               ;; vraca sledeci potez koji terba da se odgira
+               (return (if (= dubina maxdubina) alpha (list stanje (cadr alpha)))))
+        finally (return (if (= dubina maxdubina) beta (list stanje (cadr beta)))))))
+               
+               
+
+;;; Primeri za testiranje.
+;;; (MINIMAX 'A '4 "x" '--SAJT-NOVA-STANJA '--SAJT-PROCENI-STANJE)
+;;; (ALPHA-BETA-MAX 'A *ALPHA* *BETA* '4 '4 '--SAJT-NOVA-STANJA '--SAJT-PROCENI-STANJE)
+;; Sa slajdova (strane 46/4 i 47/1).
+;; A -> 3
+(defun --slajdovi-nova-stanja (stanje &optional (znak "x")) 
+  (case stanje
+    ((a) '(b c d))    ((b) '(e f))     ((c) '(g h))    ((d) '(i j))
+    ((e) '(k l))      ((f) '(m n))     ((g) '(o))      ((h) '(p q))
+    ((i) '(r s))      ((j) '(t u))     (t '())))
+(defun --slajdovi-proceni-stanje (stanje)   
+  (case stanje
+    ((k) 2)    ((l) 3)    ((m) 5)    ((n) 9)    ((o) 0)    ((p) 7)
+    ((q) 4)    ((r) 2)    ((s) 1)    ((t) 5)    ((u) 6)    (t 0)))
+
+;; Sa sajta http://web.cs.ucla.edu/~rosen/161/notes/alphabeta.html
+;; A -> 3
+(defun --sajt-nova-stanja (stanje &optional (znak "x"))  
+  (case stanje
+    ((a) '(b c))    ((b) '(d e))    ((c) '(f g))    ((d) '(h i))
+    ((e) '(j k))    ((f) '(l m))    ((g) '(n))      ((h) '(o p))
+    ((i) '(q r))    ((j) '(s))      ((k) '(t u))    ((l) '(v w))
+    ((m) '(x))      ((n) '(y z))    (t '())))
+(defun --sajt-proceni-stanje (stanje)   
+  (case stanje
+    ((o) 3)    ((p) 17)    ((q) 2)    ((r) 12)    ((s) 15)    ((t) 25)
+    ((u) 0)    ((v) 2)     ((w) 5)    ((x) 3)     ((y) 2)     ((z) 14)
+    (t 0)))
+
+(defun vreme ()
+  (let ((real1 (get-internal-real-time))
+        (run1 (get-internal-run-time)))
+    ;(ALPHA-BETA-MAX *TABLA* *ALPHA* *BETA* '4 '4)
+    (ALPHA-BETA-MAX *TABLA* *ALPHA* *BETA* '3 '3) 
+    ;(MINIMAX *TABLA* 2 "x")
+    (let ((run2 (get-internal-run-time))
+	    (real2 (get-internal-real-time)))
+	(format t "Computation took:~%")
+	(format t "  ~f seconds of real time~%"
+		(/ (- real2 real1) internal-time-units-per-second))
+	(format t "  ~f seconds of run time~%"
+		(/ (- run2 run1) internal-time-units-per-second)))))
 
 
 
@@ -674,53 +772,7 @@
 
 
 
-;;; paljevina
-(defun paljevina ()
-  (progn (setq *tabla* (kreiraj-tablu 5))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x"))))) 
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x"))))) 
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x"))))) 
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x"))))) 
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "x")))))
-    (print (stampaj (setq *tabla* (car (minimax *tabla* 5 "o")))))))
 
-  
 
 
 
@@ -758,14 +810,13 @@
       (float (heuristika-parametri tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)))))
 
 (defun-ajax heuristikaAJAX (data) (*ajax-processor* :callback-data :response-text)
-  (let* ((znak data)
+  (let* (;(znak data) ; zapravo je nebitan parametar
          (tabla *tabla*)
          (faktor-pobeda 1)
          (faktor-izgurani 1)
          (faktor-centar 1)
          (faktor-grupisanje 1))
-    (format nil "Znak: ~s~%Pobeda: ~s~%Izgurani: ~s~%Centar: ~s~%Grupisanje: ~s~%Zbir: ~s~%"
-      znak
+    (format nil "Pobeda: ~s~%Izgurani: ~s~%Centar: ~s~%Grupisanje: ~s~%Zbir: ~s~%"
       (float (h-pobeda     tabla faktor-pobeda))
       (float (h-izgurani   tabla faktor-izgurani))
       (float (h-centar     tabla faktor-centar))
@@ -773,31 +824,18 @@
       (float (heuristika-parametri tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)))))
 
 (defun-ajax echo (data) (*ajax-processor* :callback-data :response-text)
-  (let (
-        ;(a (format t "rezultat: ~S~%" (eval data)))
-        ;(b (format t "data: ~S~%"  data))
-        ;(c (eval data))
-        (d (string-to-list data))
-        )
-    (format nil "~S~%" (stampaj
-                        (setq *tabla*
-                              (if (null (odigraj-potez (car d) (cadr d) *tabla*))
-                                  *tabla*
-                                  (odigraj-potez (car d) (cadr d) *tabla*)
-                                  )
-                            )
-                        )
-      )
-    ;;(concatenate 'string "echo: " (eval d))
-    )
-  )
+  (let ((d (string-to-list data)))
+    (format nil "~S~%" (stampaj (setq *tabla* (if (null (odigraj-potez (car d) (cadr d) *tabla*))
+                                                  *tabla*
+                                                (odigraj-potez (car d) (cadr d) *tabla*)))))))
 
-;;; Neka AI razmisli 
-(defun ai-odigraj-potez-1 (tabla znak) 
-  (car (minimax tabla 20 znak))) 
+;;; Neka AI razmisli
+(defun ai-odigraj-potez-1 (tabla znak)
+  (car (minimax tabla (if (equalp znak "x") 60 3) znak)))
 (defun-ajax ai-odigraj-potez (data) (*ajax-processor* :callback-data :response-text)
-  (format nil "~S~%" (stampaj (ai-odigraj-potez-1 (string-u-tabla (subseq data 1 (length data)))
-                                                  (subseq data 0 1)))))
+  (format nil "~S~%" (stampaj (setq *tabla* (ai-odigraj-potez-1 (string-u-tabla (subseq data 1 (length data)))
+                                                                (subseq data 0 1))))))
+
 
 (defun-ajax reset (data) (*ajax-processor* :callback-data :response-text)
   (format nil "~S~%" (stampaj (setq *tabla* (kreiraj-tablu 5))))
@@ -823,3 +861,64 @@
 
 (setq *dispatch-table* (list 'dispatch-easy-handlers
                              (create-ajax-dispatcher *ajax-processor*)))
+
+
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;                                                                                              ;;;
+;;;                                          TEST UNITI                                          ;;;
+;;;                                                                                              ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; 8. poglavlje
+
+(defmacro do-primes ((var start end) &body body)
+  (let ((ending-value-name (gensym)))
+    `(do ((,var (next-prime ,start) (next-prime (1+ ,var)))
+          (,ending-value-name ,end))
+         ((> ,var ,ending-value-name))
+       ,@body)))
+
+(defmacro with-gensyms ((&rest names) &body body)
+  `(let ,(loop for n in names collect `(,n (gensym)))
+     ,@body))
+
+
+;;; 9. poglavlje
+
+(defvar *test-name* nil)
+
+(defmacro deftest (name parameters &body body)
+  "Define a test function. Within a test function we can call
+   other test functions or use 'check' to run individual test
+   cases."
+  `(defun ,name ,parameters
+    (let ((*test-name* (append *test-name* (list ',name))))
+      ,@body)))
+
+(defmacro check (&body forms)
+  `(combine-results
+    ,@(loop for f in forms collect `(report-result ,f ',f))))
+
+(defmacro combine-results (&body forms)
+  (with-gensyms (result)
+    `(let ((,result t))
+      ,@(loop for f in forms collect `(unless ,f (setf ,result nil)))
+       ,result)))
+
+(defun report-result (result form)
+  "Report the results of a single test case. Called by 'check'."
+  (format t "~:[FAIL~;pass~] ... ~a: ~a~%" result *test-name* form)
+  result)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                           
+  
+  
+
+
+
