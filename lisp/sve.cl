@@ -628,7 +628,7 @@
 ;;; 3. centar
 ;;; 4. grupisanje
 (defun heuristika (tabla)
-  (float (heuristika-parametri tabla 999999999 100 10 10)))
+  (float (heuristika-parametri tabla 999999999 1000 30 100)))
 
 
 
@@ -831,7 +831,9 @@
 
 ;;; Neka AI razmisli
 (defun ai-odigraj-potez-1 (tabla znak)
-  (car (minimax tabla (if (equalp znak "x") 60 3) znak)))
+  (if (equalp znak "x")
+      (car (alpha-beta-max tabla *alpha* *beta* 3 3))
+   (car (alpha-beta-min tabla *alpha* *beta* 2 2))))
 (defun-ajax ai-odigraj-potez (data) (*ajax-processor* :callback-data :response-text)
   (format nil "~S~%" (stampaj (setq *tabla* (ai-odigraj-potez-1 (string-u-tabla (subseq data 1 (length data)))
                                                                 (subseq data 0 1))))))
