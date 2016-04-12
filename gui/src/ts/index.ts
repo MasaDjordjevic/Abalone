@@ -19,19 +19,38 @@ function posaljiPotez(kameni, smer): any {
     smackjack.heuristika('x', prikaziHeuristike, null);
 }
 
+var novaIgra = function() {
+    var prvi = (<HTMLInputElement>document.getElementById('igrac-1-human')).checked ? Igrac.Human : Igrac.AI;
+    var drugi = (<HTMLInputElement>document.getElementById('igrac-2-human')).checked ? Igrac.Human : Igrac.AI;
 
-window.onload = function() {
-    tabla = new Tabla(5, Igrac.Human, Igrac.Human);
+    tabla = new Tabla(5, prvi, drugi);
+
     tabla.nacrtaj();
     smackjack.reset('', callback, null);
+}
+
+
+window.onload = function() {
+
+    var prvi = Igrac.AI;
+    var drugi = Igrac.Human;
+
+    (<HTMLInputElement>document.getElementById('igrac-1-human')).checked = (prvi == Igrac.Human);
+    (<HTMLInputElement>document.getElementById('igrac-1-ai')).checked = (prvi == Igrac.AI);
+    (<HTMLInputElement>document.getElementById('igrac-2-human')).checked = (drugi == Igrac.Human);
+    (<HTMLInputElement>document.getElementById('igrac-2-ai')).checked = (drugi == Igrac.AI);
+
+    novaIgra();
+    document.getElementById("nova-igra").addEventListener('click', novaIgra);
 
     // Event listeneri za smerove
     document.getElementById('smer1').addEventListener('click', function() { posaljiPotez(tabla.selektirani, 1); });
     document.getElementById('smer2').addEventListener('click', function() { posaljiPotez(tabla.selektirani, 2); });
     document.getElementById('smer3').addEventListener('click', function() { posaljiPotez(tabla.selektirani, 3); });
     document.getElementById('smer4').addEventListener('click', function() { posaljiPotez(tabla.selektirani, 4); });
-    document.getElementById('smer5').addEventListener('click', function() { posaljiPotez(tabla.selektirani, 5); });
     document.getElementById('smer6').addEventListener('click', function() { posaljiPotez(tabla.selektirani, 6); });
+    document.getElementById('smer5').addEventListener('click', function() { posaljiPotez(tabla.selektirani, 5); });
+
 
     var tablaHTML = document.getElementById('tabla-id');
     tablaHTML.classList.add('axial-visible');
@@ -73,12 +92,14 @@ window.onload = function() {
         document.getElementById("config").classList.toggle("hidden");
     });
 
+    // Select on drag
     document.addEventListener("mouseup", function() {
         isMouseDown = false;
     });
 
 }
 
+// Shortcutovi na tastaturi za pomeranje kad igra Human
 document.onkeypress = function(e) {
     var c = e.keyCode;
     if (c == 100 || c == 54) posaljiPotez(tabla.selektirani, 1);   // d, 6
@@ -106,14 +127,14 @@ function callback(response) {
     tabla.nacrtajString(response);
 
     var naRedu = tabla.igraci[tabla.naRedu];
+    var znakIgracaNaRedu = tabla.naRedu == 0 ? "x" : "o";
     console.log("Potez treba da odigra " + (naRedu == Igrac.Human ? "čovek" : "AI") + ".");
 
     if (naRedu == Igrac.AI) {
         console.log("AI-ju se postavlja zadatak!\nTabla je:\n"  + tabla.poslednjeStanje);
         setTimeout(function() {
-            var znakIgracaNaRedu = tabla.naRedu == 0 ? "x" : "o";
             smackjack.AIodigrajPotez(znakIgracaNaRedu + tabla.poslednjeStanje, callback, null);
-        }, 750);
+        }, 500);
     }
 };
 

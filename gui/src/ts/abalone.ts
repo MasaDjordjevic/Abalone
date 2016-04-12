@@ -123,6 +123,7 @@ class Tabla {
             this.polja[i] = new Kamen(this);
         }
 
+        this.resetNaRedu();
         this.poslednjeStanje = null;
 
         var index = 0;
@@ -147,6 +148,13 @@ class Tabla {
         }
 
         this.selektirani = [];
+    }
+
+    resetNaRedu(): void {
+        this.naRedu = 0;
+        if (!document.getElementById("stats-x").classList.contains("trenutni-na-redu"))
+            document.getElementById("stats-x").classList.add("trenutni-na-redu");
+        document.getElementById("stats-o").classList.remove("trenutni-na-redu");
     }
 
     toggleNaRedu(): void {

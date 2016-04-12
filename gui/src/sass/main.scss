@@ -100,12 +100,13 @@ h1 {
     box-shadow      : 0 0 0 3px rgba(white, .6);
     overflow        : hidden;
     transition      : height 0.33s, opacity 0.33s;
-    height          : 80px;
+    height          : 150px;
     border-radius   : 15px;
     opacity         : 1;
     margin          : 30px 10px 10px;
     padding         : 10px;
     box-sizing      : border-box;
+    color           : rgba(black, .7);
 
     &.hidden {
         height : 0;
@@ -130,7 +131,6 @@ input:not([type="text"]) {
         display    : inline-block;
         position   : relative;
         transition : opacity 0.33s; // zbog disablovanja
-        color      : rgba(black, .7);
 
         &::before {
             content    : "";
