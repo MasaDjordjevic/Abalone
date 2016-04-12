@@ -18,7 +18,7 @@ $color-no-marble: palette($blue-grey, 100);
 $color-select-disallowed: rgba(palette($red, 300), .7);
 $color-select-allowed: rgba(palette($green, 300), .7);
 /**/
-$marble-size: 23px;
+$marble-size: 13.7px;
 
 * {
     -webkit-touch-callout: none;
@@ -34,29 +34,92 @@ $marble-size: 23px;
 
 body {
     background-color: $background-color;
+    display: flex;
+    flex-grow: column;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
 h1 {
     font-family: 'Satisfy', cursive;
     position   : fixed;
     top        : 55px;
-    left       : 50px;
+    right       : 50px;
     margin     : 0;
     padding    : 0;
     font-size  : 7em;
-    transform  : rotate(-17deg);
+    transform  : rotate(+17deg);
     color      : $color-main-dark;
-    text-shadow: 5px 5px 0 $color-main-light;
+    text-shadow: -5px 5px 0 $color-main-light;
 }
 
 
 .tabla-container {
-    width          : 100%;
     //border         : black 2px solid;
     display        : flex;
-    justify-content: space-around;
-    align-items    : stretch;
     position       : relative;
+    list-style-type: none;
+    flex-wrap: wrap;
+    margin-left: 6*$marble-size;
+
+    &.contains-x > li > .item > .tabla {
+      box-shadow: 0px 0px 0px 2px rgba(black, 0.4) inset;
+    }
+
+    &.contains-o > li > .item > .tabla {
+      box-shadow: 0px 0px 0px 2px rgba(white, 1) inset;
+    }
+
+    &.hidden {
+      display: none;
+    }
+}
+
+
+
+.item {
+  margin-right: $marble-size;
+  position: relative;
+}
+
+.tabla-container > li:not(.expanded) > .item .toggle-descendants {
+  display: none;
+}
+
+body > .tabla-container {
+  margin-left: 0;
+}
+
+.tabla-container li div {
+    //width          : 100%;
+}
+
+body > .tabla-container > li > .item > .tabla {
+  background-color: palette($orange);
+}
+
+body > .tabla-container > li > .tabla-container > li > .item > .tabla {
+  background-color: palette($light-green);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+  background-color: palette($teal);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+  background-color: palette($light-blue);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+  background-color: palette($indigo, 300);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+  background-color: palette($pink);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+  background-color: palette($red, 300);
 }
 
 .tabla {
@@ -129,4 +192,8 @@ h1 {
         opacity         : 0.5;
     }
 
+}
+
+.expanded {
+  width: 100%;
 }
