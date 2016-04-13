@@ -617,19 +617,20 @@
        (eval (list pm (h-grupisanje tabla znak faktor-grupisanje-moj)))
        (eval (list mp (h-grupisanje tabla (suprotan-znak znak) faktor-grupisanje-njegov))))))
 
-(defun deskriptivna-heuristika (tabla znak faktor-pobeda-moj faktor-pobeda-njegov faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov)
+(defun deskriptivna-heuristika (tabla znak faktor-pobeda-moj faktor-pobeda-njegov faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov &optional (stampaj-u-konzoli t))
   (let* ((pm (if (equalp znak "x") '+ '-))
          (mp (if (equalp znak "o") '+ '-)))
-    (format t "Pobeda: ~s~%Izgurani moj: ~s~%Izgurani njegov: ~s~%Centar moj: ~s~%Centar njegov: ~s~%Grupisanje moj: ~s~%Grupisanje njegov: ~s~%Ukupno: ~s~%"
-      (eval (list pm (h-pobeda     tabla znak faktor-pobeda-moj)))
-      (eval (list mp (h-pobeda     tabla (suprotan-znak znak) faktor-pobeda-njegov)))
-      (eval (list pm (h-izgurani   tabla znak faktor-izgurani-moj)))
-      (eval (list mp (h-izgurani   tabla (suprotan-znak znak) faktor-izgurani-njegov)))
-      (eval (list pm (h-centar     tabla znak faktor-centar-moj)))
-      (eval (list mp (h-centar     tabla (suprotan-znak znak) faktor-centar-njegov)))
-      (eval (list pm (h-grupisanje tabla znak faktor-grupisanje-moj)))
-      (eval (list mp (h-grupisanje tabla (suprotan-znak znak) faktor-grupisanje-njegov))))
-      (float (heuristika-parametri tabla znak faktor-pobeda-moj faktor-pobeda-njegov faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov))))
+    (format stampaj-u-konzoli "Znak: ~s~%Pobeda-moj: ~s~%Pobeda njegov: ~s~%Izgurani moj: ~s~%Izgurani njegov: ~s~%Centar moj: ~s~%Centar njegov: ~s~%Grupisanje moj: ~s~%Grupisanje njegov: ~s~%Ukupno: ~s~%"
+      znak
+      (float (eval (list pm (h-pobeda     tabla znak faktor-pobeda-moj))))
+      (float (eval (list mp (h-pobeda     tabla (suprotan-znak znak) faktor-pobeda-njegov))))
+      (float (eval (list pm (h-izgurani   tabla znak faktor-izgurani-moj))))
+      (float (eval (list mp (h-izgurani   tabla (suprotan-znak znak) faktor-izgurani-njegov))))
+      (float (eval (list pm (h-centar     tabla znak faktor-centar-moj))))
+      (float (eval (list mp (h-centar     tabla (suprotan-znak znak) faktor-centar-njegov))))
+      (float (eval (list pm (h-grupisanje tabla znak faktor-grupisanje-moj))))
+      (float (eval (list mp (h-grupisanje tabla (suprotan-znak znak) faktor-grupisanje-njegov))))
+      (float (heuristika-parametri tabla znak faktor-pobeda-moj faktor-pobeda-njegov faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov)))))
 
 
 ;;; 1. pobeda
@@ -637,7 +638,7 @@
 ;;; 3. centar moj/njegov
 ;;; 4. grupisanje moj/njegov
 (defun heuristika (tabla znak)
-  (float (heuristika-parametri tabla znak 999999999 999999999 1000 1000 30 30 100 100)))
+  (float (heuristika-parametri tabla znak 999999999 999999999 1000 1000 100 80 100 120)))
 
 
 
@@ -672,7 +673,7 @@
 ;;; Proceni stanje na osnovu procene potomaka (tj. poteza u koje moze da se stigne iz STANJE) i igraca koji je na potezu.
 ;;; "x" = max, "o" = min.
 ;;; Pretraga se okocava kada se dosegne zadatak DUBINA, i tada se kao procena stanja vraca njegova heuristika.
-;;; Podrazumevano se kao funkcija koja vraca nova stanja zove "nove-stanja", a za procenu stanja se zove "heuristika", 
+;;; Podrazumevano se kao funkcija koja vraca nova stanja zove "nove-stanja", a za procenu stanja se zove "heuristika",
 ;;;   ali se moze promeniti proslednjivanjem opcionih parametara.
 (defun minimax (stanje dubina igrac &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
   (let* ((igrac-sad      (if (equalp igrac "x") 'max-stanje 'min-stanje))
@@ -703,13 +704,13 @@
                ;; vraca sebe:
                ;(return (list stanje (cadr beta))))
                ;finally (return (list stanje (cadr alpha))))))
-               ;; vraca najdublji dokle je stigo pa je skontao da je najbolje resenje:   
+               ;; vraca najdublji dokle je stigo pa je skontao da je najbolje resenje:
                ;(return beta))
                ;finally (return alpha))))
                ;; vraca sledeci potez koji treba da se odigra
                (return (if (= dubina maxdubina) beta (list stanje (cadr beta)))))
         finally (return (if (= dubina maxdubina) alpha (list stanje (cadr alpha)))))))
-               
+
 
 (defun alpha-beta-min (stanje alpha beta dubina maxdubina znak igram-ja &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
   (if (zerop dubina)
@@ -721,39 +722,39 @@
                ;; vraca sebe:
                ;(return (list stanje (cadr alpha))))
                ;finally (return (list stanje (cadr beta))))))
-               ;; vraca najdublji dokle je stigo pa je skontao da je najbolje resenje:   
-               (return alpha))
-               finally (return beta))))
+               ;; vraca najdublji dokle je stigo pa je skontao da je najbolje resenje:
+               ;(return alpha))
+               ;finally (return beta))))
                ;; vraca sledeci potez koji terba da se odgira
-               ;(return (if (= dubina maxdubina) alpha (list stanje (cadr alpha)))))
-       ; finally (return (if (= dubina maxdubina) beta (list stanje (cadr beta)))))))
-               
-               
+               (return (if (= dubina maxdubina) alpha (list stanje (cadr alpha)))))
+        finally (return (if (= dubina maxdubina) beta (list stanje (cadr beta)))))))
+
+
 
 ;;; Primeri za testiranje.
 ;;; (MINIMAX 'A '4 "x" '--SAJT-NOVA-STANJA '--SAJT-PROCENI-STANJE)
 ;;; (ALPHA-BETA-MAX 'A *ALPHA* *BETA* '4 '4 '--SAJT-NOVA-STANJA '--SAJT-PROCENI-STANJE)
 ;; Sa slajdova (strane 46/4 i 47/1).
 ;; A -> 3
-(defun --slajdovi-nova-stanja (stanje &optional (znak "x")) 
+(defun --slajdovi-nova-stanja (stanje &optional (znak "x"))
   (case stanje
     ((a) '(b c d))    ((b) '(e f))     ((c) '(g h))    ((d) '(i j))
     ((e) '(k l))      ((f) '(m n))     ((g) '(o))      ((h) '(p q))
     ((i) '(r s))      ((j) '(t u))     (t '())))
-(defun --slajdovi-proceni-stanje (stanje &optional (znak "x"))   
+(defun --slajdovi-proceni-stanje (stanje &optional (znak "x"))
   (case stanje
     ((k) 2)    ((l) 3)    ((m) 5)    ((n) 9)    ((o) 0)    ((p) 7)
     ((q) 4)    ((r) 2)    ((s) 1)    ((t) 5)    ((u) 6)    (t 0)))
 
 ;; Sa sajta http://web.cs.ucla.edu/~rosen/161/notes/alphabeta.html
 ;; A -> 3
-(defun --sajt-nova-stanja (stanje &optional (znak "x"))  
+(defun --sajt-nova-stanja (stanje &optional (znak "x"))
   (case stanje
     ((a) '(b c))    ((b) '(d e))    ((c) '(f g))    ((d) '(h i))
     ((e) '(j k))    ((f) '(l m))    ((g) '(n))      ((h) '(o p))
     ((i) '(q r))    ((j) '(s))      ((k) '(t u))    ((l) '(v w))
     ((m) '(x))      ((n) '(y z))    (t '())))
-(defun --sajt-proceni-stanje (stanje &optional (znak "x"))   
+(defun --sajt-proceni-stanje (stanje &optional (znak "x"))
   (case stanje
     ((o) 3)    ((p) 17)    ((q) 2)    ((r) 12)    ((s) 15)    ((t) 25)
     ((u) 0)    ((v) 2)     ((w) 5)    ((x) 3)     ((y) 2)     ((z) 14)
@@ -765,7 +766,7 @@
   (let ((real1 (get-internal-real-time))
         (run1 (get-internal-run-time)))
     ;(ALPHA-BETA-MAX *TABLA* *ALPHA* *BETA* '4 '4)
-    ;(ALPHA-BETA-MAX *TABLA* *ALPHA* *BETA* '3 '3 "x") 
+    ;(ALPHA-BETA-MAX *TABLA* *ALPHA* *BETA* '3 '3 "x")
     ;(MINIMAX *TABLA* 2 "x")
     (let ((run2 (get-internal-run-time))
 	    (real2 (get-internal-real-time)))
@@ -845,6 +846,26 @@
 ;      (float (h-grupisanje tabla (suprotan-znak znak) faktor-grupisanje-njegov))
 ;      (float (heuristika-parametri tabla znak faktor-pobeda faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov)))))
 
+(defun-ajax heuristika-ajax (data) (*ajax-processor* :callback-data :response-text)
+  (let* ((data (string-to-list data))
+         (data (car data)) ; posto ga on stavi u listu
+         (znakk (nth 0 data))
+         (tabla (string-u-tabla (nth 1 data)))
+         (faktor-pobeda-moj (nth 2 data))
+         (faktor-pobeda-njegov (nth 3 data))
+         (faktor-izgurani-moj (nth 4 data))
+         (faktor-izgurani-njegov (nth 5 data))
+         (faktor-centar-moj (nth 6 data))
+         (faktor-centar-njegov (nth 7 data))
+         (faktor-grupisanje-moj (nth 8 data))
+         (faktor-grupisanje-njegov (nth 9 data)))
+    (format nil "~s~%" (deskriptivna-heuristika tabla znakk
+                             faktor-pobeda-moj faktor-pobeda-njegov
+                             faktor-izgurani-moj faktor-izgurani-njegov
+                             faktor-centar-moj faktor-centar-njegov
+                             faktor-grupisanje-moj faktor-grupisanje-njegov
+                             nil))))
+
 (defun-ajax echo (data) (*ajax-processor* :callback-data :response-text)
   (let ((d (string-to-list data)))
     (format nil "~S~%" (stampaj (setq *tabla* (if (null (odigraj-potez (car d) (cadr d) *tabla*))
@@ -855,7 +876,7 @@
 (defun ai-odigraj-potez-1 (tabla znak)
   (if (equalp znak "x")
       (car (alpha-beta-max tabla *alpha* *beta* 3 3 "x" t))
-    (car (alpha-beta-min tabla *alpha* *beta* 3 3 "o" t))))  
+    (car (alpha-beta-min tabla *alpha* *beta* 3 3 "o" t))))
 
 
 
@@ -942,10 +963,3 @@
   result)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-                           
-  
-  
-
-
-

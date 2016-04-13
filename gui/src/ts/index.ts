@@ -16,14 +16,13 @@ function posaljiPotez(kameni, smer): any {
     string = string + smer + ' *tabla*';
 
     smackjack.echo(string, callback, null);
-    smackjack.heuristika('x', prikaziHeuristike, null);
 }
 
 var novaIgra = function() {
     var prvi = (<HTMLInputElement>document.getElementById('igrac-1-human')).checked ? Igrac.Human : Igrac.AI;
     var drugi = (<HTMLInputElement>document.getElementById('igrac-2-human')).checked ? Igrac.Human : Igrac.AI;
 
-    tabla = new Tabla(5, prvi, drugi, document.getElementById('tabla-id'), 70);    
+    tabla = new Tabla(5, prvi, drugi, document.getElementById('tabla-id'), 70);
 
     smackjack.reset('', callback, null);
 }
@@ -136,7 +135,3 @@ function callback(response) {
         }, 500);
     }
 };
-
-function prikaziHeuristike(response) {
-    console.log(response);
-}

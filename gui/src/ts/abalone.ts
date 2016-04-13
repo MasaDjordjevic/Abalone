@@ -38,7 +38,7 @@ class Kamen {
 
 
 
-        // upis u kamen nase koordinate
+        // upis u kamen, kubne koordinate
         kamen.innerHTML = '<span class="koordinate cubic">' + this.koordinata.x + ', ' + this.koordinata.y + ', ' + this.koordinata.z + '</span>';
 
         // upis u kamen, aksijalne kooridnate
@@ -50,9 +50,6 @@ class Kamen {
 
         this.tabla.div.appendChild(kamen);
         this.div = kamen;
-        /*this.div.onclick = (e) => {
-            this._onclick();
-        }*/
 
         this.div.onmousedown = (e) => {
             isMouseDown = true;
@@ -115,6 +112,8 @@ class Tabla {
     igraci: Igrac[] = new Array<Igrac>(Igrac.Human, Igrac.Human);
     naRedu: number = 0;
     velicinaKamencica : number = 70;
+    heuristikaX = [];
+    heuristikaO = [];
 
     constructor(velicina: number, igrac0: Igrac = Igrac.Human, igrac1: Igrac = Igrac.Human, HTMLtabla:HTMLElement, velicinaKamencica: number, miniTabla: boolean = true) {
         this.velicina = velicina;
@@ -127,7 +126,7 @@ class Tabla {
             this.polja[i] = new Kamen(this);
         }
 
-        if(miniTabla)
+        if (miniTabla)
           this.resetNaRedu();
         this.poslednjeStanje = null;
 
@@ -274,5 +273,26 @@ class Tabla {
         }
 
         this.nacrtaj();
+    }
+
+    toString(): string {
+        var s: string = "";
+        for (let i = 0; i < this.polja.length; i++) {
+            s += this.polja[i].boja;
+        }
+        return s;
+    }
+
+    izracunajHeuristike(f1x:number = 1, f1o:number = 1, f2x:number = 1, f2o:number = 1, f3x:number = 1, f3o:number = 1, f4x:number = 1, f4o:number = 1) {
+        var data: string;
+        var znaci = ["x", "o"];
+        for (let i = 0; i < znaci.length; i++) {
+            var znak = znaci[i];
+            data = '("' + znak + '" "' + this.toString() + '" ' + f1x + ' ' + f1o + ' ' + f2x + ' ' + f2o + ' ' + f3x + ' ' + f3o + ' ' + f4x + ' ' + f4o + ')';
+            smackjack.heuristika(data, function(response) {
+                var nizHeuristika: Array<number> = response.match(/[-+]?[0-9]*\.?[0-9]+/g);
+                console.log(nizHeuristika);
+            }, null);
+        }
     }
 }

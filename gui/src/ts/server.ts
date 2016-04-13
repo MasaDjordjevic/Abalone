@@ -133,7 +133,7 @@ var smackjack = {
     smackjack.reset = reset;
 
     function heuristika(data, callback, errorHandler = null) {
-        return ajaxCall("HEURISTIKAAJAX", [data], "GET", callback, errorHandler, responseText);
+        return ajaxCall("HEURISTIKA-AJAX", [data], "GET", callback, errorHandler, responseText);
     };
     smackjack.heuristika = heuristika;
 
