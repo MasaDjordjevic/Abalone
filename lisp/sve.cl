@@ -864,7 +864,13 @@
                              faktor-izgurani-moj faktor-izgurani-njegov
                              faktor-centar-moj faktor-centar-njegov
                              faktor-grupisanje-moj faktor-grupisanje-njegov
-                             nil))))
+                                                nil))))
+
+(defun-ajax deca-ajax (data) (*ajax-processor* :callback-data :response-text)  
+  (let* ((znak (subseq data 0 1))
+         (tabla (string-u-tabla (subseq data 1 (length data)))))
+    (format nil "~s" (LOOP FOR STANJE IN (NOVA-STANJA tabla znak) collect (format nil "~s" (STAMPAJ STANJE))))))
+
 
 (defun-ajax echo (data) (*ajax-processor* :callback-data :response-text)
   (let ((d (string-to-list data)))

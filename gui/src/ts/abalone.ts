@@ -78,7 +78,7 @@ class Kamen {
     }
 
     _onclick() {
-        if(this.tabla instanceof TablaZaCrtanje) 
+        if(this.tabla instanceof TablaZaCrtanje)
           return;
         //ako je ukljucen striktni rezim i ako ti nisi na redu oboji -lose
         if ((<HTMLInputElement>document.getElementsByName("strict-mode")[0]).checked) {

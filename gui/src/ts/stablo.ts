@@ -5,10 +5,11 @@
 var table = [];
 
 window.onload = function() {
-  kreirajTablu(document.getElementsByClassName("tabla-container")[0]);
+  var initTabla = 'xx-ooxxxooo-xx-oo---------------------------oo-xx-oooxxxoo-xx';
+  kreirajTablu(document.getElementsByClassName("tabla-container")[0], initTabla);
 }
 
-function kreirajTablu(cont) {
+function kreirajTablu(cont, str) {
   var li = document.createElement("li");
   var wrapper = document.createElement("div");
   wrapper.className = "item";
@@ -18,7 +19,11 @@ function kreirajTablu(cont) {
   el.classList.add("sakrij-koordinate");
 
   var tabla = new TablaZaCrtanje(5, el, 15);
-  tabla.nacrtajString(randomTabla());
+  tabla.nacrtajString(str);
+  tabla.izracunajHeuristike(99999, 99999, 100, 100, 10, 20, 30, 40);
+  tabla.div.addEventListener("click", function(){
+    window.prompt("Copy to clipboard: Ctrl+C, Enter", str);
+  })
   table.push(tabla);
   wrapper.appendChild(el);
 
@@ -39,7 +44,7 @@ function kreirajTablu(cont) {
   btn.className = "fetch-children-x";
   //btn.innerHTML = "x";
   btn.onclick = function () {
-    _onclick(this, "x");
+    _onclick(this, "x", tabla);
   }
   wrapper.appendChild(btn);
 
@@ -47,7 +52,7 @@ function kreirajTablu(cont) {
   btn.className = "fetch-children-o";
   //btn.innerHTML = "o";
   btn.onclick = function() {
-    _onclick(this, "o");
+    _onclick(this, "o", tabla);
   }
   wrapper.appendChild(btn);
   var s:string = '';
@@ -68,15 +73,26 @@ function kreirajTablu(cont) {
   cont.appendChild(li);
 }
 
-function _onclick(btn:HTMLButtonElement, znak:string) {
+function _onclick(btn:HTMLButtonElement, znak:string, tabla: TablaZaCrtanje) {
   btn.disabled = true;
   var ul = document.createElement("ul");
   ul.className = "tabla-container contains-" + znak;
-   for (let i = 0; i < 20; i++) {
-    kreirajTablu(ul);
-   }
-   btn.parentNode.parentNode.appendChild(ul);
-   (<HTMLButtonElement>btn.parentNode.parentNode).classList.add("expanded");
+  var tablaSelf = tabla;
+  //ajax deca
+  var decaStr = smackjack.deca(znak + tabla.toString(), function(response) {
+    var res:string = response.replace(/[^XxOo\-\_\"]/g, '');
+    res = res.substr(2, res.length - 4);
+    var stanja = res.split('""""');
+    for(var i = 0; i< stanja.length; i++) {
+       kreirajTablu(ul, stanja[i]);
+    }
+
+  }, null)
+
+
+
+  btn.parentNode.parentNode.appendChild(ul);
+  (<HTMLButtonElement>btn.parentNode.parentNode).classList.add("expanded");
 }
 
 function randomTabla() {
@@ -86,5 +102,5 @@ function randomTabla() {
     str += znaci[Math.floor((Math.random() * 100) % 3)];
   }
 
-  return str;
+  return "xx-ooxxxooo-xx-oo---------------------------oo-xx-oooxxxoo-xx";
 }
