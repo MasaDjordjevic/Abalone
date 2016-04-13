@@ -578,22 +578,20 @@
 
 ;;; Ocekuje cvorove.
 (defun pobeda-p (znak tabla)
-  (< (prebroji znak tabla) 8))
+  (< (prebroji (suprotan-znak znak) tabla) 8))
 
 ;;; Ocekuje cvorove.
-(defun h-pobeda (tabla faktor)
-  (cond ((pobeda-p "x" tabla) faktor)
-        ((pobeda-p "o" tabla) (- 0 faktor))
+(defun h-pobeda (tabla znak faktor)
+  (cond ((pobeda-p znak tabla) faktor)
         (t 0)))
 
 ;;; Ocekuje cvorove.
-(defun h-izgurani (tabla faktor)
-  (* (- (broj-izguranih "o" tabla) (broj-izguranih "x" tabla)) faktor))
+(defun h-izgurani (tabla znak faktor)
+  (- (* (broj-izguranih znak tabla) faktor)))
 
 ;;; Ocekuje cvorove.
-(defun h-centar (tabla faktor)
-  (* (- (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "o")))
-        (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "x")))) faktor))
+(defun h-centar (tabla znak faktor)
+  (- (* (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla znak))) faktor)))
 
 ;;; Ocekuje cvorove.
 (defun h-grupisanje-1 (lista svi)
@@ -601,34 +599,45 @@
         (t (+ (prosecno-rastojanje-do-svih (car lista) svi) (h-grupisanje-1 (cdr lista) svi)))))
 
 ;;; Ocekuje cvorove.
-(defun h-grupisanje (tabla faktor)
-  (let* ((svi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "x")))
-         (svi-njegovi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla "o"))))
-    (* (- (h-grupisanje-1 svi-njegovi svi-njegovi) (h-grupisanje-1 svi svi)) faktor)))
+(defun h-grupisanje (tabla znak faktor)
+  (let* ((svi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla znak))))
+    (- (* (h-grupisanje-1 svi svi) faktor))))
 
 
 ;;; Ocekuje cvorove.
-(defun heuristika-parametri (tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
-  (+ (h-pobeda     tabla faktor-pobeda)
-     (h-izgurani   tabla faktor-izgurani)
-     (h-centar     tabla faktor-centar)
-     (h-grupisanje tabla faktor-grupisanje)))
+(defun heuristika-parametri (tabla znak faktor-pobeda-moj faktor-pobeda-njegov faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov)
+  (let* ((pm (if (equalp znak "x") '+ '-))
+         (mp (if (equalp znak "o") '+ '-)))
+    (+ (eval (list pm (h-pobeda     tabla znak faktor-pobeda-moj)))
+       (eval (list mp (h-pobeda     tabla (suprotan-znak znak) faktor-pobeda-njegov)))
+       (eval (list pm (h-izgurani   tabla znak faktor-izgurani-moj)))
+       (eval (list mp (h-izgurani   tabla (suprotan-znak znak) faktor-izgurani-njegov)))
+       (eval (list pm (h-centar     tabla znak faktor-centar-moj)))
+       (eval (list mp (h-centar     tabla (suprotan-znak znak) faktor-centar-njegov)))
+       (eval (list pm (h-grupisanje tabla znak faktor-grupisanje-moj)))
+       (eval (list mp (h-grupisanje tabla (suprotan-znak znak) faktor-grupisanje-njegov))))))
 
-(defun deskriptivna-heuristika (tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
-  (format t "Pobeda: ~s~%Izgurani: ~s~%Centar: ~s~%Grupisanje: ~s~%Zbir: ~s~%"
-    (float (h-pobeda     tabla faktor-pobeda))
-    (float (h-izgurani   tabla faktor-izgurani))
-    (float (h-centar     tabla faktor-centar))
-    (float (h-grupisanje tabla faktor-grupisanje))
-    (float (heuristika-parametri tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje))))
+(defun deskriptivna-heuristika (tabla znak faktor-pobeda-moj faktor-pobeda-njegov faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov)
+  (let* ((pm (if (equalp znak "x") '+ '-))
+         (mp (if (equalp znak "o") '+ '-)))
+    (format t "Pobeda: ~s~%Izgurani moj: ~s~%Izgurani njegov: ~s~%Centar moj: ~s~%Centar njegov: ~s~%Grupisanje moj: ~s~%Grupisanje njegov: ~s~%Ukupno: ~s~%"
+      (eval (list pm (h-pobeda     tabla znak faktor-pobeda-moj)))
+      (eval (list mp (h-pobeda     tabla (suprotan-znak znak) faktor-pobeda-njegov)))
+      (eval (list pm (h-izgurani   tabla znak faktor-izgurani-moj)))
+      (eval (list mp (h-izgurani   tabla (suprotan-znak znak) faktor-izgurani-njegov)))
+      (eval (list pm (h-centar     tabla znak faktor-centar-moj)))
+      (eval (list mp (h-centar     tabla (suprotan-znak znak) faktor-centar-njegov)))
+      (eval (list pm (h-grupisanje tabla znak faktor-grupisanje-moj)))
+      (eval (list mp (h-grupisanje tabla (suprotan-znak znak) faktor-grupisanje-njegov))))
+      (float (heuristika-parametri tabla znak faktor-pobeda-moj faktor-pobeda-njegov faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov))))
 
 
 ;;; 1. pobeda
-;;; 2. izgurani
-;;; 3. centar
-;;; 4. grupisanje
-(defun heuristika (tabla)
-  (float (heuristika-parametri tabla 999999999 1000 30 100)))
+;;; 2. izgurani moj/njegov
+;;; 3. centar moj/njegov
+;;; 4. grupisanje moj/njegov
+(defun heuristika (tabla znak)
+  (float (heuristika-parametri tabla znak 999999999 999999999 1000 1000 30 30 100 100)))
 
 
 
@@ -639,20 +648,21 @@
 ;;; X je MAX, O je MIN
 
 ;;; Od prosledjene lista STANJA napravi listu ciji su elementi (stanje heuristika).
-(defun dodaj-heuristike (stanja)
+;; Ovo se nigde ne zove?
+(defun dodaj-heuristike (stanja znak)
   (cond ((null stanja) '())
-        (t (cons (list (car stanja) (heuristika (car stanja)))
-                 (dodaj-heuristike (cdr stanja))))))
+        (t (cons (list (car stanja) (heuristika (car stanja) znak))
+                 (dodaj-heuristike (cdr stanja) znak)))))
 
 ;;; Iz LISTE ciji su elementi (stanje heuristika) izaberi stanje sa najvecom/najmanjom (>/<) heuristikom.
 ;; Pomocna funkcija
-(defun minmax-stanje-i (lista max-stanje znak)
+(defun minmax-stanje-i (lista max-stanje op)
   (cond ((null lista) max-stanje)
-        ((apply znak (list (cadar lista) (cadr max-stanje))) (minmax-stanje-i (cdr lista) (car lista) znak)) ; nadjen novi maksimum, on se prosledjuje dalje
-        (t (minmax-stanje-i (cdr lista) max-stanje znak)))) ; trenutni maksimum se prosledjuje dalje
+        ((apply op (list (cadar lista) (cadr max-stanje))) (minmax-stanje-i (cdr lista) (car lista) op)) ; nadjen novi maksimum, on se prosledjuje dalje
+        (t (minmax-stanje-i (cdr lista) max-stanje op)))) ; trenutni maksimum se prosledjuje dalje
 ;; Glavna funkcija (polazi od pretpostavke da je prvi element najveci/najmanji.
-(defun minmax-stanje (lista znak)
-  (minmax-stanje-i (cdr lista) (car lista) znak))
+(defun minmax-stanje (lista op)
+  (minmax-stanje-i (cdr lista) (car lista) op))
 
 ;;; Konkretne funkcije za min i max
 (defun min-stanje (lista) (minmax-stanje lista '<))
@@ -667,8 +677,8 @@
 (defun minimax (stanje dubina igrac &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
   (let* ((igrac-sad      (if (equalp igrac "x") 'max-stanje 'min-stanje))
          (lista-potomaka (apply fja-nova-stanja (list stanje igrac))))
-    (cond ((or (zerop dubina) (null lista-potomaka)) (list stanje (apply fja-proceni-stanje (list stanje))))
-          (t (apply igrac-sad (list (mapcar (lambda (x) (minimax x (1- dubina) (suprotan-znak igrac) fja-nova-stanja fja-proceni-stanje)) lista-potomaka)))))))
+    (cond ((or (zerop dubina) (null lista-potomaka)) (list stanje (apply fja-proceni-stanje (list stanje igrac))))
+          (t (apply igrac-sad (list (mapcar (lambda (el) (minimax el (1- dubina) (suprotan-znak igrac) fja-nova-stanja fja-proceni-stanje)) lista-potomaka)))))))
 
 
 ;;; Alfa-beta odsecanje
@@ -683,12 +693,12 @@
 
 (defparameter *ALPHA* '('() -999999999))
 (defparameter *BETA*  '('() +999999999))
-(defun alpha-beta-max (stanje alpha beta dubina maxdubina &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
+(defun alpha-beta-max (stanje alpha beta dubina maxdubina znak igram-ja &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
   (if (zerop dubina)
-      (list stanje (apply fja-proceni-stanje (list stanje)))
-    (loop for sledbenik in (apply fja-nova-stanja (list stanje "x"))
+      (list stanje (apply fja-proceni-stanje (list stanje znak)))
+    (loop for sledbenik in (apply fja-nova-stanja (list stanje (if igram-ja znak (suprotan-znak znak))))
         do (if (>= (cadr (setq alpha (vece-stanje alpha
-                                                  (alpha-beta-min sledbenik alpha beta (1- dubina) maxdubina fja-nova-stanja fja-proceni-stanje))))
+                                                  (alpha-beta-min sledbenik alpha beta (1- dubina) maxdubina znak (not igram-ja) fja-nova-stanja fja-proceni-stanje))))
                    (cadr beta))
                ;; vraca sebe:
                ;(return (list stanje (cadr beta))))
@@ -701,22 +711,22 @@
         finally (return (if (= dubina maxdubina) alpha (list stanje (cadr alpha)))))))
                
 
-(defun alpha-beta-min (stanje alpha beta dubina maxdubina &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
+(defun alpha-beta-min (stanje alpha beta dubina maxdubina znak igram-ja &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
   (if (zerop dubina)
-      (list stanje (apply fja-proceni-stanje (list stanje)))
-    (loop for sledbenik in (apply fja-nova-stanja (list stanje "o"))
+      (list stanje (apply fja-proceni-stanje (list stanje znak)))
+    (loop for sledbenik in (apply fja-nova-stanja (list stanje (if igram-ja znak (suprotan-znak znak))))
         do (if (<= (cadr (setq beta (manje-stanje beta
-                                                  (alpha-beta-max sledbenik alpha beta (1- dubina) maxdubina fja-nova-stanja fja-proceni-stanje))))
+                                                  (alpha-beta-max sledbenik alpha beta (1- dubina) maxdubina znak (not igram-ja) fja-nova-stanja fja-proceni-stanje))))
                    (cadr alpha))
                ;; vraca sebe:
                ;(return (list stanje (cadr alpha))))
                ;finally (return (list stanje (cadr beta))))))
                ;; vraca najdublji dokle je stigo pa je skontao da je najbolje resenje:   
-               ;(return alpha))
-               ;finally (return beta))))
+               (return alpha))
+               finally (return beta))))
                ;; vraca sledeci potez koji terba da se odgira
-               (return (if (= dubina maxdubina) alpha (list stanje (cadr alpha)))))
-        finally (return (if (= dubina maxdubina) beta (list stanje (cadr beta)))))))
+               ;(return (if (= dubina maxdubina) alpha (list stanje (cadr alpha)))))
+       ; finally (return (if (= dubina maxdubina) beta (list stanje (cadr beta)))))))
                
                
 
@@ -730,7 +740,7 @@
     ((a) '(b c d))    ((b) '(e f))     ((c) '(g h))    ((d) '(i j))
     ((e) '(k l))      ((f) '(m n))     ((g) '(o))      ((h) '(p q))
     ((i) '(r s))      ((j) '(t u))     (t '())))
-(defun --slajdovi-proceni-stanje (stanje)   
+(defun --slajdovi-proceni-stanje (stanje &optional (znak "x"))   
   (case stanje
     ((k) 2)    ((l) 3)    ((m) 5)    ((n) 9)    ((o) 0)    ((p) 7)
     ((q) 4)    ((r) 2)    ((s) 1)    ((t) 5)    ((u) 6)    (t 0)))
@@ -743,17 +753,19 @@
     ((e) '(j k))    ((f) '(l m))    ((g) '(n))      ((h) '(o p))
     ((i) '(q r))    ((j) '(s))      ((k) '(t u))    ((l) '(v w))
     ((m) '(x))      ((n) '(y z))    (t '())))
-(defun --sajt-proceni-stanje (stanje)   
+(defun --sajt-proceni-stanje (stanje &optional (znak "x"))   
   (case stanje
     ((o) 3)    ((p) 17)    ((q) 2)    ((r) 12)    ((s) 15)    ((t) 25)
     ((u) 0)    ((v) 2)     ((w) 5)    ((x) 3)     ((y) 2)     ((z) 14)
     (t 0)))
 
+
+
 (defun vreme ()
   (let ((real1 (get-internal-real-time))
         (run1 (get-internal-run-time)))
     ;(ALPHA-BETA-MAX *TABLA* *ALPHA* *BETA* '4 '4)
-    (ALPHA-BETA-MAX *TABLA* *ALPHA* *BETA* '3 '3) 
+    ;(ALPHA-BETA-MAX *TABLA* *ALPHA* *BETA* '3 '3 "x") 
     ;(MINIMAX *TABLA* 2 "x")
     (let ((run2 (get-internal-run-time))
 	    (real2 (get-internal-real-time)))
@@ -800,28 +812,38 @@
 (defparameter *ajax-processor*
   (make-instance 'ajax-processor :server-uri "/repl-api"))
 
-(defun heuristika-ajax-1 (tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)
-  (let* ((tabla (string-u-tabla tabla)))
-    (format t "Pobeda: ~s~%Izgurani: ~s~%Centar: ~s~%Grupisanje: ~s~%Zbir: ~s~%"
-      (float (h-pobeda     tabla faktor-pobeda))
-      (float (h-izgurani   tabla faktor-izgurani))
-      (float (h-centar     tabla faktor-centar))
-      (float (h-grupisanje tabla faktor-grupisanje))
-      (float (heuristika-parametri tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)))))
+;(defun heuristika-ajax-1 (tabla znak faktor-pobeda faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov)
+;  (let* ((tabla (string-u-tabla tabla)))
+;    (format t "Pobeda: ~s~%Izgurani moj: ~s~%Izgurani njegov: ~s~%Centar moj: ~s~%Centar njegov: ~s~%Grupisanje moj: ~s~%Grupisanje njegov: ~s~%Ukupno: ~s~%"
+;      (float (h-pobeda     tabla faktor-pobeda))
+;      (float (h-izgurani   tabla znak faktor-izgurani-moj))
+;      (float (h-izgurani   tabla (suprotan-znak znak) faktor-izgurani-njegov))
+;      (float (h-centar     tabla znak faktor-centar-moj))
+;      (float (h-centar     tabla (suprotan-znak znak) faktor-centar-njegov))
+;      (float (h-grupisanje tabla znak faktor-grupisanje-moj))
+;      (float (h-grupisanje tabla (suprotan-znak znak) faktor-grupisanje-njegov))
+;      (float (heuristika-parametri tabla znak faktor-pobeda faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov)))))
 
-(defun-ajax heuristikaAJAX (data) (*ajax-processor* :callback-data :response-text)
-  (let* (;(znak data) ; zapravo je nebitan parametar
-         (tabla *tabla*)
-         (faktor-pobeda 1)
-         (faktor-izgurani 1)
-         (faktor-centar 1)
-         (faktor-grupisanje 1))
-    (format nil "Pobeda: ~s~%Izgurani: ~s~%Centar: ~s~%Grupisanje: ~s~%Zbir: ~s~%"
-      (float (h-pobeda     tabla faktor-pobeda))
-      (float (h-izgurani   tabla faktor-izgurani))
-      (float (h-centar     tabla faktor-centar))
-      (float (h-grupisanje tabla faktor-grupisanje))
-      (float (heuristika-parametri tabla faktor-pobeda faktor-izgurani faktor-centar faktor-grupisanje)))))
+
+;(defun-ajax heuristikaAJAX (data) (*ajax-processor* :callback-data :response-text)
+;  (let* ((znak data)
+;         (tabla *tabla*)
+;         (faktor-pobeda 1)
+;         (faktor-izgurani-moj 1)
+;         (faktor-izgurani-njegov 1)
+;         (faktor-centar-moj 1)
+;         (faktor-centar-njegov 1)
+;         (faktor-grupisanje-moj 1)
+;         (faktor-grupisanje-njegov 1))
+;    (format nil "Pobeda: ~s~%Izgurani moj: ~s~%Izgurani njegov: ~s~%Centar moj: ~s~%Centar njegov: ~s~%Grupisanje moj: ~s~%Grupisanje njegov: ~s~%Ukupno: ~s~%"
+;      (float (h-pobeda     tabla faktor-pobeda))
+;      (float (h-izgurani   tabla znak faktor-izgurani-moj))
+;      (float (h-izgurani   tabla (suprotan-znak znak) faktor-izgurani-njegov))
+;      (float (h-centar     tabla znak faktor-centar-moj))
+;      (float (h-centar     tabla (suprotan-znak znak) faktor-centar-njegov))
+;      (float (h-grupisanje tabla znak faktor-grupisanje-moj))
+;      (float (h-grupisanje tabla (suprotan-znak znak) faktor-grupisanje-njegov))
+;      (float (heuristika-parametri tabla znak faktor-pobeda faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov)))))
 
 (defun-ajax echo (data) (*ajax-processor* :callback-data :response-text)
   (let ((d (string-to-list data)))
@@ -832,8 +854,11 @@
 ;;; Neka AI razmisli
 (defun ai-odigraj-potez-1 (tabla znak)
   (if (equalp znak "x")
-      (car (alpha-beta-max tabla *alpha* *beta* 3 3))
-   (car (alpha-beta-min tabla *alpha* *beta* 2 2))))
+      (car (alpha-beta-max tabla *alpha* *beta* 3 3 "x" t))
+    (car (alpha-beta-min tabla *alpha* *beta* 3 3 "o" t))))  
+
+
+
 (defun-ajax ai-odigraj-potez (data) (*ajax-processor* :callback-data :response-text)
   (format nil "~S~%" (stampaj (setq *tabla* (ai-odigraj-potez-1 (string-u-tabla (subseq data 1 (length data)))
                                                                 (subseq data 0 1))))))
