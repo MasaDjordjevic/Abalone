@@ -34,17 +34,17 @@ $marble-size: 13.7px;
 
 body {
     background-color: $background-color;
-    display: flex;
-    flex-grow: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    display         : flex;
+    flex-grow       : column;
+    justify-content : flex-start;
+    align-items     : flex-start;
 }
 
 h1 {
     font-family: 'Satisfy', cursive;
     position   : fixed;
     top        : 55px;
-    right       : 50px;
+    right      : 50px;
     margin     : 0;
     padding    : 0;
     font-size  : 7em;
@@ -53,41 +53,38 @@ h1 {
     text-shadow: -5px 5px 0 $color-main-light;
 }
 
-
 .tabla-container {
     //border         : black 2px solid;
     display        : flex;
     position       : relative;
     list-style-type: none;
-    flex-wrap: wrap;
-    margin-left: 6*$marble-size;
+    flex-wrap      : wrap;
+    margin-left    : 6*$marble-size;
 
     &.contains-x > li > .item > .tabla {
-      box-shadow: 0px 0px 0px 2px rgba(black, 0.4) inset;
+        box-shadow: 0 0 0 2px rgba(black, 0.4) inset;
     }
 
     &.contains-o > li > .item > .tabla {
-      box-shadow: 0px 0px 0px 2px rgba(white, 1) inset;
+        box-shadow: 0 0 0 2px rgba(white, 1) inset;
     }
 
     &.hidden {
-      display: none;
+        display: none;
     }
 }
 
-
-
 .item {
-  margin-right: $marble-size;
-  position: relative;
+    margin-right: $marble-size;
+    position    : relative;
 }
 
 .tabla-container > li:not(.expanded) > .item .toggle-descendants {
-  display: none;
+    display: none;
 }
 
 body > .tabla-container {
-  margin-left: 0;
+    margin-left: 0;
 }
 
 .tabla-container li div {
@@ -95,31 +92,67 @@ body > .tabla-container {
 }
 
 body > .tabla-container > li > .item > .tabla {
-  background-color: palette($orange);
+    background-color: palette($orange);
 }
 
 body > .tabla-container > li > .tabla-container > li > .item > .tabla {
-  background-color: palette($light-green);
+    background-color: palette($yellow, 600);
 }
 
 body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
-  background-color: palette($teal);
+    background-color: palette($light-green);
 }
 
 body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
-  background-color: palette($light-blue);
+    background-color: palette($teal);
 }
 
 body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
-  background-color: palette($indigo, 300);
+    background-color: palette($light-blue);
 }
 
 body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
-  background-color: palette($pink);
+    background-color: palette($indigo, 400);
 }
 
 body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
-  background-color: palette($red, 300);
+    background-color: palette($pink);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+    background-color: palette($red);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+    background-color: palette($orange);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+    background-color: palette($yellow);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+    background-color: palette($light-green);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+    background-color: palette($teal);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+    background-color: palette($light-blue);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+    background-color: palette($indigo);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+    background-color: palette($pink);
+}
+
+body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .tabla-container > li > .item > .tabla {
+    background-color: palette($red);
 }
 
 .tabla {
@@ -144,14 +177,11 @@ body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .
     }
 }
 
-
 .polje {
     position     : absolute;
     border-radius: 50%;
     width        : $marble-size;
     height       : $marble-size;
-    cursor       : pointer;
-    transition   : all 0.2s ease;
 
     .koordinate {
         position   : absolute;
@@ -191,9 +221,75 @@ body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .
         background-color: $color-no-marble;
         opacity         : 0.5;
     }
-
 }
 
 .expanded {
-  width: 100%;
+    width: 100%;
+}
+
+.item button {
+    position: absolute;
+    border  : none;
+    outline : none;
+}
+
+.item button.toggle-descendants {
+    top             : 0;
+    margin          : auto;
+    width           : 20px;
+    height          : 20px;
+    line-height     : 20px;
+    font-size       : 18px;
+    background-color: palette($blue-grey, 200);
+    color           : rgba(white, .8);
+    font-weight     : bold;
+    border-radius   : 50%;
+}
+
+.item button.fetch-children-o,
+.item button.fetch-children-x {
+    top          : 8.66 * $marble-size;
+    width        : 30px;
+    height       : 30px;
+    font-weight  : bold;
+    box-shadow   : 0 0 5px 0 rgba(black, .45);
+    border-radius: 50%;
+    //z-index   : -4;
+}
+
+.item button.fetch-children-x {
+    background-color: palette($blue-grey, 900);
+    left            : 0.166 * $marble-size;
+}
+
+.item button.fetch-children-o {
+    background-color: palette($blue-grey, 50);
+    right           : 0.166 * $marble-size;
+}
+
+.heuristics {
+    font-size: 0.8em;
+    width    : 100%;
+    max-width: 200px;
+    display  : flex;
+    flex-flow: column;
+
+    &.heuristics-o {
+        margin-top: 10px;
+    }
+
+    dl {
+        display        : flex;
+        justify-content: space-between;
+
+        dt {
+            font-style: italic;
+            color     : rgba(black, .5);
+        }
+
+        dd {
+            font-weight: bold;
+            color      : rgba(black, .7);
+        }
+    }
 }

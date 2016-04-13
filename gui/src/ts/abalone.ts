@@ -103,19 +103,15 @@ enum Igrac {
     AI
 };
 
-class Tabla {
-    div: HTMLElement;
-    polja: Kamen[];
+class Tabla extends TablaZaCrtanje {
     selektirani: Kamen[];
-    velicina: number;
     poslednjeStanje: string;
     igraci: Igrac[] = new Array<Igrac>(Igrac.Human, Igrac.Human);
     naRedu: number = 0;
-    velicinaKamencica : number = 70;
-    heuristikaX = [];
-    heuristikaO = [];
 
     constructor(velicina: number, igrac0: Igrac = Igrac.Human, igrac1: Igrac = Igrac.Human, HTMLtabla:HTMLElement, velicinaKamencica: number, miniTabla: boolean = true) {
+        super();
+
         this.velicina = velicina;
 
         this.igraci[0] = igrac0;
@@ -286,13 +282,31 @@ class Tabla {
     izracunajHeuristike(f1x:number = 1, f1o:number = 1, f2x:number = 1, f2o:number = 1, f3x:number = 1, f3o:number = 1, f4x:number = 1, f4o:number = 1) {
         var data: string;
         var znaci = ["x", "o"];
+        var self = this;
         for (let i = 0; i < znaci.length; i++) {
-            var znak = znaci[i];
+            let znak = znaci[i];
             data = '("' + znak + '" "' + this.toString() + '" ' + f1x + ' ' + f1o + ' ' + f2x + ' ' + f2o + ' ' + f3x + ' ' + f3o + ' ' + f4x + ' ' + f4o + ')';
             smackjack.heuristika(data, function(response) {
                 var nizHeuristika: Array<number> = response.match(/[-+]?[0-9]*\.?[0-9]+/g);
+                var znak = response.match("\\\\\"(.)\\\\\"")[1];
+                var $h = $(self.div).siblings(".heuristics-" + znak)
+                $h.find(".h-pobeda-ja").children("dd").text(nizHeuristika[0]);
+                $h.find(".h-pobeda-on").children("dd").text(nizHeuristika[1]);
+                $h.find(".h-izgurani-ja").children("dd").text(nizHeuristika[2]);
+                $h.find(".h-izgurani-on").children("dd").text(nizHeuristika[3]);
+                $h.find(".h-centar-ja").children("dd").text(nizHeuristika[4]);
+                $h.find(".h-centar-on").children("dd").text(nizHeuristika[5]);
+                $h.find(".h-grupisanje-ja").children("dd").text(nizHeuristika[6]);
+                $h.find(".h-grupisanje-on").children("dd").text(nizHeuristika[7]);
                 console.log(nizHeuristika);
             }, null);
         }
     }
+}
+
+class TablaZaCrtanje {
+    div: HTMLElement;
+    polja: Kamen[];
+    velicina: number;
+    velicinaKamencica : number = 70;
 }

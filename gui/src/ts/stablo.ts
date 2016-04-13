@@ -21,7 +21,7 @@ function kreirajTablu(cont) {
 
   var tabla = new Tabla(5, Igrac.Human, Igrac.Human, el, 15, false);
   tabla.nacrtajString(randomTabla());
-  table[table.length++] = tabla;
+  table.push(tabla);
   wrapper.appendChild(el);
 
   var span = document.createElement("span");
@@ -39,7 +39,7 @@ function kreirajTablu(cont) {
 
   var btn = document.createElement("button");
   btn.className = "fetch-children-x";
-  btn.innerHTML = "x";
+  //btn.innerHTML = "x";
   btn.onclick = function () {
     _onclick(this, "x");
   }
@@ -47,11 +47,24 @@ function kreirajTablu(cont) {
 
   var btn = document.createElement("button");
   btn.className = "fetch-children-o";
-  btn.innerHTML = "o";
+  //btn.innerHTML = "o";
   btn.onclick = function() {
     _onclick(this, "o");
   }
   wrapper.appendChild(btn);
+  var s:string = '';
+  //s += '<div class="heuristics">';
+    s += '<dl class="h-pobeda-ja">     <dt>Pobeda Ja</dt>      <dd>120.63</dd>  </dl>';
+    s += '<dl class="h-pobeda-on">     <dt>Pobeda On</dt>      <dd>120.63</dd>  </dl>';
+    s += '<dl class="h-izgurani-ja">   <dt>Izgurani Ja</dt>    <dd>120.63</dd>  </dl>';
+    s += '<dl class="h-izgurani-on">   <dt>Izgurani On</dt>    <dd>120.63</dd>  </dl>';
+    s += '<dl class="h-centar-ja">     <dt>Centar Ja</dt>      <dd>120.63</dd>  </dl>';
+    s += '<dl class="h-centar-on">     <dt>Centar On</dt>      <dd>120.63</dd>  </dl>';
+    s += '<dl class="h-grupisanje-ja"> <dt>Grupisanje Ja</dt>  <dd>120.63</dd>  </dl>';
+    s += '<dl class="h-grupisanje-on"> <dt>Grupisanje On</dt>  <dd>120.63</dd>  </dl>';
+  //s += '</div>';
+  $(wrapper).append(jQuery.parseHTML('<div class="heuristics heuristics-x">' + s + '</div>'));
+  $(wrapper).append(jQuery.parseHTML('<div class="heuristics heuristics-o">' + s + '</div>'));
 
   li.appendChild(wrapper);
   cont.appendChild(li);
