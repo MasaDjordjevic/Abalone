@@ -8,7 +8,7 @@ class Kamen {
     div: HTMLElement;
 
     constructor(
-        public tabla: Tabla,
+        public tabla: TablaZaCrtanje,
         public koordinata: Koordinata = new Koordinata(),
         public boja: string = '-'
         ) { }
@@ -78,20 +78,23 @@ class Kamen {
     }
 
     _onclick() {
+        if(this.tabla instanceof TablaZaCrtanje) 
+          return;
         //ako je ukljucen striktni rezim i ako ti nisi na redu oboji -lose
         if ((<HTMLInputElement>document.getElementsByName("strict-mode")[0]).checked) {
-            var naRedu = this.tabla.naRedu;
-            var naReduZnak = this.tabla.naRedu == 0 ? "x" : "o";
+            var tabla =  (<Tabla>this.tabla);
+            var naRedu = tabla.naRedu;
+            var naReduZnak = tabla.naRedu == 0 ? "x" : "o";
             if (naReduZnak == this.boja) {
-                this.tabla.toggleKamen(this, "-dobro");
+                tabla.toggleKamen(this, "-dobro");
             }
             else {
-                this.tabla.toggleKamen(this, "-lose");
+                tabla.toggleKamen(this, "-lose");
             }
 
         }
         else {
-            this.tabla.toggleKamen(this);
+            tabla.toggleKamen(this);
         }
 
 
@@ -103,31 +106,21 @@ enum Igrac {
     AI
 };
 
-class Tabla extends TablaZaCrtanje {
-    selektirani: Kamen[];
-    poslednjeStanje: string;
-    igraci: Igrac[] = new Array<Igrac>(Igrac.Human, Igrac.Human);
-    naRedu: number = 0;
+class TablaZaCrtanje {
+    div: HTMLElement;
+    polja: Kamen[];
+    velicina: number;
+    velicinaKamencica : number = 70;
 
-    constructor(velicina: number, igrac0: Igrac = Igrac.Human, igrac1: Igrac = Igrac.Human, HTMLtabla:HTMLElement, velicinaKamencica: number, miniTabla: boolean = true) {
-        super();
-
+    constructor(velicina: number, HTMLtabla: HTMLElement, velicinaKamencica: number) {
         this.velicina = velicina;
-
-        this.igraci[0] = igrac0;
-        this.igraci[1] = igrac1;
+        this.div = HTMLtabla;
+        this.velicinaKamencica = velicinaKamencica;
 
         this.polja = new Array<Kamen>(3 * velicina * velicina - 3 * velicina + 1); // 3n² - 3n + 1
         for (var i = 0; i < this.polja.length; i++) {
             this.polja[i] = new Kamen(this);
         }
-
-        if (miniTabla)
-          this.resetNaRedu();
-        this.poslednjeStanje = null;
-
-        this.div = HTMLtabla;
-        this.velicinaKamencica = velicinaKamencica;
 
         //postavljanje koordinata kamencicima
         var index = 0;
@@ -150,6 +143,79 @@ class Tabla extends TablaZaCrtanje {
                 index++;
             }
         }
+    }
+
+    nacrtaj(): void {
+        this.div.innerHTML = '';
+
+        for (var i = 0; i < this.polja.length; i++) {
+            this.polja[i].stampaj(this.velicinaKamencica);
+        }
+
+        var width: number = 2 * 5 * this.velicinaKamencica;
+        //var height:number = 5 * size * Math.sqrt(3.0);
+        this.div.style.width = String(width) + "px";
+        this.div.style.height = String(width) + "px";
+    }
+
+    nacrtajString(s: string): void {
+        s = s.replace(/[^XxOo\-\_]/g, '');
+
+        for (var i = 0; i < Math.min(this.polja.length, s.length); i++) {
+            this.polja[i].boja = s[i];
+        }
+
+        this.nacrtaj();
+    }
+
+    toString(): string {
+        var s: string = "";
+        for (let i = 0; i < this.polja.length; i++) {
+            s += this.polja[i].boja;
+        }
+        return s;
+    }
+
+    izracunajHeuristike(f1x:number = 1, f1o:number = 1, f2x:number = 1, f2o:number = 1, f3x:number = 1, f3o:number = 1, f4x:number = 1, f4o:number = 1) {
+        var data: string;
+        var znaci = ["x", "o"];
+        var self = this;
+        for (let i = 0; i < znaci.length; i++) {
+            let znak = znaci[i];
+            data = '("' + znak + '" "' + this.toString() + '" ' + f1x + ' ' + f1o + ' ' + f2x + ' ' + f2o + ' ' + f3x + ' ' + f3o + ' ' + f4x + ' ' + f4o + ')';
+            smackjack.heuristika(data, function(response) {
+                var nizHeuristika: Array<number> = response.match(/[-+]?[0-9]*\.?[0-9]+/g);
+                var znak = response.match("\\\\\"(.)\\\\\"")[1];
+                var $h = $(self.div).siblings(".heuristics-" + znak)
+                $h.find(".h-pobeda-ja").children("dd").text(nizHeuristika[0]);
+                $h.find(".h-pobeda-on").children("dd").text(nizHeuristika[1]);
+                $h.find(".h-izgurani-ja").children("dd").text(nizHeuristika[2]);
+                $h.find(".h-izgurani-on").children("dd").text(nizHeuristika[3]);
+                $h.find(".h-centar-ja").children("dd").text(nizHeuristika[4]);
+                $h.find(".h-centar-on").children("dd").text(nizHeuristika[5]);
+                $h.find(".h-grupisanje-ja").children("dd").text(nizHeuristika[6]);
+                $h.find(".h-grupisanje-on").children("dd").text(nizHeuristika[7]);
+                console.log(nizHeuristika);
+            }, null);
+        }
+    }
+}
+
+
+class Tabla extends TablaZaCrtanje {
+    selektirani: Kamen[];
+    poslednjeStanje: string;
+    igraci: Igrac[] = new Array<Igrac>(Igrac.Human, Igrac.Human);
+    naRedu: number = 0;
+
+    constructor(velicina: number, igrac0: Igrac = Igrac.Human, igrac1: Igrac = Igrac.Human, HTMLtabla:HTMLElement, velicinaKamencica: number) {
+        super(velicina, HTMLtabla, velicinaKamencica);
+
+        this.igraci[0] = igrac0;
+        this.igraci[1] = igrac1;
+
+        this.resetNaRedu();
+        this.poslednjeStanje = null;
 
         this.selektirani = [];
 
@@ -181,23 +247,14 @@ class Tabla extends TablaZaCrtanje {
         return returnValue;
     }
 
-    nacrtaj(): void {
-        this.selektirani = [];
-        var HTMLselektirani = document.getElementById('selektirani');
-        if (HTMLselektirani !== null) {
-            HTMLselektirani.innerHTML = '';
-        }
+    nacrtaj() {
+      this.selektirani = [];
+      var HTMLselektirani = document.getElementById('selektirani');
+      if (HTMLselektirani !== null) {
+          HTMLselektirani.innerHTML = '';
+      }
 
-        this.div.innerHTML = '';
-
-        for (var i = 0; i < this.polja.length; i++) {
-            this.polja[i].stampaj(this.velicinaKamencica);
-        }
-
-        var width: number = 2 * 5 * this.velicinaKamencica;
-        //var height:number = 5 * size * Math.sqrt(3.0);
-        this.div.style.width = String(width) + "px";
-        this.div.style.height = String(width) + "px";
+      super.nacrtaj();
     }
 
     toggleKamen(kamen: Kamen, nacin: string = "-dobro"): void {
@@ -271,42 +328,4 @@ class Tabla extends TablaZaCrtanje {
         this.nacrtaj();
     }
 
-    toString(): string {
-        var s: string = "";
-        for (let i = 0; i < this.polja.length; i++) {
-            s += this.polja[i].boja;
-        }
-        return s;
-    }
-
-    izracunajHeuristike(f1x:number = 1, f1o:number = 1, f2x:number = 1, f2o:number = 1, f3x:number = 1, f3o:number = 1, f4x:number = 1, f4o:number = 1) {
-        var data: string;
-        var znaci = ["x", "o"];
-        var self = this;
-        for (let i = 0; i < znaci.length; i++) {
-            let znak = znaci[i];
-            data = '("' + znak + '" "' + this.toString() + '" ' + f1x + ' ' + f1o + ' ' + f2x + ' ' + f2o + ' ' + f3x + ' ' + f3o + ' ' + f4x + ' ' + f4o + ')';
-            smackjack.heuristika(data, function(response) {
-                var nizHeuristika: Array<number> = response.match(/[-+]?[0-9]*\.?[0-9]+/g);
-                var znak = response.match("\\\\\"(.)\\\\\"")[1];
-                var $h = $(self.div).siblings(".heuristics-" + znak)
-                $h.find(".h-pobeda-ja").children("dd").text(nizHeuristika[0]);
-                $h.find(".h-pobeda-on").children("dd").text(nizHeuristika[1]);
-                $h.find(".h-izgurani-ja").children("dd").text(nizHeuristika[2]);
-                $h.find(".h-izgurani-on").children("dd").text(nizHeuristika[3]);
-                $h.find(".h-centar-ja").children("dd").text(nizHeuristika[4]);
-                $h.find(".h-centar-on").children("dd").text(nizHeuristika[5]);
-                $h.find(".h-grupisanje-ja").children("dd").text(nizHeuristika[6]);
-                $h.find(".h-grupisanje-on").children("dd").text(nizHeuristika[7]);
-                console.log(nizHeuristika);
-            }, null);
-        }
-    }
-}
-
-class TablaZaCrtanje {
-    div: HTMLElement;
-    polja: Kamen[];
-    velicina: number;
-    velicinaKamencica : number = 70;
 }

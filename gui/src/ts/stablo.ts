@@ -6,8 +6,6 @@ var table = [];
 
 window.onload = function() {
   kreirajTablu(document.getElementsByClassName("tabla-container")[0]);
-
-
 }
 
 function kreirajTablu(cont) {
@@ -19,7 +17,7 @@ function kreirajTablu(cont) {
   el.classList.add("tabla");
   el.classList.add("sakrij-koordinate");
 
-  var tabla = new Tabla(5, Igrac.Human, Igrac.Human, el, 15, false);
+  var tabla = new TablaZaCrtanje(5, el, 15);
   tabla.nacrtajString(randomTabla());
   table.push(tabla);
   wrapper.appendChild(el);
