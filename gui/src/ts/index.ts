@@ -23,9 +23,8 @@ var novaIgra = function() {
     var prvi = (<HTMLInputElement>document.getElementById('igrac-1-human')).checked ? Igrac.Human : Igrac.AI;
     var drugi = (<HTMLInputElement>document.getElementById('igrac-2-human')).checked ? Igrac.Human : Igrac.AI;
 
-    tabla = new Tabla(5, prvi, drugi);
+    tabla = new Tabla(5, prvi, drugi, document.getElementById('tabla-id'), 70);    
 
-    tabla.nacrtaj();
     smackjack.reset('', callback, null);
 }
 

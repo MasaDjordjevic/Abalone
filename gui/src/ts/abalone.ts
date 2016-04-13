@@ -26,7 +26,7 @@ class Kamen {
 
         var left = x + z / 2;
         var top = z;
-        top -= this.koordinata.z * 9;
+        top -= this.koordinata.z * (size * 9 / 67);
 
         // Korekcija da bude u centar
         //top  += (- size / 2 + 5 * size * Math.sqrt(3.0) / 2);
@@ -43,12 +43,12 @@ class Kamen {
 
         // upis u kamen, aksijalne kooridnate
         var pbroj = this.koordinata.z;
-        pbroj = 2 * tabla.velicina - 1 - pbroj;
+        pbroj = 2 * this.tabla.velicina - 1 - pbroj;
         var p = String.fromCharCode(93 + (pbroj - 1)).toUpperCase();
-        var q = (this.koordinata.x) + 2 * tabla.velicina - 5;
+        var q = (this.koordinata.x) + 2 * this.tabla.velicina - 5;
         kamen.innerHTML += '<span class="koordinate axial">' + p + q + '</span>';
 
-        document.getElementById("tabla-id").appendChild(kamen);
+        this.tabla.div.appendChild(kamen);
         this.div = kamen;
         /*this.div.onclick = (e) => {
             this._onclick();
@@ -83,8 +83,8 @@ class Kamen {
     _onclick() {
         //ako je ukljucen striktni rezim i ako ti nisi na redu oboji -lose
         if ((<HTMLInputElement>document.getElementsByName("strict-mode")[0]).checked) {
-            var naRedu = tabla.naRedu;
-            var naReduZnak = tabla.naRedu == 0 ? "x" : "o";
+            var naRedu = this.tabla.naRedu;
+            var naReduZnak = this.tabla.naRedu == 0 ? "x" : "o";
             if (naReduZnak == this.boja) {
                 this.tabla.toggleKamen(this, "-dobro");
             }
@@ -107,25 +107,34 @@ enum Igrac {
 };
 
 class Tabla {
+    div: HTMLElement;
     polja: Kamen[];
     selektirani: Kamen[];
     velicina: number;
     poslednjeStanje: string;
     igraci: Igrac[] = new Array<Igrac>(Igrac.Human, Igrac.Human);
     naRedu: number = 0;
+    velicinaKamencica : number = 70;
 
-    constructor(velicina: number, igrac0: Igrac = Igrac.Human, igrac1: Igrac = Igrac.Human) {
+    constructor(velicina: number, igrac0: Igrac = Igrac.Human, igrac1: Igrac = Igrac.Human, HTMLtabla:HTMLElement, velicinaKamencica: number, miniTabla: boolean = true) {
         this.velicina = velicina;
+
         this.igraci[0] = igrac0;
         this.igraci[1] = igrac1;
+
         this.polja = new Array<Kamen>(3 * velicina * velicina - 3 * velicina + 1); // 3n² - 3n + 1
         for (var i = 0; i < this.polja.length; i++) {
             this.polja[i] = new Kamen(this);
         }
 
-        this.resetNaRedu();
+        if(miniTabla)
+          this.resetNaRedu();
         this.poslednjeStanje = null;
 
+        this.div = HTMLtabla;
+        this.velicinaKamencica = velicinaKamencica;
+
+        //postavljanje koordinata kamencicima
         var index = 0;
         for (var z = -(velicina - 1); z <= (velicina - 1); z++) {
             var duzinaReda = 2 * velicina - 1 - Math.abs(z); // duzinaReda + abs(z) = 2*velicina -1
@@ -148,6 +157,8 @@ class Tabla {
         }
 
         this.selektirani = [];
+
+        this.nacrtaj();
     }
 
     resetNaRedu(): void {
@@ -181,17 +192,17 @@ class Tabla {
         if (HTMLselektirani !== null) {
             HTMLselektirani.innerHTML = '';
         }
-        var HTMLtabla = document.getElementById('tabla-id');
-        HTMLtabla.innerHTML = '';
-        var size: number = 70; // velicina kamencica
+
+        this.div.innerHTML = '';
+
         for (var i = 0; i < this.polja.length; i++) {
-            this.polja[i].stampaj(size);
+            this.polja[i].stampaj(this.velicinaKamencica);
         }
 
-        var width: number = 2 * 5 * size;
+        var width: number = 2 * 5 * this.velicinaKamencica;
         //var height:number = 5 * size * Math.sqrt(3.0);
-        HTMLtabla.style.width = String(width) + "px";
-        HTMLtabla.style.height = String(width) + "px";
+        this.div.style.width = String(width) + "px";
+        this.div.style.height = String(width) + "px";
     }
 
     toggleKamen(kamen: Kamen, nacin: string = "-dobro"): void {
@@ -207,9 +218,9 @@ class Tabla {
         // Apdejtovanje DIV-a
         if (document.getElementById('selektirani') !== null) {
             var string = '';
-            for (var i = 0; i < tabla.selektirani.length; i++) {
+            for (var i = 0; i < this.selektirani.length; i++) {
                 string += '<li>';
-                string += tabla.selektirani[i].koordinata.x + ', ' + tabla.selektirani[i].koordinata.y + ', ' + tabla.selektirani[i].koordinata.z;
+                string += this.selektirani[i].koordinata.x + ', ' + this.selektirani[i].koordinata.y + ', ' + this.selektirani[i].koordinata.z;
                 string += '</li>';
             }
             document.getElementById('selektirani').innerHTML = string;
@@ -238,8 +249,8 @@ class Tabla {
         var brojX = 0;
         var brojO = 0;
 
-        for (var i = 0; i < Math.min(tabla.polja.length, s.length); i++) {
-            tabla.polja[i].boja = s[i];
+        for (var i = 0; i < Math.min(this.polja.length, s.length); i++) {
+            this.polja[i].boja = s[i];
             if (s[i] == 'x' || s[i] == 'X') {
                 brojX++;
             }
@@ -253,12 +264,15 @@ class Tabla {
 
         var HTMLizguraniX = document.getElementById("izgurani-x");
         var HTMLizguraniO = document.getElementById("izgurani-o");
-        HTMLizguraniX.innerHTML = '';
-        HTMLizguraniO.innerHTML = '';
 
-        for (var i = 0; i < brojX; i++) HTMLizguraniX.innerHTML += '<div class="polje polje-x"></div>';
-        for (var i = 0; i < brojO; i++) HTMLizguraniO.innerHTML += '<div class="polje polje-o"></div>';
+        if(HTMLizguraniX != null && HTMLizguraniO !== null) {
+          HTMLizguraniX.innerHTML = '';
+          HTMLizguraniO.innerHTML = '';
 
-        tabla.nacrtaj();
+          for (var i = 0; i < brojX; i++) HTMLizguraniX.innerHTML += '<div class="polje polje-x"></div>';
+          for (var i = 0; i < brojO; i++) HTMLizguraniO.innerHTML += '<div class="polje polje-o"></div>';
+        }
+
+        this.nacrtaj();
     }
 }
