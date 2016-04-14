@@ -30,7 +30,7 @@ var novaIgra = function() {
 
 window.onload = function() {
 
-    var prvi = Igrac.AI;
+    var prvi = Igrac.Human;
     var drugi = Igrac.Human;
 
     (<HTMLInputElement>document.getElementById('igrac-1-human')).checked = (prvi == Igrac.Human);

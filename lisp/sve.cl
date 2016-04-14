@@ -560,15 +560,16 @@
 
 ;;; Ocekuje koordinate.
 (defun prosecno-rastojanje-do-svih (kamen lista)
-  (cond ((= (length lista) 0) 0)
+  (cond ((= (length lista) 0) 1)
         ((= (length lista) 1) (rastojanje kamen (car lista)))
         (t (/ (rastojanje-do-svih kamen lista) (if (member kamen lista)
                                                    (1- (length lista))
                                                    (length lista))))))
 
 ;;; Ocekuje koordinate.
+;;; Vraca broj izmedju 1.00 i 3.00 sto odredjuje meru udaljenosti od centra.
 (defun prosecno-rastojanje-do-centra (lista)
-  (cond ((= (length lista) 0) 0)
+  (cond ((= (length lista) 0) 1)
         ((= (length lista) 1) (rastojanje-centar (car lista)))
         (t (/ (rastojanje-do-svih '(0 0 0) lista) (length lista)))))
 
@@ -581,17 +582,25 @@
   (< (prebroji (suprotan-znak znak) tabla) 8))
 
 ;;; Ocekuje cvorove.
+;;; Vraca 100 ako je pobedio znak, inace 0.
 (defun h-pobeda (tabla znak faktor)
-  (cond ((pobeda-p znak tabla) faktor)
+  (cond ((pobeda-p znak tabla) (* 100 faktor))
         (t 0)))
 
 ;;; Ocekuje cvorove.
+;; Vraca -100 kad su svi ZNAKovi izgurani. (minus jer je lose)
+;; Vraca 0 kad nije nijedan.
 (defun h-izgurani (tabla znak faktor)
-  (- (* (broj-izguranih znak tabla) faktor)))
+  (- (* 20 (* (broj-izguranih znak tabla) faktor))))
 
 ;;; Ocekuje cvorove.
+;;; prosecno-rastojanje-do-centra vraca broj izmedju 1.00 i 4.00
+;;; smanjimo ga za jedan: izmedju 0.00 i 3.00
+;;; pomnozimo ga sa 33.33: izmedju 0.00 i 100.00
+;;; okrenemo znak jer igraci treba da teze tome da znak bude sto manji
+;;; pomnozimo prosledjenim faktorom
 (defun h-centar (tabla znak faktor)
-  (- (* (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla znak))) faktor)))
+  (* faktor (- (* 33.333333 (1- (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla znak))))))))
 
 ;;; Ocekuje cvorove.
 (defun h-grupisanje-1 (lista svi)
@@ -599,9 +608,18 @@
         (t (+ (prosecno-rastojanje-do-svih (car lista) svi) (h-grupisanje-1 (cdr lista) svi)))))
 
 ;;; Ocekuje cvorove.
+;;; Neki prosek za najzguranije je 1.75, za najrazudjenije je 4.5
+;; Oduzmemo 1.75, sad je od 0.00 do 2.75.
+;; Mnozimo sa 36.36 i dobijamo od 0.00 do 100.00.
+;; Izvrnemo znak jer je bolje kad je manje.
+;; Mnozimo prosledjenim faktorom.
 (defun h-grupisanje (tabla znak faktor)
-  (let* ((svi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla znak))))
-    (- (* (h-grupisanje-1 svi svi) faktor))))
+  (let* ((svi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla znak)))
+         (duzina (if (equalp (length svi) 0) 1 (length svi))))
+    (* faktor
+       (- (* 36.363636 (- (/ (h-grupisanje-1 svi svi)
+                          duzina)
+                       1.75))))))
 
 
 ;;; Ocekuje cvorove.
@@ -638,7 +656,7 @@
 ;;; 3. centar moj/njegov
 ;;; 4. grupisanje moj/njegov
 (defun heuristika (tabla znak)
-  (float (heuristika-parametri tabla znak 999999999 999999999 1000 1000 100 80 100 120)))
+  (float (heuristika-parametri tabla znak 999999 999999 100 100 70 50 110 90)))
 
 
 
@@ -691,12 +709,20 @@
   (if (>= (cadr stanje1) (cadr stanje2))
       stanje1 stanje2))
 
+(defun op-poredjenja-h-x (a b) (> (cadr a) (cadr b)))
+(defun op-poredjenja-h-o (a b) (< (cadr a) (cadr b)))
+(defun sort-h (lista znak)
+  (if (equalp znak "x")
+      (sortiraj lista 'op-poredjenja-h-x)
+      (sortiraj lista 'op-poredjenja-h-o)))
+
 
 (defparameter *ALPHA* '('() -999999999))
 (defparameter *BETA*  '('() +999999999))
 (defun alpha-beta-max (stanje alpha beta dubina maxdubina znak igram-ja &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
-  (if (zerop dubina)
+  (if (or (zerop dubina) (pobeda-p znak stanje))
       (list stanje (apply fja-proceni-stanje (list stanje znak)))
+;    (loop for sledbenik in (mapcar 'car (sort-h (dodaj-heuristike (apply fja-nova-stanja (list stanje (if igram-ja znak (suprotan-znak znak)))) znak) znak))
     (loop for sledbenik in (apply fja-nova-stanja (list stanje (if igram-ja znak (suprotan-znak znak))))
         do (if (>= (cadr (setq alpha (vece-stanje alpha
                                                   (alpha-beta-min sledbenik alpha beta (1- dubina) maxdubina znak (not igram-ja) fja-nova-stanja fja-proceni-stanje))))
@@ -713,20 +739,21 @@
 
 
 (defun alpha-beta-min (stanje alpha beta dubina maxdubina znak igram-ja &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
-  (if (zerop dubina)
+  (if (or (zerop dubina) (pobeda-p znak stanje))
       (list stanje (apply fja-proceni-stanje (list stanje znak)))
+;    (loop for sledbenik in (mapcar 'car (sort-h (dodaj-heuristike (apply fja-nova-stanja (list stanje (if igram-ja znak (suprotan-znak znak)))) znak) znak))
     (loop for sledbenik in (apply fja-nova-stanja (list stanje (if igram-ja znak (suprotan-znak znak))))
-        do (if (<= (cadr (setq beta (manje-stanje beta
-                                                  (alpha-beta-max sledbenik alpha beta (1- dubina) maxdubina znak (not igram-ja) fja-nova-stanja fja-proceni-stanje))))
-                   (cadr alpha))
-               ;; vraca sebe:
-               ;(return (list stanje (cadr alpha))))
-               ;finally (return (list stanje (cadr beta))))))
-               ;; vraca najdublji dokle je stigo pa je skontao da je najbolje resenje:
-               ;(return alpha))
-               ;finally (return beta))))
-               ;; vraca sledeci potez koji terba da se odgira
-               (return (if (= dubina maxdubina) alpha (list stanje (cadr alpha)))))
+          do (if (<= (cadr (setq beta (manje-stanje beta
+                                                    (alpha-beta-max sledbenik alpha beta (1- dubina) maxdubina znak (not igram-ja) fja-nova-stanja fja-proceni-stanje))))
+                     (cadr alpha))
+                 ;; vraca sebe:
+                 ;(return (list stanje (cadr alpha))))
+                 ;finally (return (list stanje (cadr beta))))))
+                 ;; vraca najdublji dokle je stigo pa je skontao da je najbolje resenje:
+                 ;(return alpha))
+                 ;finally (return beta))))
+                 ;; vraca sledeci potez koji terba da se odgira
+                 (return (if (= dubina maxdubina) alpha (list stanje (cadr alpha)))))
         finally (return (if (= dubina maxdubina) beta (list stanje (cadr beta)))))))
 
 
@@ -866,10 +893,12 @@
                              faktor-grupisanje-moj faktor-grupisanje-njegov
                                                 nil))))
 
-(defun-ajax deca-ajax (data) (*ajax-processor* :callback-data :response-text)  
+(defun-ajax deca-ajax (data) (*ajax-processor* :callback-data :response-text)
   (let* ((znak (subseq data 0 1))
          (tabla (string-u-tabla (subseq data 1 (length data)))))
-    (format nil "~s" (LOOP FOR STANJE IN (NOVA-STANJA tabla znak) collect (format nil "~s" (STAMPAJ STANJE))))))
+    (format nil "~s" 
+      (LOOP FOR STANJE IN (sort-h (dodaj-heuristike (NOVA-STANJA tabla znak) znak) znak)
+            collect (format nil "~s" (STAMPAJ (car STANJE)))))))
 
 
 (defun-ajax echo (data) (*ajax-processor* :callback-data :response-text)

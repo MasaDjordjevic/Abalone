@@ -51,6 +51,7 @@ h1 {
     transform  : rotate(+17deg);
     color      : $color-main-dark;
     text-shadow: -5px 5px 0 $color-main-light;
+    opacity    : 0.1;
 }
 
 .tabla-container {
@@ -170,7 +171,7 @@ body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .
 
     &.sakrij-koordinate .koordinate {
         display: none;
-    }  
+    }
 }
 
 .polje {
@@ -269,9 +270,10 @@ body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .
     max-width: 200px;
     display  : flex;
     flex-flow: column;
+    margin   : 10px 0;
 
     &.heuristics-o {
-        margin-top: 10px;
+        margin-bottom: 20px;
     }
 
     dl {
@@ -280,12 +282,24 @@ body > .tabla-container > li > .tabla-container > li > .tabla-container > li > .
 
         dt {
             font-style: italic;
-            color     : rgba(black, .5);
+            opacity   : 0.5;
         }
 
         dd {
             font-weight: bold;
-            color      : rgba(black, .7);
+            opacity    : 0.7;
         }
+    }
+
+    dl:nth-child(1),
+    dl:nth-child(2),
+    dl:nth-child(5),
+    dl:nth-child(6),
+    dl:nth-child(9) {
+        background-color: rgba(black, .05);
+    }
+
+    dl:last-child {
+        color: palette($blue, 900);
     }
 }

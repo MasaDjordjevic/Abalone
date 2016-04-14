@@ -78,26 +78,26 @@ class Kamen {
     }
 
     _onclick() {
-        if(this.tabla instanceof TablaZaCrtanje)
-          return;
-        //ako je ukljucen striktni rezim i ako ti nisi na redu oboji -lose
-        if ((<HTMLInputElement>document.getElementsByName("strict-mode")[0]).checked) {
-            var tabla =  (<Tabla>this.tabla);
-            var naRedu = tabla.naRedu;
-            var naReduZnak = tabla.naRedu == 0 ? "x" : "o";
-            if (naReduZnak == this.boja) {
-                tabla.toggleKamen(this, "-dobro");
+        try {
+            //ako je ukljucen striktni rezim i ako ti nisi na redu oboji -lose
+            if ((<HTMLInputElement>document.getElementsByName("strict-mode")[0]).checked) {
+                var tabla =  (<Tabla>this.tabla);
+                var naRedu = tabla.naRedu;
+                var naReduZnak = tabla.naRedu == 0 ? "x" : "o";
+                if (naReduZnak == this.boja) {
+                    tabla.toggleKamen(this, "-dobro");
+                }
+                else {
+                    tabla.toggleKamen(this, "-lose");
+                }
+
             }
             else {
-                tabla.toggleKamen(this, "-lose");
+                tabla.toggleKamen(this);
             }
+        } catch (e) {
 
         }
-        else {
-            tabla.toggleKamen(this);
-        }
-
-
     }
 }
 
@@ -187,14 +187,15 @@ class TablaZaCrtanje {
                 var nizHeuristika: Array<number> = response.match(/[-+]?[0-9]*\.?[0-9]+/g);
                 var znak = response.match("\\\\\"(.)\\\\\"")[1];
                 var $h = $(self.div).siblings(".heuristics-" + znak)
-                $h.find(".h-pobeda-ja").children("dd").text(nizHeuristika[0]);
-                $h.find(".h-pobeda-on").children("dd").text(nizHeuristika[1]);
-                $h.find(".h-izgurani-ja").children("dd").text(nizHeuristika[2]);
-                $h.find(".h-izgurani-on").children("dd").text(nizHeuristika[3]);
-                $h.find(".h-centar-ja").children("dd").text(nizHeuristika[4]);
-                $h.find(".h-centar-on").children("dd").text(nizHeuristika[5]);
-                $h.find(".h-grupisanje-ja").children("dd").text(nizHeuristika[6]);
-                $h.find(".h-grupisanje-on").children("dd").text(nizHeuristika[7]);
+                $h.find(".h-pobeda-ja").children("dd").text(Number(nizHeuristika[0]).toFixed(2));
+                $h.find(".h-pobeda-on").children("dd").text(Number(nizHeuristika[1]).toFixed(2));
+                $h.find(".h-izgurani-ja").children("dd").text(Number(nizHeuristika[2]).toFixed(2));
+                $h.find(".h-izgurani-on").children("dd").text(Number(nizHeuristika[3]).toFixed(2));
+                $h.find(".h-centar-ja").children("dd").text(Number(nizHeuristika[4]).toFixed(2));
+                $h.find(".h-centar-on").children("dd").text(Number(nizHeuristika[5]).toFixed(2));
+                $h.find(".h-grupisanje-ja").children("dd").text(Number(nizHeuristika[6]).toFixed(2));
+                $h.find(".h-grupisanje-on").children("dd").text(Number(nizHeuristika[7]).toFixed(2));
+                $h.find(".h-ukupno").children("dd").text(Number(nizHeuristika[8]).toFixed(2));
                 console.log(nizHeuristika);
             }, null);
         }
