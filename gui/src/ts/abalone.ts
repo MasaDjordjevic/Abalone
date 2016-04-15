@@ -85,15 +85,14 @@ class Kamen {
                 var naRedu = tabla.naRedu;
                 var naReduZnak = tabla.naRedu == 0 ? "x" : "o";
                 if (naReduZnak == this.boja) {
-                    tabla.toggleKamen(this, "-dobro");
+                    (<Tabla>this.tabla).toggleKamen(this, "-dobro");
                 }
                 else {
-                    tabla.toggleKamen(this, "-lose");
+                    (<Tabla>this.tabla).toggleKamen(this, "-lose");
                 }
-
             }
             else {
-                tabla.toggleKamen(this);
+                (<Tabla>this.tabla).toggleKamen(this);
             }
         } catch (e) {
 

@@ -62,11 +62,16 @@ window.onload = function() {
 
     document.getElementsByName("strict-mode")[0].addEventListener('change', function() {
         if (!this.checked) {
+            /*
             var crveni = document.getElementsByClassName('selektiran-lose');
+            var lol = "haha";
             for (let i = 0; i < crveni.length; i++) {
-                crveni[i].classList.remove('selektiran-lose');
-                crveni[i].classList.add('selektiran-dobro');
+                //crveni[i].classList.remove("selektiran-lose");//.replace("selektiran-lose", "");className.replace("selektiran-lose", "")
+                //crveni[i].className += 'selektiran-dobro';
+
             }
+            */
+            $('.selektiran-lose').addClass("selektiran-dobro").removeClass("selektiran-lose");
         }
         else {
             for (let i = 0; i < tabla.selektirani.length; i++) {
