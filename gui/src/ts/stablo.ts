@@ -10,7 +10,7 @@ window.onload = function() {
 
     inicijalneTable.push("xx-oo  xxxooo  -xx-oo-  --------  ---------  --------  -oo-xx-  oooxxx  oo-xx"); // Belgian Daisy
 
-    var t = false;
+    var t = true;
     if (t) {
         inicijalneTable.push("-----  ------  -------  --------  ---------  --------  -------  ------  -----"); // prazna tabla
 
@@ -62,7 +62,7 @@ function kreirajTablu(cont, str) {
 
   var tabla = new TablaZaCrtanje(5, el, 15);
   tabla.nacrtajString(str);
-  tabla.izracunajHeuristike(999999, 999999, 120, 120, 40, 30, 70, 90);
+  tabla.izracunajHeuristike(999999, 999999, 1, 1, 1, 1, 1, 1);
   tabla.div.addEventListener("click", function(){
     window.prompt("Copy to clipboard: Ctrl+C, Enter", str);
   })
