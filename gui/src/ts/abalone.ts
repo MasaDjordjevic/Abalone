@@ -303,6 +303,14 @@ class Tabla extends TablaZaCrtanje {
         kamen.deselektiraj();
     }
 
+    izbrojiIzgurane() {
+        var brojX = (this.trenutnoStanje().match(/[Xx]/g) || []).length;
+        var brojO = (this.trenutnoStanje().match(/[Oo]/g) || []).length;
+        brojX = 14 - brojX;
+        brojO = 14 - brojO;
+        return { x: brojX, o: brojO };
+    }
+
     nacrtajString(s: string): void {
         s = s.replace(/[^XxOo\-\_]/g, '');
 

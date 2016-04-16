@@ -144,11 +144,18 @@ function deselektirajSve() {
 
 function callback(response) {
     console.log(response);
+
     if (tabla.poslednjeStanje !== null && tabla.poslednjeStanje != response.replace(/[^XxOo\-\_]/g, '')) {
         tabla.toggleNaRedu();
     }
     tabla.setPoslednjeStanje(response);
     tabla.nacrtajString(response);
+
+    var izgurani = tabla.izbrojiIzgurane();
+    if (izgurani.x >= 6 || izgurani.o >= 6) {
+        alert("Igra je završena. \nPobedio je " + (izgurani.x > izgurani.o ? "o" : "x" + ". \nRifrešuj stranicu."));
+        return;
+    }
 
     var naRedu = tabla.igraci[tabla.naRedu];
     var znakIgracaNaRedu = tabla.naRedu == 0 ? "x" : "o";
