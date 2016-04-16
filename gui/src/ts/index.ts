@@ -10,12 +10,14 @@ function posaljiPotez(kameni, smer): any {
     var sel = tabla.selektirani;
     var string = '';
     for (var i = 0; i < sel.length; i++) {
-        string += '(' + sel[i].koordinata.x + ' ' + sel[i].koordinata.y + ' ' + sel[i].koordinata.z + ') ';
+        string += '(' + sel[i].koordinata.getAxialCoordinates()[0] + ' ' + sel[i].koordinata.getAxialCoordinates()[1] + ') ';
+        // string += '(' + sel[i].koordinata.x + ' ' + sel[i].koordinata.y + ' ' + sel[i].koordinata.z + ') ';
     }
     string = "(" + string + ") ";
     string = string + smer + ' *tabla*';
 
-    smackjack.echo(string, callback, null);
+    smackjack.potez(string, callback, null);
+    // smackjack.echo(string, callback, null);
 }
 
 var novaIgra = function() {

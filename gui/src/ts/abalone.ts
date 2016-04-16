@@ -2,6 +2,18 @@ var isMouseDown = false;
 
 class Koordinata {
     constructor(public x: number = 0, public y: number = 0, public z: number = 0) { }
+
+    getCubeCoordinates() {
+        return [this.x, this.y, this.z];
+    }
+
+    getAxialCoordinates(velicina:number = 5) {
+        var pbroj = this.z;
+        pbroj = 2 * velicina - 1 - pbroj;
+        var p = String.fromCharCode(93 + (pbroj - 1)).toUpperCase();
+        var q = (this.x) + 2 * velicina - 5;
+        return [p, q];
+    }
 }
 
 class Kamen {
@@ -40,10 +52,8 @@ class Kamen {
         kamen.innerHTML = '<span class="koordinate cubic">' + this.koordinata.x + ', ' + this.koordinata.y + ', ' + this.koordinata.z + '</span>';
 
         // upis u kamen, aksijalne kooridnate
-        var pbroj = this.koordinata.z;
-        pbroj = 2 * this.tabla.velicina - 1 - pbroj;
-        var p = String.fromCharCode(93 + (pbroj - 1)).toUpperCase();
-        var q = (this.koordinata.x) + 2 * this.tabla.velicina - 5;
+        var p = this.koordinata.getAxialCoordinates()[0];
+        var q = this.koordinata.getAxialCoordinates()[1];
         kamen.innerHTML += '<span class="koordinate axial">' + p + q + '</span>';
 
         this.tabla.div.appendChild(kamen);

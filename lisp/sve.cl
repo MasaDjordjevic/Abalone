@@ -4,7 +4,6 @@
 
 (in-package :jank-repl)
 
-
 ;;; Vraca listu od 6 koordinata tj. susede.
 (defun kreiraj-susede (cvor)
   (let* ((x (car cvor))
@@ -870,6 +869,28 @@
   (kreiraj-tablu 5))
 
 
+
+
+;;; Prevodjenje aksijalnih u kubne koordinate.
+;;; KOORD = (A 2) = (p q)
+;;;   A => 4, B => 3, ... E => 0, ... I => -4       (p => z)    (- 69 (CHAR-INT (CHAR (SYMBOL-NAME P) 0)))
+;;;   1 => -4, 2 => -3, ... , 5 => 0, ..., 9 => 4   (q => x)    (- Q 5)
+;;;                                                 (     y)    (- 0 x z)
+
+(defun axial2cube-1 (koord)
+  (let* ((P (car koord))
+         (Q (cadr koord))
+         (z (- 69 (CHAR-INT (CHAR (SYMBOL-NAME P) 0))))
+         (x (- Q 5))
+         (y (- 0 x z)))
+    (list x y z)))
+
+(defun axial2cube (koords)
+  (mapcar 'axial2cube-1 koords))
+
+
+
+
 ; Allow cl-who and parenscript to work together
 (setf *js-string-delimiter* #\")
 
@@ -913,6 +934,12 @@
     (format nil "~S~%" (stampaj (setq *tabla* (if (null (odigraj-potez (car d) (cadr d) *tabla*))
                                                   *tabla*
                                                 (odigraj-potez (car d) (cadr d) *tabla*)))))))
+
+(defun-ajax ajax-potez (data) (*ajax-processor* :callback-data :response-text)
+  (let ((d (string-to-list data)))
+    (format nil "~S~%" (stampaj (setq *tabla* (if (null (odigraj-potez (axial2cube (car d)) (cadr d) *tabla*))
+                                                  *tabla*
+                                                (odigraj-potez (axial2cube (car d)) (cadr d) *tabla*)))))))
 
 ;;; Neka AI razmisli
 (defun ai-odigraj-potez-1 (tabla znak)

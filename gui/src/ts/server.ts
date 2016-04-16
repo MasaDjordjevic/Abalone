@@ -1,5 +1,6 @@
 var smackjack = {
     echo: function(data, callback, errorHandler): any { },
+    potez: function(data, callback, errorHandler): any { },
     reset: function(data, callback, errorHandler): any { },
     heuristika: function(data, callback, errorHandler): any { },
     AIodigrajPotez: function(data, callback, errorHandler): any { },
@@ -128,6 +129,11 @@ var smackjack = {
         return ajaxCall("ECHO", [data], "GET", callback, errorHandler, responseText);
     };
     smackjack.echo = echo;
+
+    function potez(data, callback, errorHandler = null) {
+        return ajaxCall("AJAX-POTEZ", [data], "GET", callback, errorHandler, responseText);
+    };
+    smackjack.potez = potez;
 
     function reset(data, callback, errorHandler = null) {
         return ajaxCall("RESET", [data], "GET", callback, errorHandler, responseText);
