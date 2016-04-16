@@ -655,8 +655,44 @@
 ;;; 2. izgurani moj/njegov
 ;;; 3. centar moj/njegov
 ;;; 4. grupisanje moj/njegov
+
+(defparameter *huge-number* 999999)
+(defparameter *izgurani-x-ja* 100)
+(defparameter *izgurani-x-on* 100)
+(defparameter *izgurani-o-ja* 100)
+(defparameter *izgurani-o-on* 100)
+(defparameter *centar-x-ja* 100)
+(defparameter *centar-x-on* 70)
+(defparameter *centar-o-ja* 100)
+(defparameter *centar-o-on* 70)
+(defparameter *grupisanje-x-ja* 110)
+(defparameter *grupisanje-x-on* 90)
+(defparameter *grupisanje-o-ja* 110)
+(defparameter *grupisanje-o-on* 90)
+
+(defun view-params ()
+  (format t "~s" (list *izgurani-x-ja* *izgurani-x-on* *izgurani-o-ja* *izgurani-o-on*
+                       *centar-x-ja* *centar-x-on* *centar-o-ja* *centar-o-on*
+                       *grupisanje-x-ja* *grupisanje-x-on* *grupisanje-o-ja* *grupisanje-o-on*)))
+
+
+
 (defun heuristika (tabla znak)
   (float (heuristika-parametri tabla znak 999999 999999 100 100 70 50 110 90)))
+
+(defun heuristika-x (tabla &optional (znak "x"))
+  (float (heuristika-parametri tabla znak
+                               *huge-number* *huge-number* 
+                               *izgurani-x-ja* *izgurani-x-on*
+                               *centar-x-ja* *centar-x-on*
+                               *grupisanje-x-ja* *grupisanje-x-on*)))
+
+(defun heuristika-o (tabla &optional (znak "o"))
+  (float (heuristika-parametri tabla znak
+                               *huge-number* *huge-number* 
+                               *izgurani-o-ja* *izgurani-o-on*
+                               *centar-o-ja* *centar-o-on*
+                               *grupisanje-o-ja* *grupisanje-o-on*)))
 
 
 
@@ -666,11 +702,11 @@
 ;;; Minimax algoritam
 ;;; X je MAX, O je MIN
 
-;;; Od prosledjene lista STANJA napravi listu ciji su elementi (stanje heuristika).
-;; Ovo se nigde ne zove?
-(defun dodaj-heuristike (stanja znak)
+;;; Od prosledjene liste STANJA napravi listu ciji su elementi (stanje heuristika).
+
+(defun dodaj-heuristike (stanja znak &optional (h-fja 'heuristika))
   (cond ((null stanja) '())
-        (t (cons (list (car stanja) (heuristika (car stanja) znak))
+        (t (cons (list (car stanja) (apply h-fja (list (car stanja) znak)))
                  (dodaj-heuristike (cdr stanja) znak)))))
 
 ;;; Iz LISTE ciji su elementi (stanje heuristika) izaberi stanje sa najvecom/najmanjom (>/<) heuristikom.
@@ -719,7 +755,7 @@
 
 (defparameter *ALPHA* '('() -999999999))
 (defparameter *BETA*  '('() +999999999))
-(defun alpha-beta-max (stanje alpha beta dubina maxdubina znak igram-ja &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
+(defun alpha-beta-max (stanje alpha beta dubina maxdubina znak igram-ja &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika-x))
   (if (or (zerop dubina) (pobeda-p znak stanje))
       (list stanje (apply fja-proceni-stanje (list stanje znak)))
 ;    (loop for sledbenik in (mapcar 'car (sort-h (dodaj-heuristike (apply fja-nova-stanja (list stanje (if igram-ja znak (suprotan-znak znak)))) znak) znak))
@@ -738,7 +774,7 @@
         finally (return (if (= dubina maxdubina) alpha (list stanje (cadr alpha)))))))
 
 
-(defun alpha-beta-min (stanje alpha beta dubina maxdubina znak igram-ja &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
+(defun alpha-beta-min (stanje alpha beta dubina maxdubina znak igram-ja &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika-o))
   (if (or (zerop dubina) (pobeda-p znak stanje))
       (list stanje (apply fja-proceni-stanje (list stanje znak)))
 ;    (loop for sledbenik in (mapcar 'car (sort-h (dodaj-heuristike (apply fja-nova-stanja (list stanje (if igram-ja znak (suprotan-znak znak)))) znak) znak))
@@ -840,39 +876,7 @@
 (defparameter *ajax-processor*
   (make-instance 'ajax-processor :server-uri "/repl-api"))
 
-;(defun heuristika-ajax-1 (tabla znak faktor-pobeda faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov)
-;  (let* ((tabla (string-u-tabla tabla)))
-;    (format t "Pobeda: ~s~%Izgurani moj: ~s~%Izgurani njegov: ~s~%Centar moj: ~s~%Centar njegov: ~s~%Grupisanje moj: ~s~%Grupisanje njegov: ~s~%Ukupno: ~s~%"
-;      (float (h-pobeda     tabla faktor-pobeda))
-;      (float (h-izgurani   tabla znak faktor-izgurani-moj))
-;      (float (h-izgurani   tabla (suprotan-znak znak) faktor-izgurani-njegov))
-;      (float (h-centar     tabla znak faktor-centar-moj))
-;      (float (h-centar     tabla (suprotan-znak znak) faktor-centar-njegov))
-;      (float (h-grupisanje tabla znak faktor-grupisanje-moj))
-;      (float (h-grupisanje tabla (suprotan-znak znak) faktor-grupisanje-njegov))
-;      (float (heuristika-parametri tabla znak faktor-pobeda faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov)))))
-
-
-;(defun-ajax heuristikaAJAX (data) (*ajax-processor* :callback-data :response-text)
-;  (let* ((znak data)
-;         (tabla *tabla*)
-;         (faktor-pobeda 1)
-;         (faktor-izgurani-moj 1)
-;         (faktor-izgurani-njegov 1)
-;         (faktor-centar-moj 1)
-;         (faktor-centar-njegov 1)
-;         (faktor-grupisanje-moj 1)
-;         (faktor-grupisanje-njegov 1))
-;    (format nil "Pobeda: ~s~%Izgurani moj: ~s~%Izgurani njegov: ~s~%Centar moj: ~s~%Centar njegov: ~s~%Grupisanje moj: ~s~%Grupisanje njegov: ~s~%Ukupno: ~s~%"
-;      (float (h-pobeda     tabla faktor-pobeda))
-;      (float (h-izgurani   tabla znak faktor-izgurani-moj))
-;      (float (h-izgurani   tabla (suprotan-znak znak) faktor-izgurani-njegov))
-;      (float (h-centar     tabla znak faktor-centar-moj))
-;      (float (h-centar     tabla (suprotan-znak znak) faktor-centar-njegov))
-;      (float (h-grupisanje tabla znak faktor-grupisanje-moj))
-;      (float (h-grupisanje tabla (suprotan-znak znak) faktor-grupisanje-njegov))
-;      (float (heuristika-parametri tabla znak faktor-pobeda faktor-izgurani-moj faktor-izgurani-njegov faktor-centar-moj faktor-centar-njegov faktor-grupisanje-moj faktor-grupisanje-njegov)))))
-
+;; Za stablo
 (defun-ajax heuristika-ajax (data) (*ajax-processor* :callback-data :response-text)
   (let* ((data (string-to-list data))
          (data (car data)) ; posto ga on stavi u listu
@@ -893,11 +897,14 @@
                              faktor-grupisanje-moj faktor-grupisanje-njegov
                                                 nil))))
 
+;;; Vraca sva sledeca moguca stanja.
+;;; U data se nalazi string gde je prvi karakter ZNAK koji igra (x ili o),
+;;;   a preostalih 61 znakova predstavljaju stanje TABLE.
 (defun-ajax deca-ajax (data) (*ajax-processor* :callback-data :response-text)
   (let* ((znak (subseq data 0 1))
          (tabla (string-u-tabla (subseq data 1 (length data)))))
     (format nil "~s" 
-      (LOOP FOR STANJE IN (sort-h (dodaj-heuristike (NOVA-STANJA tabla znak) znak) znak)
+      (LOOP FOR STANJE IN (sort-h (dodaj-heuristike (nova-stanja tabla znak) znak) znak)
             collect (format nil "~s" (STAMPAJ (car STANJE)))))))
 
 
@@ -913,16 +920,35 @@
       (car (alpha-beta-max tabla *alpha* *beta* 3 3 "x" t))
     (car (alpha-beta-min tabla *alpha* *beta* 3 3 "o" t))))
 
-
-
 (defun-ajax ai-odigraj-potez (data) (*ajax-processor* :callback-data :response-text)
   (format nil "~S~%" (stampaj (setq *tabla* (ai-odigraj-potez-1 (string-u-tabla (subseq data 1 (length data)))
                                                                 (subseq data 0 1))))))
 
+;;; Menjanje parametara za heuristiku preko AJAX-a.
+(defun-ajax promeni-h-ajax (data) (*ajax-processor* :callback-data :response-text)
+  (let* ((data (string-to-list data)))
+    (progn 
+      (setq *izgurani-x-ja* (nth 0 data))
+      (setq *izgurani-x-on* (nth 1 data))
+      (setq *izgurani-o-ja* (nth 2 data))
+      (setq *izgurani-o-on* (nth 3 data))
+      (setq *centar-x-ja* (nth 4 data))
+      (setq *centar-x-on* (nth 5 data))
+      (setq *centar-o-ja* (nth 6 data))
+      (setq *centar-o-on* (nth 7 data))
+      (setq *grupisanje-x-ja* (nth 8 data))
+      (setq *grupisanje-x-on* (nth 9 data))
+      (setq *grupisanje-o-ja* (nth 10 data))
+      (setq *grupisanje-o-on* (nth 11 data))
+      (format nil "ACK"))))
+
+
+
+
+
 
 (defun-ajax reset (data) (*ajax-processor* :callback-data :response-text)
-  (format nil "~S~%" (stampaj (setq *tabla* (kreiraj-tablu 5))))
-  )
+  (format nil "~S~%" (stampaj (setq *tabla* (kreiraj-tablu 5)))))
 
 
 (defun string-to-list (string)

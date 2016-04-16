@@ -36,8 +36,6 @@ class Kamen {
         kamen.style.top = top.toString() + 'px';
         kamen.style.left = left.toString() + 'px';
 
-
-
         // upis u kamen, kubne koordinate
         kamen.innerHTML = '<span class="koordinate cubic">' + this.koordinata.x + ', ' + this.koordinata.y + ', ' + this.koordinata.z + '</span>';
 

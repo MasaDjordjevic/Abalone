@@ -100,10 +100,29 @@ window.onload = function() {
         isMouseDown = false;
     });
 
+    // Window on load
+    // Slanje heuristika
+    $(document).on('keypress keydown keyup', '#h-igrac-1, #h-igrac-2', function(e) {
+        var $self = $(this);
+        if (e.keyCode != 13) // Enter
+        $(this).addClass('unsaved');
+        else {
+            var h = $('#h-igrac-1').val() + ' ' + $('#h-igrac-2').val();
+            h = h.replace(/\s+/g, " ");
+            if (h.split(' ').length != 12) {
+                alert('Pogresan unos!');
+                debugger;
+            }
+            smackjack.promeniHeuristike(h, function(response) {
+                $self.removeClass("unsaved");
+            }, null);
+        }
+    });
 }
 
 // Shortcutovi na tastaturi za pomeranje kad igra Human
 document.onkeypress = function(e) {
+    if ($('.h-parametri > input').is(":focus")) return;
     var c = e.keyCode;
     if (c == 100 || c == 54) posaljiPotez(tabla.selektirani, 1);   // d, 6
     if (c == 101 || c == 57) posaljiPotez(tabla.selektirani, 2);   // e, 9

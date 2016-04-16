@@ -113,8 +113,51 @@ h1 {
         opacity: 0;
     }
 
+    & > span {
+        width  : 90px;
+        display: inline-block;
+    }
+
     input[name="radio-koordinate"] {
         margin-left: 20px;
+    }
+
+    input#igrac-1-ai {
+        &:not(:checked) ~ .h-parametri:first-of-type {
+            opacity: 0.1;
+        }
+    }
+
+    input#igrac-2-ai {
+        &:not(:checked) ~ .h-parametri {
+            opacity: 0.1;
+        }
+    }
+
+    .h-parametri {
+        margin-left: 40px;
+        width      : 300px;
+        display    : inline-block;
+
+        input {
+            width           : 100%;
+            background-color: transparent;
+            outline         : none;
+            border          : none;
+            box-shadow      : 0 2px rgba($color-main-dark, .2);
+            transition      : box-shadow 0.2s;
+            color           : rgba(black, .7);
+            font-size       : 16px;
+
+            &:active,
+            &:focus {
+                box-shadow: 0 3.5px rgba($color-main-dark, .6);
+            }
+
+            &.unsaved {
+                color: palette($red);
+            }
+        }
     }
 }
 $input-button-size: 22px;

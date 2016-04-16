@@ -3,7 +3,8 @@ var smackjack = {
     reset: function(data, callback, errorHandler): any { },
     heuristika: function(data, callback, errorHandler): any { },
     AIodigrajPotez: function(data, callback, errorHandler): any { },
-    deca: function(data, callback, errorHandler): any { }
+    deca: function(data, callback, errorHandler): any { },
+    promeniHeuristike: function(data, callback, errorHandler): any { }
 };
 
 (function() {
@@ -147,6 +148,11 @@ var smackjack = {
         return ajaxCall("DECA-AJAX", [data], "GET", callback, errorHandler, responseText);
     };
     smackjack.deca = deca;
+
+    function promeniHeuristike(data, callback, errorHandler = null) {
+        return ajaxCall("PROMENI-H-AJAX", [data], "GET", callback, errorHandler, responseText);
+    };
+    smackjack.promeniHeuristike = promeniHeuristike;
 
     return null;
 })();
