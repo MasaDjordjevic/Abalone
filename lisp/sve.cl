@@ -84,8 +84,8 @@
          (o2 (append (list (list -k 0 k)) (kreiraj-susede (list -k 0 k))))
          (o (append o1 o2))
 
-         (tabla (postavi-inicijalne-vrednosti x "x" praznaTabla))
-         (tabla (postavi-inicijalne-vrednosti o "o" tabla)))
+         (tabla (postavi-inicijalne-vrednosti x "o" praznaTabla))
+         (tabla (postavi-inicijalne-vrednosti o "x" tabla)))
 
     (sortiraj tabla 'op-poredjenja)))
 
@@ -530,7 +530,8 @@
 
 
 
-
+;;; Pretvara string "xx-ooxxxooo-xx-oo----..." u tablu (stanje).
+;;; Ne zove kreiraj-praznu-tablu jer tu nisu sortirane koordinate.
 (defun string-u-tabla (string)
      (string-u-tabla-1 string (mapcar 'car (kreiraj-tablu 5))))
 
@@ -596,7 +597,8 @@
 ;;; prosecno-rastojanje-do-centra vraca broj izmedju 1.00 i 4.00
 ;;; smanjimo ga za jedan: izmedju 0.00 i 3.00
 ;;; pomnozimo ga sa 33.33: izmedju 0.00 i 100.00
-;;; okrenemo znak jer igraci treba da teze tome da znak bude sto manji
+;;; okrenemo znak jer igraci treba da teze tome da razdaljina bude sto manja
+;;; -100 je kad su perle najdalje od centra (po ivici table), a 0 je kada su najblize centru (za 8 perli)
 ;;; pomnozimo prosledjenim faktorom
 (defun h-centar (tabla znak faktor)
   (* faktor (- (* 33.333333 (1- (prosecno-rastojanje-do-centra (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla znak))))))))
@@ -611,6 +613,7 @@
 ;; Oduzmemo 1.75, sad je od 0.00 do 2.75.
 ;; Mnozimo sa 36.36 i dobijamo od 0.00 do 100.00.
 ;; Izvrnemo znak jer je bolje kad je manje.
+;; -100 kada su najgore grupisane (mada moze da predje i preko), 0 za najbolje
 ;; Mnozimo prosledjenim faktorom.
 (defun h-grupisanje (tabla znak faktor)
   (let* ((svi (cvorovi-u-pozicije (izdvoji-sve-istog-znaka tabla znak)))
@@ -710,17 +713,17 @@
 
 ;;; Iz LISTE ciji su elementi (stanje heuristika) izaberi stanje sa najvecom/najmanjom (>/<) heuristikom.
 ;; Pomocna funkcija
-(defun minmax-stanje-i (lista max-stanje op)
-  (cond ((null lista) max-stanje)
-        ((apply op (list (cadar lista) (cadr max-stanje))) (minmax-stanje-i (cdr lista) (car lista) op)) ; nadjen novi maksimum, on se prosledjuje dalje
-        (t (minmax-stanje-i (cdr lista) max-stanje op)))) ; trenutni maksimum se prosledjuje dalje
+;(defun minmax-stanje-i (lista max-stanje op)
+;  (cond ((null lista) max-stanje)
+;        ((apply op (list (cadar lista) (cadr max-stanje))) (minmax-stanje-i (cdr lista) (car lista) op)) ; nadjen novi maksimum, on se prosledjuje dalje
+;        (t (minmax-stanje-i (cdr lista) max-stanje op)))) ; trenutni maksimum se prosledjuje dalje
 ;; Glavna funkcija (polazi od pretpostavke da je prvi element najveci/najmanji.
-(defun minmax-stanje (lista op)
-  (minmax-stanje-i (cdr lista) (car lista) op))
+;(defun minmax-stanje (lista op)
+;  (minmax-stanje-i (cdr lista) (car lista) op))
 
 ;;; Konkretne funkcije za min i max
-(defun min-stanje (lista) (minmax-stanje lista '<))
-(defun max-stanje (lista) (minmax-stanje lista '>))
+;(defun min-stanje (lista) (minmax-stanje lista '<))
+;(defun max-stanje (lista) (minmax-stanje lista '>))
 
 ;;; Glavna funkcija za minimax algoritam.
 ;;; Proceni stanje na osnovu procene potomaka (tj. poteza u koje moze da se stigne iz STANJE) i igraca koji je na potezu.
@@ -728,15 +731,15 @@
 ;;; Pretraga se okocava kada se dosegne zadatak DUBINA, i tada se kao procena stanja vraca njegova heuristika.
 ;;; Podrazumevano se kao funkcija koja vraca nova stanja zove "nove-stanja", a za procenu stanja se zove "heuristika",
 ;;;   ali se moze promeniti proslednjivanjem opcionih parametara.
-(defun minimax (stanje dubina igrac &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
-  (let* ((igrac-sad      (if (equalp igrac "x") 'max-stanje 'min-stanje))
-         (lista-potomaka (apply fja-nova-stanja (list stanje igrac))))
-    (cond ((or (zerop dubina) (null lista-potomaka)) (list stanje (apply fja-proceni-stanje (list stanje igrac))))
-          (t (apply igrac-sad (list (mapcar (lambda (el) (minimax el (1- dubina) (suprotan-znak igrac) fja-nova-stanja fja-proceni-stanje)) lista-potomaka)))))))
+;(defun minimax (stanje dubina igrac &optional (fja-nova-stanja 'nova-stanja) (fja-proceni-stanje 'heuristika))
+;  (let* ((igrac-sad      (if (equalp igrac "x") 'max-stanje 'min-stanje))
+;         (lista-potomaka (apply fja-nova-stanja (list stanje igrac))))
+;    (cond ((or (zerop dubina) (null lista-potomaka)) (list stanje (apply fja-proceni-stanje (list stanje igrac))))
+;          (t (apply igrac-sad (list (mapcar (lambda (el) (minimax el (1- dubina) (suprotan-znak igrac) fja-nova-stanja fja-proceni-stanje)) lista-potomaka)))))))
 
 
 ;;; Alfa-beta odsecanje
-;; Mora jednako da bismo vratili levi cvor (nebitno za alfa/beta, ngo zbog vracanja cvora)
+;; Mora jednako da bismo vratili levi cvor (nebitno za alfa/beta, nego zbog vracanja cvora)
 (defun manje-stanje (stanje1 stanje2)
   (if (<= (cadr stanje1) (cadr stanje2))
       stanje1 stanje2))
@@ -968,11 +971,6 @@
       (setq *grupisanje-o-ja* (nth 10 data))
       (setq *grupisanje-o-on* (nth 11 data))
       (format nil "ACK"))))
-
-
-
-
-
 
 (defun-ajax reset (data) (*ajax-processor* :callback-data :response-text)
   (format nil "~S~%" (stampaj (setq *tabla* (kreiraj-tablu 5)))))
