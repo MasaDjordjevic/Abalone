@@ -68,7 +68,7 @@ var smackjack = {
         if (method === undefined) {
             method = "GET";
         };
-        uri = "http://localhost:8080" + uri;
+        uri = "http://localhost:8081" + uri; 
         //uri = 	"http://localhost:8080/repl-api/ECHO/?arg0=%22%2B%201%202%22"
         var request = httpNewRequest();
         if (!request) {
