@@ -991,7 +991,7 @@
             (setq string (subseq string end-position))))))
 
 (defparameter *server*
-  (start (make-instance 'easy-acceptor :address "localhost" :port 8080)))
+  (start (make-instance 'easy-acceptor :address "localhost" :port 8081)))
 
 (setq *dispatch-table* (list 'dispatch-easy-handlers
                              (create-ajax-dispatcher *ajax-processor*)))
