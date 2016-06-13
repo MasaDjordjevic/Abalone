@@ -579,7 +579,7 @@
 
 ;;; Ocekuje cvorove.
 (defun pobeda-p (znak tabla)
-  (< (prebroji (suprotan-znak znak) tabla) 8))
+  (<= (prebroji (suprotan-znak znak) tabla) 8))
 
 ;;; Ocekuje cvorove.
 ;;; Vraca 100 ako je pobedio znak, inace 0.
@@ -997,6 +997,73 @@
                              (create-ajax-dispatcher *ajax-processor*)))
 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;                                                                                              ;;;
+;;;                                    MASINA ZA ZAKLJUCIVANJE                                   ;;;
+;;;                                                                                              ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun !gt (a b)
+  (> a b))
+
+(defun !ge (a b)
+  (>= a b))
+
+(defun !le (a b)
+  (>= a b))
+
+(defun !broj-izguranih (znak)
+  (broj-izguranih znak *tabla*))
+
+(defun !prebroji (znak)
+  (prebroji znak *tabla*))
+
+(defun !pobeda (znak)
+  (pobeda-p znak *tabla*))
+
+(defun !grupisanje (znak)
+  (h-grupisanje *tabla* znak 1))
+
+(defun !centar (znak)
+  (h-centar *tabla* znak 1))
+
+
+
+;(or (<= (prebroji "x" tabla) 8) (<= (prebroji "o" tabla) 8))
+
+;(defparameter *T1-RULES* '(                          
+;                           (IF (and (broj-x ?y) (!le 8 ?y )) THEN (pobeda 'o ))
+;                           (IF (and (broj-o ?y) (!le 8 ?y )) THEN (pobeda 'x ))
+;                           (IF (and (broj-izguranih-x ?y) (!gt ?y 0)) THEN (pobeda 'o ))
+;                           (IF (and (broj-izguranih-o ?y) (!gt ?y 0)) THEN (pobeda 'x ))
+;                           (IF (and (grupisanje-x ?y) (!gt ?y -50 )) THEN (pobeda 'o ))
+;                           (IF (and (grupisanje-o ?y) (!gt ?y -50)) THEN (pobeda 'x )) 
+;                           (IF (and (centar-x ?y) (!gt ?y -50 )) THEN (pobeda 'o ))
+;                           (IF (and (centar-o ?y) (!gt ?y -50)) THEN (pobeda 'x )) 
+;                           ))
+
+		
+
+;(defparameter *T1-FACTS* '(
+;                           (broj-izguranih-x  (!broj-izguranih "x" ))
+;                           (broj-izguranih-o  (!broj-izguranih "o" ))
+;                           (broj-x (!prebroji "x"))
+;                           (broj-o (!prebroji "o"))
+;                           (grupisanje-x (!grupisanje "x"))
+;                           (grupisanje-o (!grupisanje "o"))
+;                           (centar-x (!centar "x"))
+;                           (centar-o (!centar "o")) 
+;                           ))
+
+;(prepare-knowledge *T1-RULES* *T1-FACTS* 10)
+
+;(defun kvazi-heuristika (znak)
+;  (let* ((pobeda-x (> (count-results '(pobeda 'x)) (count-results '(pobeda 'y)))))       
+;    (cond 
+;     ((and (equal znak "x") pobeda-x) '1)
+;     ((and (equal znak "o") pobeda-x) '-1)
+;     (t '0))))   
 
 
 
