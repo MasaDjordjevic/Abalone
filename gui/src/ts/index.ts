@@ -164,7 +164,10 @@ function callback(response) {
     if (naRedu == Igrac.AI) {
         console.log("AI-ju se postavlja zadatak!\nTabla je:\n"  + tabla.poslednjeStanje);
         setTimeout(function() {
-            smackjack.AIodigrajPotez(znakIgracaNaRedu + tabla.poslednjeStanje, callback, null);
+            if (znakIgracaNaRedu == "x")
+                smackjack.AIodigrajPotez(znakIgracaNaRedu + tabla.poslednjeStanje, callback, null);
+            else
+                smackjack.AIodigrajPotez2(znakIgracaNaRedu + tabla.poslednjeStanje, callback, null);
         }, 500);
     }
 };

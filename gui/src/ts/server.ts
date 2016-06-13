@@ -64,11 +64,11 @@ var smackjack = {
 
 
 
-    function fetchUri(uri, callback, method, body, errorHandler, process) {
+    function fetchUri(uri, callback, method, body, errorHandler, process, port = "8081") {
         if (method === undefined) {
             method = "GET";
         };
-        uri = "http://localhost:8081" + uri; 
+        uri = "http://localhost:" + port + uri;
         //uri = 	"http://localhost:8080/repl-api/ECHO/?arg0=%22%2B%201%202%22"
         var request = httpNewRequest();
         if (!request) {
@@ -108,7 +108,7 @@ var smackjack = {
         };
         return s;
     };
-    function ajaxCall(func, args, method, callback, errorHandler, process) {
+    function ajaxCall(func, args, method, callback, errorHandler, process, port = "8081") {
         if (method === undefined) {
             method = "GET";
         };
@@ -122,7 +122,7 @@ var smackjack = {
             body = ajaxArgs;
         };
 
-        return fetchUri(uri, callback, method, body, errorHandler, process);
+        return fetchUri(uri, callback, method, body, errorHandler, process, port);
     };
 
     function echo(data, callback, errorHandler = null) {
@@ -146,9 +146,14 @@ var smackjack = {
     smackjack.heuristika = heuristika;
 
     function AIodigrajPotez(data, callback, errorHandler = null) {
-        return ajaxCall("AI-ODIGRAJ-POTEZ", [data], "GET", callback, errorHandler, responseText);
+        return ajaxCall("AI-ODIGRAJ-POTEZ", [data], "GET", callback, errorHandler, responseText, "8081");
     };
     smackjack.AIodigrajPotez = AIodigrajPotez;
+
+    function AIodigrajPotez2(data, callback, errorHandler = null) {
+        return ajaxCall("AI-ODIGRAJ-POTEZ", [data], "GET", callback, errorHandler, responseText, "8081");
+    };
+    smackjack.AIodigrajPotez2 = AIodigrajPotez2;
 
     function deca(data, callback, errorHandler = null) {
         return ajaxCall("DECA-AJAX", [data], "GET", callback, errorHandler, responseText);
