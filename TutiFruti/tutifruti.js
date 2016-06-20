@@ -12,8 +12,8 @@ var data1 = {
             "A B C D E F G H I J K L M N O"
         ],
         coloring: "classic",
-        mode: "go",
-        size: "s"
+        mode: "classic",
+        size: "m"
     },
     player: {
         name: "La Plávusha",
@@ -1175,7 +1175,8 @@ var displayMessage = function(message, type) {
 
 $(document).ready(function() {
     //displayMessage("TutiFruti :: version 0.0");
-    //displayData(data1);
+    displayData(data1);
+    
 });
 
 var example = {};
@@ -1575,3 +1576,12 @@ example.gomokuEastern = {
         }
     ]
 };
+
+
+//TODO pomeri odavde
+$('#button').click(function() {
+    $('.info').toggleClass('hidden');
+    $('.generator').toggleClass('hidden');
+});
+
+
