@@ -268,6 +268,8 @@
         ((linijaX-p kameni 2) '2) ; z
         (t '())))
 
+
+;;; Trebalo bi da su sudei ako im je zbir svih koordinata 0
 ;;; Proverava da li su kameni A i B susedi.
 (defun susedna2-p (a b)
   (or (equal a (saberi-pokomponentno b (smer 1)))
@@ -331,7 +333,7 @@
 
 ;;; Vraca onaj kamen "koji gura".
 ;;; Podrazumeva sortirane kamencice.
-;;; member ne radi ako umesto konkretnih bojeva stavimo parametre!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+;;; member ne radi ako umesto konkretnih bojeva stavimo konstante!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 (defun polje-usg (kameni smer)
   (let* ((kameni (sortiraj kameni 'op-poredjenja-koord-samo)))
     (cond ((member smer '(4 3 2)) (car kameni))
@@ -960,14 +962,14 @@
     (progn 
       (setq *izgurani-x-ja* (nth 0 data))
       (setq *izgurani-x-on* (nth 1 data))
-      (setq *izgurani-o-ja* (nth 2 data))
-      (setq *izgurani-o-on* (nth 3 data))
-      (setq *centar-x-ja* (nth 4 data))
-      (setq *centar-x-on* (nth 5 data))
-      (setq *centar-o-ja* (nth 6 data))
-      (setq *centar-o-on* (nth 7 data))
-      (setq *grupisanje-x-ja* (nth 8 data))
-      (setq *grupisanje-x-on* (nth 9 data))
+      (setq *centar-x-ja* (nth 2 data)) 
+      (setq *centar-x-on* (nth 3 data)) 
+      (setq *grupisanje-x-ja* (nth 4 data)) 
+      (setq *grupisanje-x-on* (nth 5 data)) 
+      (setq *izgurani-o-ja* (nth 6 data))
+      (setq *izgurani-o-on* (nth 7 data))
+      (setq *centar-o-ja* (nth 8 data))
+      (setq *centar-o-on* (nth 9 data))
       (setq *grupisanje-o-ja* (nth 10 data))
       (setq *grupisanje-o-on* (nth 11 data))
       (format nil "ACK"))))
