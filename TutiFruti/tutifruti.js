@@ -154,7 +154,7 @@ var validate = function(data) {
         data.markings = [];
     }
 
-    if (isNullOrUndefined(data.removed)) {
+    if (isNullOrUndefined(data.removed) || data.removed.length === 0) {
         data.removed = [[], []];
     }
 
@@ -501,6 +501,8 @@ var validate = function(data) {
     // Removed
     for (let i = 0; i < data.removed.length; i++) {
         for (let j = 0; j < 2; j++) {
+            debugger;
+            if (data.removed[j].length === 0) continue;
             if (isNullOrUndefined(data.removed[j][i].number) && isNullOrUndefined(data.removed[j][i].style)) {
                 displayWarning("Element `removed[" + j + "][" + i + "]` nema postavljeno ni `number` ni `style`.");
             } else if (!isNullOrUndefined(data.removed[j][i].style) &&
@@ -555,7 +557,9 @@ const _boardCornersHexagonalPointy = ["bottom-left", "top-left", "top-right", "b
 const _boardColoring = ["classic", "chess"];
 
 const _boardModeHexagonal = ["classic", "circles"];
-const _boardModeRectangular = _boardModeHexagonal.push("go");
+var temp = _boardModeHexagonal;
+temp.push("go");
+const _boardModeRectangular = temp;
 
 const _boardSize = ["xxs", "xs", "s", "m", "l", "xl", "xxl"];
 
