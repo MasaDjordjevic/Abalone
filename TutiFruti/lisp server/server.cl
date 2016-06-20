@@ -127,9 +127,7 @@
                                         (setq _board board)
                                         (setq _player player)
                                         (setq _state state)))))
-    (read-state)    
-    (pomeri) ;odigravanje poteza
-    (setq _state (create-state))
+    (_odigraj-potez)
 
     (rplacd (assoc 'board _send-data) _board)
     (rplacd (assoc 'player _send-data) _player)
@@ -157,9 +155,15 @@
       (setq _x x)
       (setq _o o))))  
 
+(defun _odigraj-potez ()
+  (read-state)    
+  (pomeri) ;odigravanje poteza
+  (setq _state (create-state)))
+
 (defun pomeri ()
   (setq _x (uvecaj-koord _x)))
-             
+
+   
 (defun uvecaj-koord (koord)
   (cond
    ((null koord) '())
