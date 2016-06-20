@@ -1,5 +1,6 @@
-const fieldSize = 42; // in pixels
-const fieldMargin = 0; // in pixels
+var fieldSize = 50; // in pixels
+var fieldSizeName = "error";
+var fieldMargin = 0; // in pixels
 
 var data1 = {
     board: {
@@ -11,7 +12,8 @@ var data1 = {
             "A B C D E F G H I J K L M N O"
         ],
         coloring: "classic",
-        mode: "classic"
+        mode: "go",
+        size: "s"
     },
     player: {
         name: "La Plávusha",
@@ -28,8 +30,8 @@ var data1 = {
                 ["4", "J"], ["3", "D"]
             ],
             style: {
-                color: "red",
-                shape: "X"
+                color: "black",
+                shape: "circle"
             }
         },
         {
@@ -41,28 +43,77 @@ var data1 = {
                 ["2", "H"]
             ],
             style: {
-                color: "blue",
-                shape: "O"
+                color: "white",
+                shape: "circle"
             }
         }
     ],
     markings: [
         {
             fields: [
-                [1, 1],
-                [1, 2]
+                ["13", "C"],
+                ["2", "H"]
             ],
-            style: "move"
+            style: {
+                color: "pink",
+                shape: "crosshairs"
+            }
         }
+    ],
+    removed: [
+        // Player 1's removed figures
+        [
+            {
+                number: 1,
+                style: {
+                    color: "green",
+                    shape: "chess-queen-black"
+                }
+            },
+            {
+                number: 4,
+                style: {
+                    color: "blue",
+                    shape: "chess-pawn-white"
+                }
+            },
+            {
+                number: 2,
+                style: {
+                    color: "pink",
+                    shape: "X"
+                }
+            }
+        ],
+        // Player 2's removed figures
+        [
+            {
+                number: 1,
+                style: {
+                    color: "red",
+                    shape: "suit-spade-fill"
+                }
+            },
+            {
+                number: 2,
+                style: {
+                    color: "teal",
+                    shape: "circle-outline"
+                }
+            }
+        ]
     ]
 };
 
 var displayData = function(data) {
     try {
         $(".board").html("");
+        setSizes(data.board.size);
         displayDataBoard(data.board);
         displayDataState(data.state);
         displayDataPlayer(data.player);
+        displayDataMarkings(data.markings);
+        displayDataRemoved(data.removed);
     } catch (ex) {
         console.error(ex);
         displayError(ex);
@@ -74,6 +125,21 @@ var displayData = function(data) {
 // -------------  DATA BOARD ------------- //
 // --------------------------------------- //
 
+var setSizes = function(size) {
+    switch (size) {
+        case "xxs": fieldSize = 26; break;
+        case "xs":  fieldSize = 36; break;
+        case "s":   fieldSize = 42; break;
+        case "m":   fieldSize = 48; break;
+        case "l":   fieldSize = 56; break;
+        case "xl":  fieldSize = 64; break;
+        case "xxl": fieldSize = 72; break;
+        default: throw "Nevalidna vrednost veličine. " +
+        "Očekuje se xxs, xs, s, m, l, xl ili xxl, " +
+        "a dobijeno je " + size + "."; break;
+    }
+    fieldSizeName = size;
+};
 
 var displayDataBoard = function(dataBoard) {
     switch (dataBoard.type) {
@@ -166,7 +232,7 @@ var drawRectangularBoard = function(rows, cols) {
         var posX = (x - rows / 2) * totalFieldSize;
         var posY = (y - cols / 2) * totalFieldSize;
         $('<div/>', {
-            class: 'field rectangle',
+            class: 'field rectangle size-' + fieldSizeName,
             "data-coordinates": '' + x + '-' + y,
             style: 'left: ' + posY + 'px; top: ' + posX + 'px'
         })
@@ -221,7 +287,7 @@ var drawHexagonalFlatBoard = function(a, b, c) {
         for (j = 0; j < w; j++) {
             pos = hexagonalFlatCoordinatesToPosition(i, j, totalFieldSize, size);
             $('<div/>', {
-                class: 'field hexagon-pointy',
+                class: 'field hexagon-pointy size-' + fieldSizeName,
                 "data-coordinates": '' + i + '-' + j,
                 style: 'left: ' + pos[0] + 'px; top: ' + pos[1] + 'px;'
             })
@@ -236,7 +302,7 @@ var drawHexagonalFlatBoard = function(a, b, c) {
         for (j = o; j < w + o - 1; j++) {
             pos = hexagonalFlatCoordinatesToPosition(i, j, totalFieldSize, size);
             $('<div/>', {
-                class: 'field hexagon-pointy',
+                class: 'field hexagon-pointy size-' + fieldSizeName,
                 "data-coordinates": '' + i + '-' + j,
                 style: 'left: ' + pos[0] + 'px; top: ' + pos[1] + 'px;'
             })
@@ -251,7 +317,7 @@ var drawHexagonalFlatBoard = function(a, b, c) {
         for (j = o; j < o + w - 1; j++) {
             pos = hexagonalFlatCoordinatesToPosition(i, j, totalFieldSize, size);
             $('<div/>', {
-                class: 'field hexagon-pointy',
+                class: 'field hexagon-pointy size-' + fieldSizeName,
                 "data-coordinates": '' + i + '-' + j,
                 style: 'left: ' + pos[0] + 'px; top: ' + pos[1] + 'px;'
             })
@@ -288,7 +354,7 @@ var drawHexagonalPointyBoard = function(a, b, c) {
         for (j = 0; j < w; j++) {
             pos = hexagonalPointyCoordinatesToPosition(i, j, totalFieldSize, size);
             $('<div/>', {
-                class: 'field hexagon-flat',
+                class: 'field hexagon-flat size-' + fieldSizeName,
                 "data-coordinates": '' + i + '-' + j,
                 style: 'left: ' + pos[0] + 'px; top: ' + pos[1] + 'px;'
             })
@@ -303,7 +369,7 @@ var drawHexagonalPointyBoard = function(a, b, c) {
         for (j = o; j < w + o - 1; j++) {
             pos = hexagonalPointyCoordinatesToPosition(i, j, totalFieldSize, size);
             $('<div/>', {
-                class: 'field hexagon-flat',
+                class: 'field hexagon-flat size-' + fieldSizeName,
                 "data-coordinates": '' + i + '-' + j,
                 style: 'left: ' + pos[0] + 'px; top: ' + pos[1] + 'px;'
             })
@@ -318,7 +384,7 @@ var drawHexagonalPointyBoard = function(a, b, c) {
         for (j = o; j < o + w - 1; j++) {
             pos = hexagonalPointyCoordinatesToPosition(i, j, totalFieldSize, size);
             $('<div/>', {
-                class: 'field hexagon-flat',
+                class: 'field hexagon-flat size-' + fieldSizeName,
                 "data-coordinates": '' + i + '-' + j,
                 style: 'left: ' + pos[0] + 'px; top: ' + pos[1] + 'px;'
             })
@@ -973,7 +1039,7 @@ var drawGoStyle = function() {
 var drawCircleStyle = function() {
     var $fields = $('.board').children('.field');
     $fields.each(function() {
-        $(this).addClass("circle-style");
+        $(this).addClass("circle-style size-" + fieldSizeName);
     });
 };
 
@@ -1011,9 +1077,8 @@ var displayDataState = function(state) {
             }
             $field.addClass("occupied");
             $('<div/>', {
-                class: 'piece color--' + state[i].style.color + ' ' + 'shape--' + state[i].style.shape,
-            }).appendTo($field);//.text('O');
-            //$field.addClass("color--" + state[i].style.color);
+                class: 'piece color--' + state[i].style.color + ' ' + 'shape--' + state[i].style.shape
+            }).appendTo($field);
         }
     }
 };
@@ -1023,7 +1088,23 @@ var displayDataState = function(state) {
 // --------------------------------------- //
 
 var displayDataMarkings = function(markings) {
-
+    //foreach marking
+    for (var i = 0; i < markings.length; i++) {
+        //foreach field
+        for (var j = 0; j < markings[i].fields.length; j++) {
+            var query = markings[i].fields[j][0] + '-' + markings[i].fields[j][1];
+            var $field = $("[data-display-coordinates=" + query + "]");
+            if (!$field.length) {
+                displayWarning("Dobijen zahtev da se na polje " + query +
+                    " smesti oznaka \"" + markings[i].style.shape +
+                    "\". Ovo polje nije deo definisane table. Ignoriše se.");
+            }
+            $field.addClass("marked");
+            $("<div/>", {
+                class: 'marking color--' + markings[i].style.color+ ' ' + 'shape--' + markings[i].style.shape
+            }).appendTo($field);
+        }
+    }
 };
 
 // --------------------------------------- //
@@ -1046,6 +1127,30 @@ var displayDataPlayer = function(player) {
     $message.text(player.message);
 };
 
+// --------------------------------------- //
+// -------------  DATA REMOVED ----------- //
+// --------------------------------------- //
+
+var displayDataRemoved = function(removed) {
+    // foreach player
+    if (removed.length != 2) {
+        throw "Neočekivana greška. Niz \"removed\" mora imati tačno dva podniza. " +
+        "Dobijena duzina je " + removed.length + ".";
+    }
+    for (var i = 0; i < removed.length; i++) {
+        var $player = $(".player" + (i + 1));
+        var $removed = $player.children(".removed");
+        // for each removed figure
+        for (var j = 0; j < removed[i].length; j++) {
+            // draw a figure NUMBER times
+            for (var k = 0; k < removed[i][j].number; k++) {
+                $("<div/>", {
+                    class: 'piece piece-removed color--' + removed[i][j].style.color+ ' ' + 'shape--' + removed[i][j].style.shape
+                }).appendTo($removed);
+            }
+        }
+    }
+};
 
 
 var displayError = function(message) {
@@ -1217,7 +1322,6 @@ example.chess = {
         }
     ]
 };
-
 example.hexaChess = {
     board: {
         type: "hexagonal-pointy",
@@ -1348,6 +1452,116 @@ example.hexaChess = {
             style: {
                 color: "white",
                 shape: "chess-king-black"
+            }
+        }
+    ],
+    markings: [
+        {
+            fields: [
+                [1, 1],
+                [1, 2]
+            ],
+            style: "move"
+        }
+    ]
+};
+example.gomokuWestern = {
+    board: {
+        type: "rectangular",
+        dimensions: [15, 15],
+        corner: "bottom-left",
+        axis: [
+            "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15",
+            "A B C D E F G H I J K L M N O"
+        ],
+        coloring: "classic",
+        mode: "classic"
+    },
+    player: {
+        name: "La Plávusha",
+        order: 1,
+        message: "TutiFruti je awesome ♥"
+    },
+    state: [
+        {
+            fields: [
+                ["13", "C"], ["12", "D"], ["11", "E"], ["11", "F"], ["11", "G"], ["11", "H"], ["11", "J"], ["11", "L"],
+                ["12", "M"], ["10", "F"], ["10", "G"], ["10", "I"], ["10", "K"], ["9", "F"], ["9", "H"], ["9", "J"],
+                ["9", "L"], ["8", "E"], ["8", "F"], ["8", "G"], ["8", "H"], ["8", "M"], ["7", "E"], ["7", "H"],
+                ["6", "D"], ["6", "E"], ["6", "I"], ["6", "L"], ["5", "E"], ["5", "H"], ["5", "K"], ["4", "F"],
+                ["4", "J"], ["3", "D"]
+            ],
+            style: {
+                color: "red",
+                shape: "O"
+            }
+        },
+        {
+            fields: [
+                ["14", "B"], ["13", "F"], ["12", "E"], ["12", "F"], ["12", "I"], ["12", "K"], ["12", "N"], ["11", "C"],
+                ["11", "I"], ["10", "H"], ["9", "E"], ["9", "G"], ["9", "I"], ["8", "D"], ["8", "I"], ["8", "J"],
+                ["8", "K"], ["7", "C"], ["7", "D"], ["7", "F"], ["7", "G"], ["7", "I"], ["7", "L"], ["7", "M"],
+                ["7", "N"], ["6", "H"], ["5", "F"], ["5", "G"], ["5", "I"], ["5", "J"], ["3", "C"], ["3", "I"],
+                ["2", "H"]
+            ],
+            style: {
+                color: "blue",
+                shape: "X"
+            }
+        }
+    ],
+    markings: [
+        {
+            fields: [
+                [1, 1],
+                [1, 2]
+            ],
+            style: "move"
+        }
+    ]
+};
+example.gomokuEastern = {
+    board: {
+        type: "rectangular",
+        dimensions: [15, 15],
+        corner: "bottom-left",
+        axis: [
+            "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15",
+            "A B C D E F G H I J K L M N O"
+        ],
+        coloring: "classic",
+        mode: "go"
+    },
+    player: {
+        name: "La Plávusha",
+        order: 1,
+        message: "TutiFruti je awesome ♥"
+    },
+    state: [
+        {
+            fields: [
+                ["13", "C"], ["12", "D"], ["11", "E"], ["11", "F"], ["11", "G"], ["11", "H"], ["11", "J"], ["11", "L"],
+                ["12", "M"], ["10", "F"], ["10", "G"], ["10", "I"], ["10", "K"], ["9", "F"], ["9", "H"], ["9", "J"],
+                ["9", "L"], ["8", "E"], ["8", "F"], ["8", "G"], ["8", "H"], ["8", "M"], ["7", "E"], ["7", "H"],
+                ["6", "D"], ["6", "E"], ["6", "I"], ["6", "L"], ["5", "E"], ["5", "H"], ["5", "K"], ["4", "F"],
+                ["4", "J"], ["3", "D"]
+            ],
+            style: {
+                color: "black",
+                shape: "circle"
+            }
+        },
+        {
+            fields: [
+                ["14", "B"], ["13", "F"], ["12", "E"], ["12", "F"], ["12", "I"], ["12", "K"], ["12", "N"], ["11", "C"],
+                ["11", "I"], ["10", "H"], ["9", "E"], ["9", "G"], ["9", "I"], ["8", "D"], ["8", "I"], ["8", "J"],
+                ["8", "K"], ["7", "C"], ["7", "D"], ["7", "F"], ["7", "G"], ["7", "I"], ["7", "L"], ["7", "M"],
+                ["7", "N"], ["6", "H"], ["5", "F"], ["5", "G"], ["5", "I"], ["5", "J"], ["3", "C"], ["3", "I"],
+                ["2", "H"]
+            ],
+            style: {
+                color: "white",
+                shape: "circle"
             }
         }
     ],
