@@ -59,6 +59,7 @@ var data1 = {
 
 var displayData = function(data) {
     try {
+        $(".board").html("");
         displayDataBoard(data.board);
         displayDataState(data.state);
         displayDataPlayer(data.player);
