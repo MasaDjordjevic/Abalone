@@ -158,8 +158,14 @@ function helloWorld() {
    //zoviPrvog();
 
    //smackjack.exampleChess(JSON.stringify(example.chess), parse, null);
-   smackjack.exampleChess(JSON.stringify(data1), parse, null);
-
+   //smackjack.exampleChess(JSON.stringify(example.chess), parse, null);
+   smackjack.reset(JSON.stringify(example.chess), parse, null);
+   $("#example-chess").click(function(){
+     smackjack.exampleChess("", parse, null);
+   })
+   $("#odigraj-potez").click(function(){
+     smackjack.odigrajPotez(JSON.stringify(receivedData), parse, null);
+   })
 }
 
 function log(data) {

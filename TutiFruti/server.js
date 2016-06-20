@@ -4,6 +4,7 @@ var smackjack = {
     prvi: function (data, callback, errorHandler) { },
     drugi: function (data, callback, errorHandler) { },
     exampleChess: function (data, callback, errorHandler) { },
+    odigrajPotez: function (data, callback, errorHandler) { },
 
 };
 (function () {
@@ -186,9 +187,15 @@ var smackjack = {
     smackjack.drugi = drugi;
 
     function exampleChess(data, callback, errorHandler = null) {
-        return ajaxCall("EXAMPLE-CHESS", [data], "GET", callback, errorHandler, responseText);
+        return ajaxCall("EXAMPLE-CHESS", [data], "POST", callback, errorHandler, responseText);
     }
     ;
     smackjack.exampleChess = exampleChess;
+
+    function odigrajPotez(data, callback, errorHandler = null) {
+        return ajaxCall("ODIGRAJ-POTEZ", [data], "POST", callback, errorHandler, responseText);
+    }
+    ;
+    smackjack.odigrajPotez = odigrajPotez;
     return null;
 })();

@@ -646,6 +646,9 @@ var drawAxis = function(type, dimensions, axis, corner) {
         $(this).append("<span class='display-coordinates'>" + displayCoordinates.join('-') + "</span>");
         $(this).attr("data-display-coordinates", displayCoordinates.join('-'));
     });
+
+    axis[0] = axis[0].join(" ");
+    axis[1] = axis[1].join(" ");
 };
 
 var internalToAxis = function(type, corner, axis, dims, x, y) {
@@ -1067,7 +1070,7 @@ var displayMessage = function(message, type) {
 
 $(document).ready(function() {
     //displayMessage("TutiFruti :: version 0.0");
-    displayData(data1);
+    //displayData(data1);
 });
 
 var example = {};
