@@ -20,6 +20,19 @@
         <div>
           <button id="example-chess">Example chess</button>
           <button id="odigraj-potez">Odigraj potez</button>
+            <div>
+                <input type="text" id="port-1" value="8081">
+                <button id="odigraj-potez-1">Odrigraj potez</button>
+                <button id="reset-1">Reset</button>
+            </div>
+            <div>
+                <input type="text" id="port-2" value="8082">
+                <button id="odigraj-potez-2">Odrigraj potez</button>
+                <button id="reset-2">Reset</button>
+            </div>
+            <input type="text" id="delay" value="1000">
+            <button id="igraj">Igraj</button>
+            <button id="stop">Stop</button>
         </div>
         <div class="player player2">
             <div class="name">placeholder</div>
@@ -28,194 +41,7 @@
             <div class="other"></div>
         </div>
     </div>
-    <div class="generator">
-      <div id="gen-board">
-      	<div>
-      		<label for="gen-board-type">Type</label>
-      		<select id="gen-board-type">
-      			<option value="rectangular">Rectangular</option>
-      			<option value="hexagonal-flat">Hexagonal flat</option>
-      			<option value="hexagonal-pointy">Hexagonal pointy</option>
-      		</select>
-      	</div>
-      	<div>
-      		<span>Dimensions</span><br>
-      		<div id="gen-board-dimensions">
-      			<label for="dimensions-1">D1</label>
-      			<input id="dimensions-1" type="number" min="1" max="30" step="1" value="15" />
-      			<label for="dimensions-2">D2</label>
-      			<input id="dimensions-2" type="number" min="1" max="30" step="1" value="15" />
-      			<label for="dimensions-3">D3</label>
-      			<input id="dimensions-3" type="number" min="1" max="30" step="1" value="6" />
-      		</div>
-      	</div>
-      	<div>
-      		<label for="gen-board-corner">Corner</label>
-      		<select id="gen-board-corner">
-            <option value="bottom-left">Bottom left</option>
-            <option value="top-left">Top left</option>
-            <option value="top-right">Top right</option>
-            <option value="bottom-right">Bottom right</option>
-            <option value="left">Left</option>
-            <option value="right">Right</option>
-            <option value="bottom">Bottom</option>
-            <option value="top">Top</option>
-      		</select>
-      	</div>
-        <div>
-          <span>Axis</span><br>
-          <label for="gen-board-axis-1">A1</axis>
-          <input id="gen-board-axis-1" type="text" value="1 2 3 4 5 6 7 8 9 10 11 12 13 14 15" /> <br>
-          <label for="gen-board-axis-1">A2</axis>
-          <input id="gen-board-axis-2" type="text" value="A B C D E F G H I J K L M N O" />
-        </div>
-        <div>
-          <label for="gen-board-coloring">Coloring</label>
-          <select id="gen-board-coloring">
-            <option value="classic">Classic</option>
-            <option value="chess">Chess</option>
-          </select>
-        </div>
-        <div>
-          <label for="gen-board-mode">Mode</label>
-          <select id="gen-board-mode">
-            <option value="classic">Classic</option>
-            <option value="circles">Circles</option>
-          </select>
-        </div>
-        <div>
-          <label for="gen-board-size">Size</label>
-          <select id="gen-board-size">
-            <option value="xxs">XXS</option>
-            <option value="xs">XS</option>
-            <option value="s">S</option>
-            <option value="m">M</option>
-            <option value="l">L</option>
-            <option value="xl">XL</option>
-            <option value="xxl">XXL</option>
-          </select>
-       </div>
-     </div>
-     <div id="gen-player">
-       <div>
-         <label for="gen-player-name">Name</label>
-         <input type="text" id="gen-player-name" value="La Plavusha">
-       </div>
-       <div>
-         <label for="gen-player-order">Order</label>
-         <select id="gen-player-order">
-           <option value="1">1</option>
-           <option value="2">2</option>
-         </select>
-       </div>
-       <div>
-         <label for="gen-player-message">Message</label>
-         <input type="text" id="gen-player-message" value="Zdravo deco">
-       </div>
-     </div>
-        <div id="gen-state">
-          <div>
-            <label for="gen-state-color">Color</label>
-            <select id="gen-state-color">
-              <option value="red">red</option>
-              <option value="pink">pink</option>
-              <option value="purple">purple</option>
-              <option value="deep-purple">deep-purple</option>
-              <option value="indigo">indigo</option>
-              <option value="blue">blue</option>
-              <option value="light-blue">light-blue</option>
-              <option value="cyan">cyan</option>
-              <option value="teal">teal</option>
-              <option value="green">green</option>
-              <option value="light-green">light-green</option>
-              <option value="lime">lime</option>
-              <option value="yellow">yellow</option>
-              <option value="amber">amber</option>
-              <option value="deep-orange">deep-orange</option>
-              <option value="brown">brown</option>
-              <option value="grey">grey</option>
-              <option value="blue-grey">blue-grey</option>
-              <option value="black ">black </option>
-              <option value="white">white</option>
-            </select>
-          </div>
-          <div>
-            <label for="gen-state-shape">Shape</label>
-            <select id="gen-state-shape">
-              <optgroup label="Basic">
-                <option value="O">O</option>
-                <option value="X">X</option>
-                <option value="circle">circle</option>
-                <option value="square">square</option>
-                <option value="star">star</option>
-              </optiongroup>
-              <optgroup label="Arrows">
-                <option value="arrow-left">arrow-left</option>
-                <option value="arrow-right">arrow-right</option>
-                <option value="arrow-up">arrow-up</option>
-                <option value="arrow-down">arrow-down</option>
-                <option value="angle-left">angle-left</option>
-                <option value="angle-right">angle-right</option>
-                <option value="angle-up">angle-up</option>
-                <option value="angle-down">angle-down</option>
-                <option value="angle-double-left">angle-double-left</option>
-                <option value="angle-double-right">angle-double-right</option>
-                <option value="angle-double-up">angle-double-up</option>
-                <option value="angle-double-down">angle-double-down</option>
-              </optiongroup>
-              <optgroup label="Marking">
-                <option value="crosshairs">crosshairs</option>
-                <option value="bullseye">bullseye</option>
-                <option value="check">check</option>
-                <option value="check-circle">check-circle</option>
-                <option value="minus">minus</option>
-                <option value="plus">plus</option>
-              </optiongroup>
-              <optgroup label="Cards">
-                  <option value="suit-spade-fill">spade-fill</option>
-                  <option value="suit-spade-outline">spade-outline</option>
-                  <option value="suit-heart-fill">heart-fill</option>
-                  <option value="suit-heart-outline">heart-outline</option>
-                  <option value="suit-diamond-fill">diamond-fill</option>
-                  <option value="suit-diamond-outline">diamond-outline</option>
-                  <option value="suit-club-fill">club-fill</option>
-                  <option value="suit-club-outline">club-outline</option>
-              </optiongroup>
-              <optgroup label="Numbers/Letters">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="46">46</option>
-                  <option value="53">53</option>
-                  <option value="A">A</option>
-                  <option value="B">B</option>
-                  <option value="M">M</option>
-                  <option value="a">a</option>
-                  <option value="s">s</option>
-                  <option value="q">q</option>
-              </optiongroup>
-              <optgroup label="Chess">
-                  <option value="chess-king-outline">king-outline</option>
-                  <option value="chess-king-fill">king-fill</option>
-                  <option value="chess-queen-outline">queen-outline</option>
-                  <option value="chess-queen-fill">queen-fill</option>
-                  <option value="chess-rook-outline">rook-outline</option>
-                  <option value="chess-rook-fill">rook-fill</option>
-                  <option value="chess-bishop-outline">bishop-outline</option>
-                  <option value="chess-bishop-fill">bishop-fill</option>
-                  <option value="chess-knight-outline">knight-outline</option>
-                  <option value="chess-knight-fill">knight-fill</option>
-                  <option value="chess-pawn-outline">pawn-outline</option>
-                  <option value="chess-pawn-fill">pawn-fill</option>
-              </optiongroup>
-            </select>
-          </div>
-        </div>
-        <button type="button" id="gen-generate">Generisi</button>
-
-
-
-
-
+    <div class="generator">     
     </div>
     <div class="fab" id="button">
         <span><!--icon--></span>

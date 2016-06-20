@@ -64,14 +64,16 @@
                    (corner . "bottom-left")
                    (axis . ("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15" "A B C D E F G H I J K L M N O"))
                    (coloring . "classic")
-                   (mode . "classic")))
+                   (mode . "classic")
+                   (size . "m")))
     
     (setq _player '(
                     (name . "La Plavusha")
                     (order . 1)
                     (message . "Cemu ova poruka")))
     
-    (setq _state '())
+(setq _state '())
+
     
     (rplacd (assoc 'board _send-data) _board)
     (rplacd (assoc 'player _send-data) _player)
@@ -86,34 +88,33 @@
     
     (setq _board '(
                    (type . "rectangular")
-                   (dimensions . (15 15))
+                   (dimensions . (15 15 6))
                    (corner . "bottom-left")
                    (axis . ("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15" "A B C D E F G H I J K L M N O"))
                    (coloring . "classic")
-                   (mode . "classic")))
-    
+                   (size . xxs)))
     (setq _player '(
                     (name . "La Plavusha")
                     (order . 1)
-                    (message . "Cemu ova poruka")))
-    
+                    (message . "Zdravo deco")))
     (setq _state '(
-                   ( 
-                    (fields . ( ("13" "C") ("12" "D") ("11" "E") ("11" "G")))
-                    (style . ( 
+                   (
+                    (fields . (("13" "K")("12" "N")("9" "H")))
+                    (style . (
                               (color . "red")
-                              (shape . "X"))))
-                   ( 
-                    (fields . ( ("14" "B") ("13" "F") ("12" "E") ("12" "F")))
-                    (style . ( 
+                              (shape . "O"))))
+                   (
+                    (fields . ( ("4" "I")("15" "H")("14" "C")))
+                    (style . (
                               (color . "blue")
-                              (shape . "O"))))))
-    
-    (rplacd (assoc 'board _send-data) _board)
-    (rplacd (assoc 'player _send-data) _player)
-    (rplacd (assoc 'state _send-data) _state)    
-
-    (format nil "~S~%" (json:encode-json-to-string _send-data))))
+                              (shape . "arrow-up"))))))
+  
+  
+  (rplacd (assoc 'board _send-data) _board)
+  (rplacd (assoc 'player _send-data) _player)
+  (rplacd (assoc 'state _send-data) _state)    
+  
+  (format nil "~S~%" (json:encode-json-to-string _send-data))))
 
 
 (defun-ajax odigraj-potez (data)(*ajax-processor* :method :post :callback-data :response-text)
