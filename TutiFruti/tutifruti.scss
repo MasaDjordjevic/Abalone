@@ -321,7 +321,7 @@ body {
           // Shapes
 
           $shapes-icons: (
-            // osnovne
+                  // osnovne
                   circle: $fa-var-circle, // krug
                   circle-outline: $fa-var-circle-o,
                   square: $fa-var-square, // kvadrat
@@ -329,7 +329,7 @@ body {
                   star: $fa-var-star,     // zvezda
                   X: $fa-var-times,       // iks
                   O: $fa-var-circle-o,    // oks
-            // strelice
+                  // strelice
                   arrow-left: $fa-var-arrow-left,
                   arrow-right: $fa-var-arrow-right,
                   arrow-up: $fa-var-arrow-up,
@@ -342,7 +342,7 @@ body {
                   angle-double-right: $fa-var-angle-double-right,
                   angle-double-up: $fa-var-angle-double-up,
                   angle-double-down: $fa-var-angle-double-down,
-            // uglavnom za markings, mada moze i kao shape:
+                  // uglavnom za markings, mada moze i kao shape:
                   crosshairs: $fa-var-crosshairs,
                   bullseye: $fa-var-bullseye,
                   check: $fa-var-check,
@@ -384,7 +384,8 @@ body {
           }
 
           // Slova
-          @each $i in A B C D E F G H I J K L M N O P Q R S T U V W X Y Z {
+          @each $i in A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+                      a b c d e f g h i j k l m n o p q r s t u v w x y z {
             &.shape--letter-#{$i}::before {
               content: "#{$i}";
             }
@@ -397,18 +398,18 @@ body {
           }
 
           $shapes-chess: (
-                  king-white: "\2654",
-                  king-black: "\265A",
-                  queen-white: "\2655",
-                  queen-black: "\265B",
-                  rook-white: "\2656",
-                  rook-black: "\265C",
-                  bishop-white: "\2657",
-                  bishop-black: "\265D",
-                  knight-white: "\2658",
-                  knight-black: "\265E",
-                  pawn-white: "\2659",
-                  pawn-black: "\265F",
+                  king-outline: "\2654",
+                  king-fill: "\265A",
+                  queen-outline: "\2655",
+                  queen-fill: "\265B",
+                  rook-outline: "\2656",
+                  rook-fill: "\265C",
+                  bishop-outline: "\2657",
+                  bishop-fill: "\265D",
+                  knight-outline: "\2658",
+                  knight-fill: "\265E",
+                  pawn-outline: "\2659",
+                  pawn-fill: "\265F",
           );
 
           @each $key, $value in $shapes-chess {

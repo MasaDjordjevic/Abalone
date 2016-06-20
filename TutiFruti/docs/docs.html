@@ -442,6 +442,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_svojstvo_code_axis_code">Svojstvo <code>axis</code></a></li>
 <li><a href="#_svojstvo_code_coloring_code">Svojstvo <code>coloring</code></a></li>
 <li><a href="#_svojstvo_code_mode_code">Svojstvo <code>mode</code></a></li>
+<li><a href="#_svojstvo_code_size_code">Svojstvo <code>size</code></a></li>
 </ul>
 </li>
 <li><a href="#_grupa_code_player_code">Grupa <code>player</code></a>
@@ -453,6 +454,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_grupa_code_state_code">Grupa <code>state</code></a></li>
 <li><a href="#_grupa_code_markings_code">Grupa <code>markings</code></a></li>
+<li><a href="#_grupa_code_removed_code">Grupa <code>removed</code></a></li>
+<li><a href="#_grupa_code_report_code">Grupa <code>report</code></a></li>
 </ul>
 </li>
 </ul>
@@ -501,14 +504,22 @@ Igrači su predstavljeni Lisp serverima, podignuti na različitim portovima.</p>
 <p>informacije o trenutnom stanju table (<code>state</code>) i</p>
 </li>
 <li>
-<p>dodatne informacije o obeležavanju pojedinih polja table (<code>markings</code>).</p>
+<p>dodatne informacije o obeležavanju pojedinih polja table (<code>markings</code>),</p>
+</li>
+<li>
+<p>informacije o figurama koje su "izbačene" sa table, ako takve postoje (<code>removed</code>),</p>
+</li>
+<li>
+<p>podaci o tabli čitljivi mašinama koji se ignorišu (<code>report</code>).</p>
 </li>
 </ul>
 </div>
 <div class="sect2">
 <h3 id="_grupa_code_board_code">Grupa <code>board</code></h3>
 <div class="paragraph">
-<p>Podobjekat <code>board</code> u sebi sadrži osnovne informacije o tipu, veličini i izgledu table. Ovaj objekat u skoro svim igrama ostaje nepromenjen dokom trajanja partije. Sadrži svojstva <code>type</code>, <code>dimensions</code>, <code>corner</code>, <code>axis</code>, <code>coloring</code> i <code>mode</code>.</p>
+<p>Podobjekat <code>board</code> u sebi sadrži osnovne informacije o tipu, veličini i izgledu table.
+Ovaj objekat u skoro svim igrama ostaje nepromenjen dokom trajanja partije.
+Sadrži svojstva <code>type</code>, <code>dimensions</code>, <code>corner</code>, <code>axis</code>, <code>coloring</code>, <code>mode</code> i <code>size</code>.</p>
 </div>
 <div class="sect3">
 <h4 id="_svojstvo_code_type_code">Svojstvo <code>type</code></h4>
@@ -527,7 +538,7 @@ Igrači su predstavljeni Lisp serverima, podignuti na različitim portovima.</p>
 <div class="sect4">
 <h5 id="_opis">Opis</h5>
 <div class="paragraph">
-<p>Definiše bazični izgled table i polja na njoj.</p>
+<p>Definiše osnovni izgled table i polja na njoj.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -625,25 +636,34 @@ Igrači su predstavljeni Lisp serverima, podignuti na različitim portovima.</p>
 </div>
 <div class="sect3">
 <h4 id="_svojstvo_code_corner_code">Svojstvo <code>corner</code></h4>
+<div class="sect4">
+<h5 id="_podržane_vrednosti_3">Podržane vrednosti</h5>
 <div class="paragraph">
-<p><strong>Podržane vrednosti</strong>:
-Osnovne vrednosti koje su uvek podržane su <code>bottom-left</code>, <code>top-left</code>, <code>top-right</code> i <code>bottom-right</code>.
+<p>Osnovne vrednosti koje su uvek podržane su <code>bottom-left</code>, <code>top-left</code>, <code>top-right</code> i <code>bottom-right</code>.
 Ukoliko <code>type</code> ima vrednost <code>rectangular</code>, podržane vrednosti su samo osnovne vrednosti.
 Ukoliko <code>type</code> ima vrednost <code>hexagonal-flat</code>, pored osnovnih, podržane su i vrednosti <code>left</code> i <code>right</code>.
 Ukoliko <code>type</code> ima vrednost <code>hexagonal-pointy</code>, pored osnovnih, podržane su i vrednosti <code>top</code> i <code>bottom</code>.</p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="_podrazumevana_vrednost_3">Podrazumevana vrednost</h5>
 <div class="paragraph">
-<p><strong>Podrazumevana vrednost</strong>: <code>bottom-left</code>, nezavisno od vrednosti svojstva <code>type</code>.</p>
+<p>String <code>bottom-left</code> (nezavisno od vrednosti svojstva <code>type</code>).</p>
 </div>
 <div class="paragraph">
-<p>Daje informaciju o tome iz kog ugla počinje označavanje polja tabele (same oznake se određuju na osnovu svojstva <code>axis</code>). TODO slika.</p>
+<p>Daje informaciju o tome iz kog ugla počinje označavanje polja tabele (same oznake se određuju na osnovu svojstva <code>axis</code>).</p>
+</div>
+<div class="paragraph">
+<p>TODO slika.</p>
+</div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="_svojstvo_code_axis_code">Svojstvo <code>axis</code></h4>
+<div class="sect4">
+<h5 id="_podržane_vrednosti_4">Podržane vrednosti</h5>
 <div class="paragraph">
-<p><strong>Podržane vrednosti</strong>:
-Niz od dva stringa.
+<p>Niz od dva stringa.
 Stringovi predstavljaju oznake koje će se koristiti pri označavanju polja tabele, pri čemu je svaka oznaka odvojena blanko znakom.
 Broj ovih oznaka mora biti u skladu sa dimenzijama datim u <code>dimensions</code> i vrstom table datom u <code>type</code>.
 Ukoliko je <code>type</code> podešeno na <code>hexagonal-flat</code> ili <code>hexagonal-pointy</code>, u obzir se uzima i vrednost svosjtva <code>corner</code>.</p>
@@ -652,13 +672,13 @@ Ukoliko je <code>type</code> podešeno na <code>hexagonal-flat</code> ili <code>
 <p>Kada je <code>type</code> podešeno na <code>rectangular</code>, broj oznaka prvog stringa mora biti isti kao prva dimenzija, a broj oznaka drugog stringa mora biti isti kao druga dimenzija.</p>
 </div>
 <div class="paragraph">
-<p>Kada je <code>type</code> podešeno na <code>hexagonal-pointy</code>, broj oznak prvog stringa mora biti isti kao zbir dveju dimenzija koje se protežu iz tog ugla, pri čemu se prvo gleda smer kazaljke na satu, a zatim smer suprotan kretanu kazaljke na satu. Na primer, ako je svojstvo <code>corner</code> podešeno na <code>bottom-left</code>, broj oznaka u prvom stringu mora biti jednak <code>c + a</code>, a u drugom mora biti jednak`b + a`, pri čemu su <code>a</code>, <code>b</code> i <code>c</code> redom dimenzije date u <code>dimensions</code>.</p>
+<p>Kada je <code>type</code> podešeno na <code>hexagonal-pointy</code>, broj oznak prvog stringa mora biti isti kao zbir dveju dimenzija koje se protežu iz tog ugla, pri čemu se prvo gleda smer kazaljke na satu, a zatim smer suprotan kretanu kazaljke na satu. Na primer, ako je svojstvo <code>corner</code> podešeno na <code>bottom-left</code>, broj oznaka u prvom stringu mora biti jednak <code>c + a</code>, a u drugom mora biti jednak <code>b + a</code>, pri čemu su <code>a</code>, <code>b</code> i <code>c</code> redom dimenzije date u <code>dimensions</code>.</p>
 </div>
 <div class="paragraph">
 <p>Analogno važi i za slučaj kada je <code>type</code> podešeno na <code>hexagonal-flat</code>.</p>
 </div>
 <div class="paragraph">
-<p><strong>Podrazumevana vrednost</strong>: Nema. Agent prikazuje deskriptivnu grešku ukoliko uslovi nisu ispunjeni i prestaje sa radom (osim u nekim slučajevima; vidi dole).</p>
+<p>Agent prikazuje deskriptivnu grešku ukoliko uslovi nisu ispunjeni i prestaje sa radom (osim u nekim slučajevima; vidi dole).</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -670,21 +690,42 @@ Ukoliko je <code>type</code> podešeno na <code>hexagonal-flat</code> ili <code>
 <div class="paragraph">
 <p>TutiFruti će prijaviti grešku ukoliko je broj prosleđenih oznaka manji od zahtevanog.
 Međutim, ukoliko je on veći, samo će prijaviti upozorenje.
-Zato nije neophodno stalno "tempiranje" ovih vrednosti tokom razvitka agenata, već se one mogu jednostavno postaviti na vrednosti koje sigurno ispunjavaju svaku tablu, npr. <code>1 2 3 4 &#8230;&#8203; 20</code> ili <code>A B C D &#8230;&#8203; Z</code>.</p>
+Zato nije neophodno stalno "tempiranje" ovih vrednosti tokom razvitka agenata, već se one mogu jednostavno postaviti na vrednosti koje sigurno ispunjavaju svaku tablu, npr. <code>I II III IV V &#8230;&#8203; XX</code> ili <code>a b c d e &#8230;&#8203; y z</code>.</p>
 </div>
 </td>
 </tr>
 </table>
 </div>
 </div>
+<div class="sect4">
+<h5 id="_podrazumevana_vrednost_4">Podrazumevana vrednost</h5>
+<div class="paragraph">
+<p>Elementi niza su <code>1 2 3 4 &#8230;&#8203; 25 26</code> i <code>A B C D &#8230;&#8203; Y Z</code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_opis_3">Opis</h5>
+<div class="paragraph">
+<p>TODO slika</p>
+</div>
+</div>
+</div>
 <div class="sect3">
 <h4 id="_svojstvo_code_coloring_code">Svojstvo <code>coloring</code></h4>
+<div class="sect4">
+<h5 id="_podržane_vrednosti_5">Podržane vrednosti</h5>
 <div class="paragraph">
-<p><strong>Podržane vrednosti</strong>: <code>classic</code> ili <code>chess</code>.</p>
+<p>Stringovi <code>classic</code> i <code>chess</code>.</p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="_podrazumevana_vrednost_5">Podrazumevana vrednost</h5>
 <div class="paragraph">
-<p><strong>Podrazumevana vrednost</strong>: <code>classic</code>.</p>
+<p>String <code>classic</code>.</p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="_opis_4">Opis</h5>
 <div class="paragraph">
 <p>Definiše način bojenja polja.
 Ukoliko je podešeno na <code>classic</code>, polja će dobiti podrazumevanu boju u skladu s temom aplikacije.
@@ -692,14 +733,24 @@ Ukoliko je podešeno na <code>chess</code>, a <code>type</code> na <code>rectang
 Ukoliko je podešeno na <code>chess</code>, a <code>type</code> na <code>hexagonal-flat</code> ili <code>hexagonal-pointy</code>, polja će dobijati crnu, sivu i belu boju, tako da nijedna dva susedna ne budu obojena istom bojom.</p>
 </div>
 </div>
+</div>
 <div class="sect3">
 <h4 id="_svojstvo_code_mode_code">Svojstvo <code>mode</code></h4>
+<div class="sect4">
+<h5 id="_podržane_vrednosti_6">Podržane vrednosti</h5>
 <div class="paragraph">
-<p><strong>Podržane vrednosti</strong>: <code>classic</code>, ili <code>circles</code>. Ako je <code>type</code> podešeno na <code>rectangular</code>, pruža i mogućnost za <code>go</code>.</p>
+<p>Stringovi <code>classic</code> i <code>circles</code>.
+Ako je <code>type</code> podešeno na <code>rectangular</code>, podržana je i vrednost <code>go</code>.</p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="_podrazumevana_vrednost_6">Podrazumevana vrednost</h5>
 <div class="paragraph">
-<p><strong>Podrazumevana vrednost</strong>: <code>classic</code>.</p>
+<p>String <code>classic</code>.</p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="_opis_5">Opis</h5>
 <div class="paragraph">
 <p>Definiše način prikazivanja polja.</p>
 </div>
@@ -718,6 +769,29 @@ U tom slučaju se mreža naizgled smanjuje, i ima po jedno polje manje u obe dim
 </div>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_svojstvo_code_size_code">Svojstvo <code>size</code></h4>
+<div class="sect4">
+<h5 id="_podržane_vrednosti_7">Podržane vrednosti</h5>
+<div class="paragraph">
+<p>Stringovi <code>xxs</code>, <code>xs</code>, <code>s</code>, <code>m</code>, <code>l</code>, <code>xl</code> i <code>xxl</code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_podrazumevane_vrednosti">Podrazumevane vrednosti</h5>
+<div class="paragraph">
+<p>String <code>m</code>.</p>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_opis_6">Opis</h5>
+<div class="paragraph">
+<p>Govori o fizičkoj veličini polja.
+<code>xxs</code> je najmanja, a <code>xxl</code> je najveća veličina.</p>
+</div>
+</div>
+</div>
+</div>
 <div class="sect2">
 <h3 id="_grupa_code_player_code">Grupa <code>player</code></h3>
 <div class="paragraph">
@@ -725,26 +799,45 @@ U tom slučaju se mreža naizgled smanjuje, i ima po jedno polje manje u obe dim
 </div>
 <div class="sect3">
 <h4 id="_svojstvo_code_name_code">Svojstvo <code>name</code></h4>
+<div class="sect4">
+<h5 id="_podržane_vrednosti_8">Podržane vrednosti</h5>
 <div class="paragraph">
-<p><strong>Podržane vrednosti</strong>: String enkodovan koristeći UTF-8. Ne preporučuju se vrednosti preko 20 karaktera.</p>
+<p>Proizvoljan string. Ne preporučuju se vrednosti preko 20 karaktera.</p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="_podrazumevana_vrednost_7">Podrazumevana vrednost</h5>
 <div class="paragraph">
-<p><strong>Podrazumevana vrednost</strong>: <code>Igrač 1</code> ili <code>Igrač 2</code>, u zavinosti od vrednosti svojstva <code>order</code>.</p>
+<p><code>Igrač 1</code> ili <code>Igrač 2</code>, u zavinosti od vrednosti svojstva <code>order</code>.</p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="_opis_7">Opis</h5>
 <div class="paragraph">
 <p>Koristi se da bi se prikazalo ime igrača, tima ili agenta koji stoji iza poteza.</p>
 </div>
 </div>
+</div>
 <div class="sect3">
 <h4 id="_svojstvo_code_order_code">Svojstvo <code>order</code></h4>
+<div class="sect4">
+<h5 id="_podržane_vrednosti_9">Podržane vrednosti</h5>
 <div class="paragraph">
-<p><strong>Podržane vrednosti</strong>: <code>1</code> ili <code>2</code>.</p>
+<p>Brojevi <code>1</code> ili <code>2</code>.</p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="_podrazumevana_vrednost_8">Podrazumevana vrednost</h5>
 <div class="paragraph">
-<p><strong>Podrazumevana vrednost</strong>: Nema. Program prijavljuje grešku ukoliko dobije objekat koji sadrži nevalidnu vrednost ovog polja.</p>
+<p>Nema.
+Program prijavljuje grešku ukoliko dobije objekat koji sadrži nevalidnu vrednost ovog polja.</p>
 </div>
+</div>
+<div class="sect4">
+<h5 id="_opis_8">Opis</h5>
 <div class="paragraph">
 <p>Koristi se da bi se identifikovao igrač koji šalje prikaz stanja table.</p>
+</div>
 </div>
 </div>
 <div class="sect3">
@@ -772,35 +865,60 @@ Figure su određene oblikom (<code>shape</code>) i bojom (<code>color</code>).</
 <p>Svaki od elemenata niza mora biti objekat sa ključevima <code>style</code> i <code>fields</code>.</p>
 </div>
 <div class="paragraph">
-<p><code>style</code> je objekat koji se sastoji od ključeva <code>color</code> i <code>shape</code>.
-<code>color</code> je string koji određuje <strong>boju</strong> kojom figura treba da bude obojena.
-Podržane su sledeće vrednosti: <code>red</code>, <code>pink</code>, <code>purple</code>, <code>deep-purple</code>, <code>indigo</code>, <code>blue</code>, <code>light-blue</code>, <code>cyan</code>, <code>teal</code>, <code>green</code>, <code>light-green</code>, <code>lime</code>, <code>yellow</code>, <code>amber</code>, <code>orange</code>, <code>deep-orange</code>, <code>brown</code>, <code>grey</code>, <code>blue-grey</code>, <code>black</code> i <code>white</code>.
-<code>shape</code> je string koji određuje <strong>oblik</strong> kojim figura terba da bude predstavljena.
-Podržane su sledeće vrednosti: <code>O</code>, <code>X</code>, <code>circle</code>, <code>square</code>, <code>star</code> i skup vrednosti za igranje šaha: <code>chess-king-white</code>, <code>chess-king-black</code>, <code>chess-queen-white</code>, <code>chess-queen-black</code>, <code>chess-rock-white</code>, <code>chess-rock-black</code>, <code>chess-bishop-white</code>, <code>chess-bishop-black</code>, <code>chess-knight-white</code>, <code>chess-knight-black</code>, <code>chess-pawn-white</code>, <code>chess-pawn-white</code>.
-Treba imati u vidu da nastavci <code>-black</code> i <code>-white</code> ne određuju boju figure, već samo stil prikaza (šuplji ili ispunjen).</p>
+<p><code>style</code> je objekat koji se sastoji od ključeva <code>color</code> i <code>shape</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>color</code> je string koji određuje <strong>boju</strong> kojom figura treba da bude obojena.
+Podržane su sledeće vrednosti:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>red</code>, <code>pink</code>, <code>purple</code>, <code>deep-purple</code>, <code>indigo</code>, <code>blue</code>, <code>light-blue</code>, <code>cyan</code>, <code>teal</code>, <code>green</code>, <code>light-green</code>, <code>lime</code>, <code>yellow</code>, <code>amber</code>, <code>orange</code>, <code>deep-orange</code>, <code>brown</code>, <code>grey</code>, <code>blue-grey</code>, <code>black</code> i <code>white</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><code>shape</code> je string koji određuje <strong>oblik</strong> kojim figura terba da bude predstavljena.
+Podržane su sledeće vrednosti:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>osnovni oblici: <code>O</code>, <code>X</code>, <code>circle</code>, <code>square</code>, <code>star</code>;</p>
+</li>
+<li>
+<p>strelice: <code>arrow-left</code>, <code>arrow-right</code>, <code>arrow-up</code> <code>arrow-down</code>, <code>angle-left</code>, <code>angle-right</code>, <code>angle-up</code>, <code>angle-down</code>, <code>angle-double-left</code>, <code>angle-double-right</code>, <code>angle-double-up</code>, <code>angle-double-down</code>;</p>
+</li>
+<li>
+<p>znaci za obeležavanje: <code>crosshairs</code>, <code>bullseye</code>, <code>check</code>, <code>check-circle</code>, <code>minus</code>, <code>plus</code>;</p>
+</li>
+<li>
+<p>znaci sa karata: <code>suit-spade-outline</code>, <code>suit-spade-fill</code>, <code>suit-heart-fill</code>, <code>suit-heart-outline</code>, <code>suit-diamond-fill</code>, <code>suit-diamond-outline</code>, <code>suit-club-fill</code>, <code>suit-club-outline</code>;</p>
+</li>
+<li>
+<p>brojevi i slova: <code>number-1</code>, <code>number-2</code>, &#8230;&#8203;, <code>number-99</code>; <code>letter-A</code>, <code>letter-B</code>, &#8230;&#8203;, <code>letter-Z</code>; <code>letter-a</code>, <code>letter-b</code>, &#8230;&#8203;, <code>letter-z</code>;</p>
+</li>
+<li>
+<p>skup vrednosti za igranje šaha: <code>chess-king-outline</code>, <code>chess-king-fill</code>, <code>chess-queen-outline</code>, <code>chess-queen-fill</code>, <code>chess-rock-outline</code>, <code>chess-rock-fill</code>, <code>chess-bishop-outline</code>, <code>chess-bishop-fill</code>, <code>chess-knight-outline</code>, <code>chess-knight-fill</code>, <code>chess-pawn-outline</code>, <code>chess-pawn-outline</code>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>TODO slika</p>
 </div>
 <div class="paragraph">
 <p><code>fields</code> je niz gde svaki element predstavlja koordinate na koje se postavlja figura, čiji su boja i oblik definisani u <code>style</code>.
+Koordinate poštuju
 Svaki element ovog niza je novi niz od dva elemenata, gde elementi čine koordinate.
-Ove koordiante imaju drugačije značenje u zavisnosti od tipa table (<code>board.type</code>).</p>
+Ove koordiante poštuju konvenciju navedenu u <code>board.axis</code> i <code>board.corner</code>.</p>
+</div>
+<div class="paragraph">
+<p>Ukoliko koordinate u <code>fields</code> nisu deo definisane table, prikazuje se upozorenje.
+Slično, ukoliko dve figure imaju iste koordinate, prikazuje se upozorenje.</p>
 </div>
 <div class="paragraph">
 <p>TODO slike</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Koordinate koje TutiFruti interno koristi za prikazivanje nisu iste kao koordinate podešene pomoću <code>board.axis</code>.
-<code>board.axis</code> služi samo za vizuelni prikaz, dok se programski koordinate uvek kodiraju na isti način, opisan slikama.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 </div>
 <div class="sect2">
@@ -827,12 +945,33 @@ Služi za obeležavanje nekih polja za posebne namene (npr. poslednje odigrani p
 </table>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_grupa_code_removed_code">Grupa <code>removed</code></h3>
+<div class="paragraph">
+<p><code>removed</code> predstavlja figure koje su izbačene sa table.
+U pitanju je niz od dva elemenata: prvi element se odnosi na prvog, a drugi na drugog igrača.</p>
+</div>
+<div class="paragraph">
+<p>Svaki od nizova sadrži objekte sa ključevima <code>number</code> i <code>style</code>.
+<code>style</code> prati istu konveciju opisanu ranije.</p>
+</div>
+<div class="paragraph">
+<p><code>nubmer</code> je broj ponavljanja izbačene figure (nenegativan ceo broj).</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_grupa_code_report_code">Grupa <code>report</code></h3>
+<div class="paragraph">
+<p><code>report</code> je opcina struktura koji služi za pojednostavljeni prikaz table koji je čitljiv mašinama.
+Ne utiče na prikaz; TutiFruti ga ignoriše i samo ga prosleđuje među takmičarima.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-06-19 19:44:30 Central Europe Daylight Time
+Last updated 2016-06-20 20:21:47 Central Europe Daylight Time
 </div>
 </div>
 </body>
