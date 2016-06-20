@@ -4,14 +4,14 @@ var fieldMargin = 0; // in pixels
 
 var data1 = {
     board: {
-        type: "rectangular",
-        dimensions: [15, 15],
+        type: "hexagonal-pointy",
+        dimensions: [3, 4, 5],
         corner: "bottom-left",
         axis: [
             "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15",
-            "A B C D E F G H I J K L M N O"
+            "A B C D E F G H I J K L M N"
         ],
-        coloring: "classic",
+        coloring: "chess",
         mode: "classic",
         size: "m"
     },
@@ -23,11 +23,7 @@ var data1 = {
     state: [
         {
             fields: [
-                ["13", "C"], ["12", "D"], ["11", "E"], ["11", "F"], ["11", "G"], ["11", "H"], ["11", "J"], ["11", "L"],
-                ["12", "M"], ["10", "F"], ["10", "G"], ["10", "I"], ["10", "K"], ["9", "F"], ["9", "H"], ["9", "J"],
-                ["9", "L"], ["8", "E"], ["8", "F"], ["8", "G"], ["8", "H"], ["8", "M"], ["7", "E"], ["7", "H"],
-                ["6", "D"], ["6", "E"], ["6", "I"], ["6", "L"], ["5", "E"], ["5", "H"], ["5", "K"], ["4", "F"],
-                ["4", "J"], ["3", "D"]
+                ["1", "A"], ["2", "C"], ["2", "D"]
             ],
             style: {
                 color: "black",
@@ -36,11 +32,7 @@ var data1 = {
         },
         {
             fields: [
-                ["14", "B"], ["13", "F"], ["12", "E"], ["12", "F"], ["12", "I"], ["12", "K"], ["12", "N"], ["11", "C"],
-                ["11", "I"], ["10", "H"], ["9", "E"], ["9", "G"], ["9", "I"], ["8", "D"], ["8", "I"], ["8", "J"],
-                ["8", "K"], ["7", "C"], ["7", "D"], ["7", "F"], ["7", "G"], ["7", "I"], ["7", "L"], ["7", "M"],
-                ["7", "N"], ["6", "H"], ["5", "F"], ["5", "G"], ["5", "I"], ["5", "J"], ["3", "C"], ["3", "I"],
-                ["2", "H"]
+                ["2", "B"]
             ],
             style: {
                 color: "white",
@@ -51,8 +43,7 @@ var data1 = {
     markings: [
         {
             fields: [
-                ["13", "C"],
-                ["2", "H"]
+                ["3", "C"]
             ],
             style: {
                 color: "pink",
@@ -67,14 +58,14 @@ var data1 = {
                 number: 1,
                 style: {
                     color: "green",
-                    shape: "chess-queen-black"
+                    shape: "chess-queen-fill"
                 }
             },
             {
                 number: 4,
                 style: {
                     color: "blue",
-                    shape: "chess-pawn-white"
+                    shape: "chess-pawn-outline"
                 }
             },
             {
@@ -107,8 +98,16 @@ var data1 = {
 
 var displayData = function(data) {
     try {
+        // Clear the board first
         $(".board").html("");
+
+        // Validate input
+        validate(data);
+
+        // Set global variables for sizes
         setSizes(data.board.size);
+
+        // Display stuff
         displayDataBoard(data.board);
         displayDataState(data.state);
         displayDataPlayer(data.player);
@@ -119,6 +118,466 @@ var displayData = function(data) {
         displayError(ex);
     }
 };
+
+
+// --------------------------------------- //
+// -------------  VALIDACIJA ------------- //
+// --------------------------------------- //
+
+var validate = function(data) {
+
+    // Validnost obaveznih grupa
+    if (isNullOrUndefined(data)) {
+        throw "Primljeni objekat `data` koji treba da sadrži sve podatke o trenutnom stanju igre " +
+        "na osnovu koga se vrši prikaz ima vrednost `" + data + "`.";
+    }
+
+    if (isNullOrUndefined(data.board)) {
+        throw "Nisu dobijeni podaci o tabli. " +
+        "Objekat `board` ima vrednost `" + data.board + "`.";
+    }
+
+    if (isNullOrUndefined(data.player)) {
+        throw "Nisu dobijeni podaci o tabli. " +
+        "Objekat `board` ima vrednost `" + data.player + "`.";
+    }
+
+    // Validnost preporucenih grupa, i dodela podrazumevanih vrednosti
+    if (isNullOrUndefined(data.state)) {
+        displayWarning("Nije dobijena nijedna figura na tabli. " +
+            "(Objekat `state` ima vrednost `" + data.state + "`).");
+        data.state = [];
+    }
+
+    // Dopunjivanje podrazumevanim vrednostima neobaveznih grupa
+    if (isNullOrUndefined(data.markings)) {
+        data.markings = [];
+    }
+
+    if (isNullOrUndefined(data.removed)) {
+        data.removed = [[], []];
+    }
+
+    /////
+    // CHECKPOINT.
+    // Sve grupe su instancirane na validnu vrednost
+    /////
+
+    // Type
+    if (isNullOrUndefined(data.board.type)) {
+        displayWarning("Nije definisana vrednost za `board.type`. " +
+            "Postavlja se podrazumevana vrednost `rectangular`.");
+        data.board.type = "rectangular";
+    }
+    if ($.inArray(data.board.type, _boardType) === -1) {
+        throw "Dobijena vrednost za `board.type` je `" + data.board.type + "`. " +
+        "\nPodržane vrednosti su `rectangular`, `hexagonal-flat` i `hexagonal-pointy`.";
+    }
+
+    // Dimensions
+    if (isNullOrUndefined(data.board.dimensions)) {
+        displayWarning("dimensions");
+        if (isRectangular(data)) {
+            data.board.dimensions = [8, 8];
+        } else if (isHexagonal(data)) {
+            data.board.dimensions = [6, 6, 6]
+        } else {
+            debugger;
+            throw "Neočekivana greška.";
+        }
+    }
+    if (isRectangular(data)) {
+        if (data.board.dimensions.length < 2) {
+            throw "Tabla je pravougaona, a broj dobijenih dimenzija je `" +
+            data.board.dimensions.length + "`. Očekivani broj je `2`."
+        } else if (data.board.dimensions.length > 2) {
+            displayWarning("Tabla je pravougaona, a broj dobijenih dimenzija je `" +
+            data.board.dimensions.length + "`. Očekivani broj je `2`. " +
+            "Ignorišu se dimenzije koje su višak.");
+            data.board.dimensions.splice(2); // ostaju prve dve
+        }
+    } else if (isHexagonal(data)) {
+        if (data.board.dimensions.length < 3) {
+            throw "Tabla je šestougaona (`" + data.board.type + "`), a broj dobijenih dimenzija je `" +
+            data.board.dimensions.length + "`. Očekivani broj je `3`."
+        } else if (data.board.dimensions.length > 3) {
+            displayWarning("Tabla je šestougaona (`" + data.board.type + "`), a broj dobijenih dimenzija je `" +
+                data.board.dimensions.length + "`. Očekivani broj je `3`. " +
+                "Ignorišu se dimenzije koje su višak.");
+            data.board.dimensions.splice(3); // ostaju prve tri
+        }
+    } else {
+        debugger;
+        throw "Neočekivana greška."
+    }
+
+    // Corner
+    if (isNullOrUndefined(data.board.corner)) {
+        displayWarning("corner not set");
+        data.board.corner = "bottom-left";
+    }
+    if ($.inArray(data.board.corner, _boardCorners) === -1) {
+        throw "Svojstvo `corner` je podešeno na `" + data.board.corner + "`. " +
+        "Mora biti iz skupa vrednosti `" + _boardCorners.join("`, `") + "`.";
+    }
+    if (isRectangular(data) && $.inArray(data.board.corner, _boardCornersRectangular) === -1) {
+        throw "Svojstvo `corner` je podešeno na `" + data.board.corner + "`. " +
+        "Kod pravougaonih tabli, ova vrednost mora biti `" +
+        _boardCornersRectangular.join("`, `") + "`.";
+    }
+    if (isHexagonalFlat(data) && $.inArray(data.board.corner, _boardCornersHexagonalFlat) === -1) {
+        throw "Svojstvo `corner` je podešeno na `" + data.board.corner + "`. " +
+        "Kod šestougaonih tabli sa stranom gore, ova vrednost mora biti `" +
+        _boardCornersHexagonalFlat.join("`, `") + "`.";
+    }
+    if (isHexagonalPointy(data) && $.inArray(data.board.corner, _boardCornersHexagonalPointy) === -1) {
+        throw "Svojstvo `corner` je podešeno na `" + data.board.corner + "`. " +
+        "Kod šestougaonih tabli sa temenom gore, ova vrednost mora biti `" +
+        _boardCornersHexagonalPointy.join("`, `") + "`.";
+    }
+
+    // Axis
+    if (isNullOrUndefined(data.board.axis)) {
+        displayWarning("axis not set");
+        data.board.axis = [
+            "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26",
+            "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z"
+        ];
+    }
+    // Duzine axisa
+    var axisLength = [
+        data.board.axis[0].split(' ').length,
+        data.board.axis[1].split(' ').length
+    ];
+    // Parametri za prikaz poruke
+    var justWarning = [], dimension = [], len = [];
+    // Manje kucanja, da ne poludim
+    var dims = data.board.dimensions;
+    //debugger;
+    // Validacija duzine axisa
+    if (isRectangular(data)) {
+        for (var i = 0; i < 2; i++) {
+            if (axisLength[i] < data.board.dimensions[i]) {
+                justWarning.push(false);
+                dimension.push(i);
+                len.push(i);
+            } else if (axisLength[i] > data.board.dimensions[i]) {
+                justWarning.push(true);
+                dimension.push(i);
+                len.push(i);
+            }
+        }
+    }
+    if (isHexagonalFlat(data)) {
+        let a = dims[0], b = dims[1], c = dims[2];
+        let q = axisLength[0], w = axisLength[1];
+        switch (data.board.corner) {
+            case "bottom-left":
+            case "top-right":
+                if (q < a + c - 1) {
+                    justWarning.push(false); dimension.push(0); len.push(a + c - 1);
+                } else if (q > a + c - 1) {
+                    justWarning.push(true); dimension.push(0); len.push(a + c - 1);
+                }
+                if (w < a + b - 1) {
+                    justWarning.push(false); dimension.push(1); len.push(a + b - 1);
+                } else if (w > a + b - 1) {
+                    justWarning.push(true); dimension.push(1); len.push(a + b - 1);
+                }
+                break;
+            case "bottom-right":
+            case "top-left":
+                if (q < b + c - 1) {
+                    justWarning.push(false); dimension.push(0); len.push(b + c - 1);
+                } else if (q > b + c - 1) {
+                    justWarning.push(true); dimension.push(0); len.push(b + c - 1);
+                }
+                if (w < a + c - 1) {
+                    justWarning.push(false); dimension.push(1); len.push(a + c - 1);
+                } else if (w > a + c - 1) {
+                    justWarning.push(true); dimension.push(1); len.push(a + c - 1);
+                }
+                break;
+            case "right":
+            case "left":
+                if (q < b + a - 1) {
+                    justWarning.push(false); dimension.push(0); len.push(b + a - 1);
+                } else if (q > b + a - 1) {
+                    justWarning.push(true); dimension.push(0); len.push(b + a - 1);
+                }
+                if (w < b + c - 1) {
+                    justWarning.push(false); dimension.push(1); len.push(b + c - 1);
+                } else if (w > b + c - 1) {
+                    justWarning.push(true); dimension.push(1); len.push(b + c - 1);
+                }
+                break;
+            default:
+                debugger;
+                throw "Neočekivana greška!";
+        }
+    }
+    if (isHexagonalPointy(data)) {
+        let a = dims[0], b = dims[1], c = dims[2];
+        let q = axisLength[0], w = axisLength[1];
+        switch (data.board.corner) {
+            case "bottom-left":
+            case "top-right":
+                if (q < a + c - 1) {
+                    justWarning.push(false); dimension.push(0); len.push(a + c - 1);
+                } else if (q > a + c - 1) {
+                    justWarning.push(true); dimension.push(0); len.push(a + c - 1);
+                }
+                if (w < a + b - 1) {
+                    justWarning.push(false); dimension.push(1); len.push(a + b - 1);
+                } else if (w > a + b - 1) {
+                    justWarning.push(true); dimension.push(1); len.push(a + b - 1);
+                }
+                break;
+            case "bottom-right":
+            case "top-left":
+                if (q < b + a - 1) {
+                    justWarning.push(false); dimension.push(0); len.push(b + a - 1);
+                } else if (q > b + a - 1) {
+                    justWarning.push(true); dimension.push(0); len.push(b + a - 1);
+                }
+                if (w < b + c - 1) {
+                    justWarning.push(false); dimension.push(1); len.push(b + c - 1);
+                } else if (w > b + c - 1) {
+                    justWarning.push(true); dimension.push(1); len.push(b + c - 1);
+                }
+                break;
+            case "top":
+            case "bottom":
+                if (q < b + c - 1) {
+                    justWarning.push(false); dimension.push(0); len.push(b + c - 1);
+                } else if (q > b + c - 1) {
+                    justWarning.push(true); dimension.push(0); len.push(b + c - 1);
+                }
+                if (w < a + c - 1) {
+                    justWarning.push(false); dimension.push(1); len.push(a + c - 1);
+                } else if (w > a + c - 1) {
+                    justWarning.push(true); dimension.push(1); len.push(a + c - 1);
+                }
+                break;
+            default:
+                debugger;
+                throw "Neočekivana greška!";
+        }
+    }
+    // Rezultat prikupljanja podataka odozgo
+    if (justWarning.length !== dimension.length) {
+        debugger;
+        throw "Neočekivana greška!"
+    }
+    for (var i = 0; i < justWarning.length; i++) {
+        if (justWarning[i]) {
+            displayWarning("Dobijeno je *" + axisLength[dimension[i]] + "* oznaka za " +
+                (dimension[i] === 0 ? "prvu" : (dimension[i] === 1 ? "drugu" : "trecu")) + " dimenziju, a očekuje se " +
+                "samo *" + len[i] + "*. Ignoriše se višak oznaka.");
+            data.board.axis[dimension[i]] = data.board.axis[dimension[i]].split(' ').slice(0, len[i]).join(' ');
+        } else {
+            throw "Dobijeno je *" + axisLength[dimension[i]] + "* oznaka za " +
+            (dimension[i] === 0 ? "prvu" : (dimension[i] === 1 ? "drugu" : "trecu")) + " dimenziju, a očekuje se *" +
+            + len[i] + "*.";
+        }
+    }
+
+    //  Coloring
+    if (isNullOrUndefined(data.board.coloring)) {
+        displayWarning("coloring not set");
+        data.board.coloring = "classic";
+    }
+    if ($.inArray(data.board.coloring, _boardColoring) === -1) {
+        throw "Dobijena vrednost svojstva `coloring` je `" + data.board.coloring + ". " +
+        "Očekivane vrednosti su `" + _boardColoring.join("`, `") + "`."
+    }
+    
+    // Mode
+    if (isNullOrUndefined(data.board.mode)) {
+        displayWarning("mode not set");
+        data.board.mode = "classic";
+    }
+    if (isHexagonal(data)) {
+        if ($.inArray(data.board.mode, _boardModeHexagonal) === -1) {
+            throw "Dobijena vrednost svojstva `mode` je `" + data.board.mode + ". " +
+            "Očekivane vrednosti su `" + _boardModeHexagonal.join("`, `") + "`."
+        }
+    } else if (isRectangular(data)) {
+        if ($.inArray(data.board.mode, _boardModeRectangular) === -1) {
+            throw "Dobijena vrednost svojstva `mode` je `" + data.board.mode + ". " +
+            "Očekivane vrednosti su `" + _boardModeRectangular.join("`, `") + "`."
+        }
+    } else {
+        debugger;
+        throw "Neočekivana greška!";
+    }
+
+    //  Size
+    if (isNullOrUndefined(data.board.size)) {
+        displayWarning("coloring not set");
+        data.board.size = "m";
+    }
+    if ($.inArray(data.board.size, _boardSize) === -1) {
+        throw "Dobijena vrednost svojstva `coloring` je `" + data.board.size + ". " +
+        "Očekivane vrednosti su `" + _boardSize.join("`, `") + "`."
+    }
+
+    /////
+    // CHECKPOINT.
+    // Grupa 'board' je validna.
+    /////
+
+    // Order
+    if (isNullOrUndefined(data.player.order)) {
+        throw "Svojstvo `player.order` nije postavljeno. " +
+        "Očekivane vrednosti: `1` ili `2`";
+    }
+    if (+data.player.order !== 1 && +data.player.order !== 2) {
+        throw "Svojstvo `player.order` je postavljeno na `" +
+            data.player.order + "`. Očekivane vrednosti: `1` ili `2`."
+    }
+
+    // Name
+    if (isNullOrUndefined(data.player.name)) {
+        displayWarning("Svojstvo `player.name` nije postavljeno. " +
+            "Koristi se podrazumevana vrednost `Igrač " + data.player.order + "`.");
+        data.player.name = "Igrač " + data.player.order;
+    }
+    if (data.player.name === "") {
+        displayWarning("Svojstvo `player.name` je podešeno na prazan string.");
+    }
+
+    // Message se ne ispituje
+
+    /////
+    // CHECKPOINT.
+    // Grupa 'player' je validna.
+    /////
+
+
+    // State
+    for (let i = 0; i < data.state.length; i++) {
+        if (isNullOrUndefined(data.state[i].fields) && isNullOrUndefined(data.state[i].style)) {
+            displayWarning("Element `state[" + i + "]` nema postavljeno ni `fields` ni `style`.");
+        } else if (!isNullOrUndefined(data.state[i].style) &&
+            (isNullOrUndefined(data.state[i].style.color) || isNullOrUndefined(data.state[i].style.shape))) {
+            displayWarning("Element `state[" + i + "].style` nema postavljena svojstva `color` i `shape`.");
+        } else if (isNullOrUndefined(data.state[i].fields)) {
+            displayWarning("Dobijen objekat `state[" + i + "]` ima postavljen stil na " +
+                "`" + data.state[i].style.color + "` i `" + data.state[i].style.shape + "`, ali nema `fields`.");
+        } else if ($.inArray(data.state[i].style.color, _styleColor) === -1) {
+            displayWarning("Dobijen objekat `state[" + i + "]` koji treba smestiti na polja `" +
+                data.state[i].fields.map(i => i.join('-')).join(', ') + "` ima kao boju navedeno " +
+            "`" + data.state[i].style.color + "`, što nije validna boja. Spisak boja pogledati u dokumentaciji." );
+        } else if ($.inArray(data.state[i].style.shape, _stateShape) === -1) {
+            displayWarning("Dobijen objekat `state[" + i + "]` koji treba smestiti na polja `" +
+                data.state[i].fields.map(i => i.join('-')).join(', ') + "` ima kao oblik navedeno " +
+              "`" + data.state[i].style.shape + "`, što nije validan oblik. Spisak oblika pogledati u dokumentaciji." );
+    }
+    }
+
+
+    // Markings
+    for (let i = 0; i < data.markings.length; i++) {
+        if (isNullOrUndefined(data.markings[i].fields) && isNullOrUndefined(data.markings[i].style)) {
+            displayWarning("Element `markings[" + i + "]` nema postavljeno ni `fields` ni `style`.");
+        } else if (!isNullOrUndefined(data.markings[i].style) &&
+            (isNullOrUndefined(data.markings[i].style.color) || isNullOrUndefined(data.markings[i].style.shape))) {
+            displayWarning("Element `markings[" + i + "].style` nema postavljena svojstva `color` i `shape`.");
+        } else if (isNullOrUndefined(data.markings[i].fields)) {
+            displayWarning("Dobijen objekat `markings[" + i + "]` ima postavljen stil na " +
+                "`" + data.markings[i].style.color + "` i `" + data.markings[i].style.shape + "`, ali nema `fields`.");
+        } else if ($.inArray(data.markings[i].style.color, _styleColor) === -1) {
+            displayWarning("Dobijen objekat `markings[" + i + "]` koji treba smestiti na polja `" +
+                data.markings[i].fields.map(i => i.join('-')).join(', ') + "` ima kao boju navedeno " +
+            "`" + data.markings[i].style.color + "`, što nije validna boja. Spisak boja pogledati u dokumentaciji." );
+        } else if ($.inArray(data.markings[i].style.shape, _stateShape) === -1) {
+            displayWarning("Dobijen objekat `markings[" + i + "]` koji treba smestiti na polja `" +
+                data.markings[i].fields.map(i => i.join('-')).join(', ') + "` ima kao oblik navedeno " +
+            "`" + data.markings[i].style.shape + "`, što nije validan oblik. Spisak oblika pogledati u dokumentaciji." );
+        }
+    }
+
+    // Removed
+    for (let i = 0; i < data.removed.length; i++) {
+        for (let j = 0; j < 2; j++) {
+            if (isNullOrUndefined(data.removed[j][i].number) && isNullOrUndefined(data.removed[j][i].style)) {
+                displayWarning("Element `removed[" + j + "][" + i + "]` nema postavljeno ni `number` ni `style`.");
+            } else if (!isNullOrUndefined(data.removed[j][i].style) &&
+                (isNullOrUndefined(data.removed[j][i].style.color) || isNullOrUndefined(data.removed[j][i].style.shape))) {
+                displayWarning("Element `removed[" + j + "][" + i + "].style` nema postavljena svojstva `color` i `shape`.");
+            } else if (isNullOrUndefined(data.removed[j][i].number)) {
+                displayWarning("Dobijen objekat `removed[" + j + "][" + i + "]` ima postavljen stil na " +
+                    "`" + data.removed[j][i].style.color + "` i `" + data.removed[j][i].style.shape + "`, ali nema `fields`.");
+            } else if ($.inArray(data.removed[j][i].style.color, _styleColor) === -1) {
+                displayWarning("Dobijen objekat `removed[" + j + "][" + i + "]` kojih ima `" +
+                    data.removed[j][i].number + "` ima kao boju navedeno " +
+                    "`" + data.removed[j][i].style.color + "`, što nije validna boja. Spisak boja pogledati u dokumentaciji." );
+            } else if ($.inArray(data.removed[j][i].style.shape, _stateShape) === -1) {
+                displayWarning("Dobijen objekat `removed[" + j + "][" + i + "]` kojih ima `" +
+                    data.removed[j][i].number + "` ima kao oblik navedeno " +
+                    "`" + data.removed[j][i].style.shape + "`, što nije validan oblik. Spisak oblika pogledati u dokumentaciji." );
+            }
+        }
+    }
+
+
+    //throw "*Prošlo!* Idemooo! _To bre!_";
+};
+
+var isNullOrUndefined = function(stuff) {
+    return stuff === null || stuff == undefined;
+};
+
+var isRectangular = function(data) {
+    return data.board.type === "rectangular";
+};
+
+var isHexagonalPointy = function(data) {
+    return data.board.type === "hexagonal-pointy";
+};
+
+var isHexagonalFlat = function(data) {
+    return data.board.type === "hexagonal-flat";
+};
+
+var isHexagonal = function(data) {
+    return data.board.type === "hexagonal-flat" || data.board.type === "hexagonal-pointy";
+};
+
+const _boardType = ["rectangular", "hexagonal-flat", "hexagonal-pointy"];
+
+const _boardCorners = ["bottom-left", "top-left", "top-right", "bottom-right", "left", "right", "bottom", "top"];
+const _boardCornersRectangular = ["bottom-left", "top-left", "bottom-right", "top-right"];
+const _boardCornersHexagonalFlat = ["bottom-left", "top-left", "top-right", "bottom-right", "left", "right"];
+const _boardCornersHexagonalPointy = ["bottom-left", "top-left", "top-right", "bottom-right", "top", "bottom"];
+
+const _boardColoring = ["classic", "chess"];
+
+const _boardModeHexagonal = ["classic", "circles"];
+const _boardModeRectangular = _boardModeHexagonal.push("go");
+
+const _boardSize = ["xxs", "xs", "s", "m", "l", "xl", "xxl"];
+
+const _styleColor = ["red", "pink", "purple", "deep-purple", "indigo", "blue",
+    "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow", "amber",
+    "deep-orange", "brown", "grey", "blue-grey", "black", "white"].map(i => i.trim());
+var ___stateShape =  ["O", "X", "circle", "square", "star", "circle-outline", "square-outline",
+    "arrow-left", "arrow-right", "arrow-up", "arrow-down",
+    "angle-left", "angle-right", "angle-up", "angle-down",
+    "angle-double-left", "angle-double-right", "angle-double-up", "angle-double-down",
+    "crosshairs", "bullseye", "check", "check-circle", "minus", "plus",
+    "suit-spade-fill", "suit-spade-outline", "suit-heart-fill", "suit-heart-outline",
+    "suit-diamond-fill", "suit-diamond-outline", "suit-club-fill", "suit-club-outline",
+    "chess-king-outline", "chess-king-fill", "chess-queen-outline", "chess-queen-fill",
+    "chess-rook-outline", "chess-rook-fill", "chess-bishop-outline", "chess-bishop-fill",
+    "chess-knight-outline", "chess-knight-fill", "chess-pawn-outline", "chess-pawn-fill"].map(i => i.trim());
+const _stateShape = ___stateShape
+    .concat(Array(99).fill(1).map((e, i) => e + i).map(String))
+    .concat(Array(26).fill(0x41).map((e, i) => e + i).map(i => String.fromCharCode(i)))
+    .concat(Array(26).fill(0x61).map((e, i) => e + i).map(i => String.fromCharCode(i)));
+
+
 
 
 // --------------------------------------- //
@@ -1152,6 +1611,46 @@ var displayDataRemoved = function(removed) {
     }
 };
 
+// Very simple markdown parser.
+// Doesn't allow nested formatting.
+var parseMarkdown = function(message) {
+    var currentMode = ""; // Bold, Italic, Code (in order: *, _, `)
+    var output = "";
+    for (var i = 0; i < message.length; i++) {
+        switch(message[i]) {
+            case "*":
+                if (currentMode === "b") {
+                    output += "</strong>";
+                    currentMode = "";
+                } else {
+                    output += "<strong>";
+                    currentMode = "b";
+                }
+                break;
+            case "_":
+                if (currentMode === "i") {
+                    output += "</em>";
+                    currentMode = "";
+                } else {
+                    output += "<em>";
+                    currentMode = "i";
+                }
+                break;
+            case "`":
+                if (currentMode === "c") {
+                    output += "</code>";
+                    currentMode = "";
+                } else {
+                    output += "<code>";
+                    currentMode = "c";
+                }
+                break;
+            default:
+                output += message[i];
+        }
+    }
+    return output;
+};
 
 var displayError = function(message) {
     displayMessage(message, "ERROR");
@@ -1165,7 +1664,7 @@ var displayWarning = function(message) {
 var displayMessage = function(message, type) {
     type = type || "INFO";
     $message = $("#message");
-    $message.children("span").text(type + " :: " +message);
+    $message.children("span").html('<mark>' + type + '</mark> ' + parseMarkdown(message));
     $message.animate({bottom: '24px'}, 200, 'swing', function() {
         setTimeout(function() {
             $message.animate({bottom: '-100px'}, 500, 'swing');
