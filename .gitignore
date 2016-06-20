@@ -1,3 +1,9 @@
 *.fasl
 gui/compiled/*
 abalone.rar
+
+vlado/*
+
+TutiFruti/.idea
+TutiFruti/*.rar
+TutiFruti/*.css*
