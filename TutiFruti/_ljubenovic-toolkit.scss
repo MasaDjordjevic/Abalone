@@ -219,7 +219,8 @@ $pi: 3.14159265359;
 }
 
 // Koliko se puta vrti iteracija za racunanje sinusa i kosinusa.
-$precision-level: 5;
+$precision-level: 20;
+
 
 // Racuna sinus od ugla koji je dat u stepenima.
 @function sin($angle) {
@@ -298,7 +299,7 @@ $precision-level: 5;
   $total: 12;
   $step: ceil(360/$total);
   $string: '#{$radius} 0 #{$blur} #{$color}';
-  @for $i from 1 to $total {
+  @for $i from 0 to $total {
     $j: $i * $step * 1deg;
     $left: $radius * cos($j);
     $down: $radius * sin($j);

@@ -1,6 +1,10 @@
+'use strict';
+
 var fieldSize = 50; // in pixels
 var fieldSizeName = "error";
 var fieldMargin = 0; // in pixels
+
+var messages = [];
 
 var data1 = {
     board: {
@@ -98,8 +102,9 @@ var data1 = {
 
 var displayData = function(data) {
     try {
-        // Clear the board first
+        // Clear the board & messages first
         $(".board").html("");
+        messages = [];
 
         // Validate input
         validate(data);
@@ -253,10 +258,9 @@ var validate = function(data) {
     var justWarning = [], dimension = [], len = [];
     // Manje kucanja, da ne poludim
     var dims = data.board.dimensions;
-    //debugger;
     // Validacija duzine axisa
     if (isRectangular(data)) {
-        for (var i = 0; i < 2; i++) {
+        for (let i = 0; i < 2; i++) {
             if (axisLength[i] < data.board.dimensions[i]) {
                 justWarning.push(false);
                 dimension.push(i);
@@ -1673,19 +1677,57 @@ var displayWarning = function(message) {
 
 var displayMessage = function(message, type) {
     type = type || "INFO";
-    $message = $("#message");
-    $message.children("span").html('<mark>' + type + '</mark> ' + parseMarkdown(message));
-    $message.animate({bottom: '24px'}, 200, 'swing', function() {
-        setTimeout(function() {
-            $message.animate({bottom: '-100px'}, 500, 'swing');
-        }, 10000);
+    messages.push({
+        type: type,
+        message: message
     });
+    displayMessages();
 };
+
+var displayMessages = function() {
+    var $messages = $("#messages");
+
+    // remove all messages
+    $messages.html("");
+
+    // display all messages
+    for (let i = 0; i < messages.length; i++) {
+        $("<div/>", {
+            class: "message message-" + messages[i].type.toLowerCase(),
+            "data-index": i
+        })
+            .append("<span>" + parseMarkdown(messages[i].message) + "</span>")
+            .append("<div class='message-close'></div>")
+            .appendTo($messages);
+    }
+    
+    // if more than one message, create a "dissmiss all" button
+    if (messages.length >= 2) {
+        $("<div/>", {
+            id: "dismiss-all-messages"
+        })
+            .append("<span>Ukloni sve</span>")
+            .prependTo($messages);
+    }
+};
+
+var dismissMessage = function(index) {
+    messages.splice(index, 1);
+    displayMessages();
+};
+
+$("#messages").on("click", ".message-close", function() {
+    dismissMessage($(this).parent().attr("data-index"));
+});
+
+$("#messages").on("click", "#dismiss-all-messages", function() {
+    messages = [];
+    displayMessages();
+});
 
 $(document).ready(function() {
     //displayMessage("TutiFruti :: version 0.0");
-    displayData(example.gomokuEastern);
-
+    displayData(data1);
 });
 
 var example = {};
