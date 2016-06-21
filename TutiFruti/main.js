@@ -1,6 +1,7 @@
 
 var receivedData = null;
 var stop = false;
+var log = false;
 
 window.onload = function () {
     drawGenerator();
@@ -49,13 +50,14 @@ window.onload = function () {
 
 function parse(data) {
   receivedData = (JSON.parse((JSON.parse(data))));
-  console.log(receivedData);
 
   displayData(receivedData);
 }
 
 function zoviPrvog() {
-  console.log("zovem prvog");
+  if(log){
+    console.log("zovem prvog");
+  }
   var port = $("#port-1").val();
   smackjack.odigrajPotez(JSON.stringify(receivedData), prviCallback, null, port);
 }
@@ -64,8 +66,10 @@ function prviCallback(data) {
   receivedData = (JSON.parse((JSON.parse(data))));
   displayData(receivedData);
 
-  console.log("dobio sam od prvog: ");
-  console.log(receivedData);
+  if(log){
+    console.log("dobio sam od prvog: ");
+    console.log(receivedData);
+  }
 
   if(stop) return;
   var delay = +$("#delay").val();
@@ -73,7 +77,9 @@ function prviCallback(data) {
 }
 
 function zoviDrugog() {
-  console.log("zovem drugog");
+  if(log){
+    console.log("zovem drugog");
+  }
   var port = $("#port-2").val();
   smackjack.odigrajPotez(JSON.stringify(receivedData), drugiCallback, null, port);
 }
@@ -81,9 +87,10 @@ function zoviDrugog() {
 function drugiCallback(data) {
   receivedData = (JSON.parse((JSON.parse(data))));
   displayData(receivedData);
-
-  console.log("dobio sam od drugog: ");
-  console.log(receivedData);
+  if(log){
+    console.log("dobio sam od drugog: ");
+    console.log(receivedData);
+  }
   if(stop) return;
   var delay = +$("#delay").val();
   setTimeout(zoviPrvog, delay);
@@ -118,21 +125,14 @@ function generate() {
   state2.color = $("#gen_stateColor-2").val();
   state2.shape = $("#gen_stateShape-2").val();
 
-  console.log(board);
-  console.log(player);
-  console.log(state);
-
-
-
-
   var ax = [];
   ax[0] = board.axis[0].split(' ');
   ax[1] = board.axis[1].split(' ');
   var rand = [];
   var rand2 = [];
   for(let i=0; i < Math.min(...board.dimensions); i++) {
-    var a = ax[0][Math.floor(Math.random()*ax[0].length)];
-    var b = ax[1][Math.floor(Math.random()*ax[1].length)];
+    var a = ax[0][Math.floor(Math.random()*board.dimensions[0])];
+    var b = ax[1][Math.floor(Math.random()*board.dimensions[1])];
     if(i%2 == 0)
       rand.push([a, b]);
     else
@@ -140,7 +140,6 @@ function generate() {
 
   }
 
-  console.log(rand);
 
   var lisp = "";
   lisp += '(setq _board \'(\n' +
@@ -167,8 +166,8 @@ function generate() {
       '\t\t\t(color . "' + state2.color + '")\n' +
       '\t\t\t(shape . "' + state2.shape + '"))))))';
 
-
-  console.log(lisp);
+  if(log)
+    console.log(lisp);
 
   var data = {
     board: board,
