@@ -100,11 +100,10 @@ var data1 = {
     ]
 };
 
-var displayData = function(data) {
+var displayData = function (data) {
     try {
         // Clear the board & messages first
         $(".board").html("");
-        messages = [];
 
         // Validate input
         validate(data);
@@ -129,7 +128,10 @@ var displayData = function(data) {
 // -------------  VALIDACIJA ------------- //
 // --------------------------------------- //
 
-var validate = function(data) {
+var validate = function (data) {
+
+    messages = [];
+    displayMessages();
 
     // Validnost obaveznih grupa
     if (isNullOrUndefined(data)) {
@@ -197,8 +199,8 @@ var validate = function(data) {
             data.board.dimensions.length + "`. Očekivani broj je `2`."
         } else if (data.board.dimensions.length > 2) {
             displayWarning("Tabla je pravougaona, a broj dobijenih dimenzija je `" +
-            data.board.dimensions.length + "`. Očekivani broj je `2`. " +
-            "Ignorišu se dimenzije koje su višak.");
+                data.board.dimensions.length + "`. Očekivani broj je `2`. " +
+                "Ignorišu se dimenzije koje su višak.");
             data.board.dimensions.splice(2); // ostaju prve dve
         }
     } else if (isHexagonal(data)) {
@@ -279,40 +281,64 @@ var validate = function(data) {
             case "bottom-left":
             case "top-right":
                 if (q < a + c - 1) {
-                    justWarning.push(false); dimension.push(0); len.push(a + c - 1);
+                    justWarning.push(false);
+                    dimension.push(0);
+                    len.push(a + c - 1);
                 } else if (q > a + c - 1) {
-                    justWarning.push(true); dimension.push(0); len.push(a + c - 1);
+                    justWarning.push(true);
+                    dimension.push(0);
+                    len.push(a + c - 1);
                 }
                 if (w < a + b - 1) {
-                    justWarning.push(false); dimension.push(1); len.push(a + b - 1);
+                    justWarning.push(false);
+                    dimension.push(1);
+                    len.push(a + b - 1);
                 } else if (w > a + b - 1) {
-                    justWarning.push(true); dimension.push(1); len.push(a + b - 1);
+                    justWarning.push(true);
+                    dimension.push(1);
+                    len.push(a + b - 1);
                 }
                 break;
             case "bottom-right":
             case "top-left":
                 if (q < b + c - 1) {
-                    justWarning.push(false); dimension.push(0); len.push(b + c - 1);
+                    justWarning.push(false);
+                    dimension.push(0);
+                    len.push(b + c - 1);
                 } else if (q > b + c - 1) {
-                    justWarning.push(true); dimension.push(0); len.push(b + c - 1);
+                    justWarning.push(true);
+                    dimension.push(0);
+                    len.push(b + c - 1);
                 }
                 if (w < a + c - 1) {
-                    justWarning.push(false); dimension.push(1); len.push(a + c - 1);
+                    justWarning.push(false);
+                    dimension.push(1);
+                    len.push(a + c - 1);
                 } else if (w > a + c - 1) {
-                    justWarning.push(true); dimension.push(1); len.push(a + c - 1);
+                    justWarning.push(true);
+                    dimension.push(1);
+                    len.push(a + c - 1);
                 }
                 break;
             case "right":
             case "left":
                 if (q < b + a - 1) {
-                    justWarning.push(false); dimension.push(0); len.push(b + a - 1);
+                    justWarning.push(false);
+                    dimension.push(0);
+                    len.push(b + a - 1);
                 } else if (q > b + a - 1) {
-                    justWarning.push(true); dimension.push(0); len.push(b + a - 1);
+                    justWarning.push(true);
+                    dimension.push(0);
+                    len.push(b + a - 1);
                 }
                 if (w < b + c - 1) {
-                    justWarning.push(false); dimension.push(1); len.push(b + c - 1);
+                    justWarning.push(false);
+                    dimension.push(1);
+                    len.push(b + c - 1);
                 } else if (w > b + c - 1) {
-                    justWarning.push(true); dimension.push(1); len.push(b + c - 1);
+                    justWarning.push(true);
+                    dimension.push(1);
+                    len.push(b + c - 1);
                 }
                 break;
             default:
@@ -327,40 +353,64 @@ var validate = function(data) {
             case "bottom-left":
             case "top-right":
                 if (q < a + c - 1) {
-                    justWarning.push(false); dimension.push(0); len.push(a + c - 1);
+                    justWarning.push(false);
+                    dimension.push(0);
+                    len.push(a + c - 1);
                 } else if (q > a + c - 1) {
-                    justWarning.push(true); dimension.push(0); len.push(a + c - 1);
+                    justWarning.push(true);
+                    dimension.push(0);
+                    len.push(a + c - 1);
                 }
                 if (w < a + b - 1) {
-                    justWarning.push(false); dimension.push(1); len.push(a + b - 1);
+                    justWarning.push(false);
+                    dimension.push(1);
+                    len.push(a + b - 1);
                 } else if (w > a + b - 1) {
-                    justWarning.push(true); dimension.push(1); len.push(a + b - 1);
+                    justWarning.push(true);
+                    dimension.push(1);
+                    len.push(a + b - 1);
                 }
                 break;
             case "bottom-right":
             case "top-left":
                 if (q < b + a - 1) {
-                    justWarning.push(false); dimension.push(0); len.push(b + a - 1);
+                    justWarning.push(false);
+                    dimension.push(0);
+                    len.push(b + a - 1);
                 } else if (q > b + a - 1) {
-                    justWarning.push(true); dimension.push(0); len.push(b + a - 1);
+                    justWarning.push(true);
+                    dimension.push(0);
+                    len.push(b + a - 1);
                 }
                 if (w < b + c - 1) {
-                    justWarning.push(false); dimension.push(1); len.push(b + c - 1);
+                    justWarning.push(false);
+                    dimension.push(1);
+                    len.push(b + c - 1);
                 } else if (w > b + c - 1) {
-                    justWarning.push(true); dimension.push(1); len.push(b + c - 1);
+                    justWarning.push(true);
+                    dimension.push(1);
+                    len.push(b + c - 1);
                 }
                 break;
             case "top":
             case "bottom":
                 if (q < b + c - 1) {
-                    justWarning.push(false); dimension.push(0); len.push(b + c - 1);
+                    justWarning.push(false);
+                    dimension.push(0);
+                    len.push(b + c - 1);
                 } else if (q > b + c - 1) {
-                    justWarning.push(true); dimension.push(0); len.push(b + c - 1);
+                    justWarning.push(true);
+                    dimension.push(0);
+                    len.push(b + c - 1);
                 }
                 if (w < a + c - 1) {
-                    justWarning.push(false); dimension.push(1); len.push(a + c - 1);
+                    justWarning.push(false);
+                    dimension.push(1);
+                    len.push(a + c - 1);
                 } else if (w > a + c - 1) {
-                    justWarning.push(true); dimension.push(1); len.push(a + c - 1);
+                    justWarning.push(true);
+                    dimension.push(1);
+                    len.push(a + c - 1);
                 }
                 break;
             default:
@@ -381,8 +431,7 @@ var validate = function(data) {
             data.board.axis[dimension[i]] = data.board.axis[dimension[i]].split(' ').slice(0, len[i]).join(' ');
         } else {
             throw "Dobijeno je *" + axisLength[dimension[i]] + "* oznaka za " +
-            (dimension[i] === 0 ? "prvu" : (dimension[i] === 1 ? "drugu" : "trecu")) + " dimenziju, a očekuje se *" +
-            + len[i] + "*.";
+            (dimension[i] === 0 ? "prvu" : (dimension[i] === 1 ? "drugu" : "trecu")) + " dimenziju, a očekuje se *" + +len[i] + "*.";
         }
     }
 
@@ -444,7 +493,7 @@ var validate = function(data) {
     }
     if (+data.player.order !== 1 && +data.player.order !== 2) {
         throw "Svojstvo `player.order` je postavljeno na `" +
-            data.player.order + "`. Očekivane vrednosti: `1` ili `2`."
+        data.player.order + "`. Očekivane vrednosti: `1` ili `2`."
     }
 
     // Name
@@ -478,12 +527,12 @@ var validate = function(data) {
         } else if ($.inArray(data.state[i].style.color, _styleColor) === -1) {
             displayWarning("Dobijen objekat `state[" + i + "]` koji treba smestiti na polja `" +
                 data.state[i].fields.map(i => i.join('-')).join(', ') + "` ima kao boju navedeno " +
-            "`" + data.state[i].style.color + "`, što nije validna boja. Spisak boja pogledati u dokumentaciji." );
+                "`" + data.state[i].style.color + "`, što nije validna boja. Spisak boja pogledati u dokumentaciji.");
         } else if ($.inArray(data.state[i].style.shape, _stateShape) === -1) {
             displayWarning("Dobijen objekat `state[" + i + "]` koji treba smestiti na polja `" +
                 data.state[i].fields.map(i => i.join('-')).join(', ') + "` ima kao oblik navedeno " +
-              "`" + data.state[i].style.shape + "`, što nije validan oblik. Spisak oblika pogledati u dokumentaciji." );
-    }
+                "`" + data.state[i].style.shape + "`, što nije validan oblik. Spisak oblika pogledati u dokumentaciji.");
+        }
     }
 
 
@@ -500,18 +549,17 @@ var validate = function(data) {
         } else if ($.inArray(data.markings[i].style.color, _styleColor) === -1) {
             displayWarning("Dobijen objekat `markings[" + i + "]` koji treba smestiti na polja `" +
                 data.markings[i].fields.map(i => i.join('-')).join(', ') + "` ima kao boju navedeno " +
-            "`" + data.markings[i].style.color + "`, što nije validna boja. Spisak boja pogledati u dokumentaciji." );
+                "`" + data.markings[i].style.color + "`, što nije validna boja. Spisak boja pogledati u dokumentaciji.");
         } else if ($.inArray(data.markings[i].style.shape, _stateShape) === -1) {
             displayWarning("Dobijen objekat `markings[" + i + "]` koji treba smestiti na polja `" +
                 data.markings[i].fields.map(i => i.join('-')).join(', ') + "` ima kao oblik navedeno " +
-            "`" + data.markings[i].style.shape + "`, što nije validan oblik. Spisak oblika pogledati u dokumentaciji." );
+                "`" + data.markings[i].style.shape + "`, što nije validan oblik. Spisak oblika pogledati u dokumentaciji.");
         }
     }
 
     // Removed
     for (let i = 0; i < data.removed.length; i++) {
         for (let j = 0; j < 2; j++) {
-
             if (data.removed[j] == null || data.removed[j].length === 0) continue;
             if (isNullOrUndefined(data.removed[j][i].number) && isNullOrUndefined(data.removed[j][i].style)) {
                 displayWarning("Element `removed[" + j + "][" + i + "]` nema postavljeno ni `number` ni `style`.");
@@ -524,36 +572,35 @@ var validate = function(data) {
             } else if ($.inArray(data.removed[j][i].style.color, _styleColor) === -1) {
                 displayWarning("Dobijen objekat `removed[" + j + "][" + i + "]` kojih ima `" +
                     data.removed[j][i].number + "` ima kao boju navedeno " +
-                    "`" + data.removed[j][i].style.color + "`, što nije validna boja. Spisak boja pogledati u dokumentaciji." );
+                    "`" + data.removed[j][i].style.color + "`, što nije validna boja. Spisak boja pogledati u dokumentaciji.");
             } else if ($.inArray(data.removed[j][i].style.shape, _stateShape) === -1) {
                 displayWarning("Dobijen objekat `removed[" + j + "][" + i + "]` kojih ima `" +
                     data.removed[j][i].number + "` ima kao oblik navedeno " +
-                    "`" + data.removed[j][i].style.shape + "`, što nije validan oblik. Spisak oblika pogledati u dokumentaciji." );
+                    "`" + data.removed[j][i].style.shape + "`, što nije validan oblik. Spisak oblika pogledati u dokumentaciji.");
             }
         }
     }
 
-
-    //throw "*Prošlo!* Idemooo! _To bre!_";
+    displayMessages();
 };
 
-var isNullOrUndefined = function(stuff) {
+var isNullOrUndefined = function (stuff) {
     return stuff === null || stuff == undefined;
 };
 
-var isRectangular = function(data) {
+var isRectangular = function (data) {
     return data.board.type === "rectangular";
 };
 
-var isHexagonalPointy = function(data) {
+var isHexagonalPointy = function (data) {
     return data.board.type === "hexagonal-pointy";
 };
 
-var isHexagonalFlat = function(data) {
+var isHexagonalFlat = function (data) {
     return data.board.type === "hexagonal-flat";
 };
 
-var isHexagonal = function(data) {
+var isHexagonal = function (data) {
     return data.board.type === "hexagonal-flat" || data.board.type === "hexagonal-pointy";
 };
 
@@ -576,7 +623,7 @@ const _boardSize = ["xxs", "xs", "s", "m", "l", "xl", "xxl"];
 const _styleColor = ["red", "pink", "purple", "deep-purple", "indigo", "blue",
     "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow", "amber",
     "deep-orange", "brown", "grey", "blue-grey", "black", "white"].map(i => i.trim());
-var ___stateShape =  ["O", "X", "circle", "square", "star", "circle-outline", "square-outline",
+var ___stateShape = ["O", "X", "circle", "square", "star", "circle-outline", "square-outline",
     "arrow-left", "arrow-right", "arrow-up", "arrow-down",
     "angle-left", "angle-right", "angle-up", "angle-down",
     "angle-double-left", "angle-double-right", "angle-double-up", "angle-double-down",
@@ -587,34 +634,48 @@ var ___stateShape =  ["O", "X", "circle", "square", "star", "circle-outline", "s
     "chess-rook-outline", "chess-rook-fill", "chess-bishop-outline", "chess-bishop-fill",
     "chess-knight-outline", "chess-knight-fill", "chess-pawn-outline", "chess-pawn-fill"].map(i => i.trim());
 const _stateShape = ___stateShape
-    .concat(Array(99).fill(1).map((e, i) => e + i).map(String))
-    .concat(Array(26).fill(0x41).map((e, i) => e + i).map(i => String.fromCharCode(i)))
-    .concat(Array(26).fill(0x61).map((e, i) => e + i).map(i => String.fromCharCode(i)));
-
-
+    .concat((new Array(99)).fill(1).map((e, i) => e + i).map(String).map(i => "number-" + i))
+    .concat((new Array(26)).fill(0x41).map((e, i) => e + i).map(i => String.fromCharCode(i)).map(i => "letter-" + i))
+    .concat((new Array(26)).fill(0x61).map((e, i) => e + i).map(i => String.fromCharCode(i)).map(i => "letter-" + i));
 
 
 // --------------------------------------- //
 // -------------  DATA BOARD ------------- //
 // --------------------------------------- //
 
-var setSizes = function(size) {
+var setSizes = function (size) {
     switch (size) {
-        case "xxs": fieldSize = 26; break;
-        case "xs":  fieldSize = 36; break;
-        case "s":   fieldSize = 42; break;
-        case "m":   fieldSize = 48; break;
-        case "l":   fieldSize = 56; break;
-        case "xl":  fieldSize = 64; break;
-        case "xxl": fieldSize = 72; break;
-        default: throw "Nevalidna vrednost veličine. " +
-        "Očekuje se xxs, xs, s, m, l, xl ili xxl, " +
-        "a dobijeno je " + size + "."; break;
+        case "xxs":
+            fieldSize = 26;
+            break;
+        case "xs":
+            fieldSize = 36;
+            break;
+        case "s":
+            fieldSize = 42;
+            break;
+        case "m":
+            fieldSize = 48;
+            break;
+        case "l":
+            fieldSize = 56;
+            break;
+        case "xl":
+            fieldSize = 64;
+            break;
+        case "xxl":
+            fieldSize = 72;
+            break;
+        default:
+            throw "Nevalidna vrednost veličine. " +
+            "Očekuje se xxs, xs, s, m, l, xl ili xxl, " +
+            "a dobijeno je " + size + ".";
+            break;
     }
     fieldSizeName = size;
 };
 
-var displayDataBoard = function(dataBoard) {
+var displayDataBoard = function (dataBoard) {
     switch (dataBoard.type) {
         case "rectangular":
             if (dataBoard.dimensions.length < 2)
@@ -642,24 +703,6 @@ var displayDataBoard = function(dataBoard) {
                 displayWarning("Tabla je šestougaona, a broj dobijenih dimenzija je " +
                     dataBoard.dimensions.length + ". Koristim samo prve 3 dimenzije, ostale ignorišem.");
             drawHexagonalPointyBoard(dataBoard.dimensions[0], dataBoard.dimensions[1], dataBoard.dimensions[2]);
-            break;
-        case "triangular-flat":
-            if (dataBoard.dimensions.length < 1)
-                throw ("Tabla je trougaona, a broj dobijenih dimenzija je " +
-                dataBoard.dimensions.length + ". Treba da bude 1.");
-            if (dataBoard.dimensions.length > 1)
-                displayWarning("Tabla je trougaona, a broj dobijenih dimenzija je " +
-                    dataBoard.dimensions.length + ". Koristim samo prve 1 dimenzije, ostale ignorišem.");
-            drawTriangularFlatBoard(dataBoard.dimensions[0]);
-            break;
-        case "triangular-pointy":
-            if (dataBoard.dimensions.length < 1)
-                displayWarning("Tabla je trougaona, a broj dobijenih dimenzija je " +
-                    dataBoard.dimensions.length + ". Treba da bude 1.");
-            if (dataBoard.dimensions.length > 1)
-                displayWarning("Tabla je trougaona, a broj dobijenih dimenzija je " +
-                    dataBoard.dimensions.length + ". Koristim samo prve 1 dimenzije, ostale ignorišem.");
-            drawTriangularPointyBoard(dataBoard.dimensions[0]);
             break;
         default:
             throw "Dobijen tip table je " + dataBoard.type + ". Tip table mora biti rectangular, triangular-pointy, triangular-flat, hexagonal-pointy ili hexagonal-flat."
@@ -691,7 +734,7 @@ var displayDataBoard = function(dataBoard) {
     }
 };
 
-var drawRectangularBoard = function(rows, cols) {
+var drawRectangularBoard = function (rows, cols) {
     if (rows <= 0 || Math.ceil(rows) !== rows)
         throw "Dobijen broj redova je " + rows + ". Broj redova mora biti nenegativan ceo broj.";
     if (cols <= 0 || Math.ceil(cols) !== cols)
@@ -734,7 +777,7 @@ var checkHexagonalDimensions = function (a, b, c) {
     }
 };
 
-var hexagonalFlatCoordinatesToPosition = function(x, y, size, dimension) {
+var hexagonalFlatCoordinatesToPosition = function (x, y, size, dimension) {
     size = size / Math.sqrt(3) / 2;
     var cubeZ = x;
     var cubeY = -y;
@@ -742,13 +785,13 @@ var hexagonalFlatCoordinatesToPosition = function(x, y, size, dimension) {
     cubeX -= (dimension.a + dimension.b - 1) / 2 - dimension.a + 1;
     cubeZ -= (dimension.c + dimension.a - 1) / 2;
     var posX = 2 * size * Math.sqrt(3) * (cubeX + cubeZ / 2);
-    var posY = 2 * size * (3/2) * cubeZ;
+    var posY = 2 * size * (3 / 2) * cubeZ;
     posY += size / 2;
     posX += size * Math.sqrt(3) / 2;
     return [posX, posY];
 };
 
-var drawHexagonalFlatBoard = function(a, b, c) {
+var drawHexagonalFlatBoard = function (a, b, c) {
     checkHexagonalDimensions(a, b, c);
     var $board = $('.board');
     var totalFieldSize = fieldSize + 2 * fieldMargin;
@@ -801,7 +844,7 @@ var drawHexagonalFlatBoard = function(a, b, c) {
     }
 };
 
-var hexagonalPointyCoordinatesToPosition = function(x, y, size, dimension) {
+var hexagonalPointyCoordinatesToPosition = function (x, y, size, dimension) {
     size = size / Math.sqrt(3) / 2;
     var cubeZ = x;
     var cubeY = -y;
@@ -809,13 +852,13 @@ var hexagonalPointyCoordinatesToPosition = function(x, y, size, dimension) {
     cubeX -= (dimension.a + dimension.b - 1) / 2 - dimension.a + 1;
     cubeZ -= (dimension.c + dimension.a - 1) / 2;
     var posY = 2 * size * Math.sqrt(3) * (cubeZ + cubeX / 2);
-    var posX = 2 * size * (3/2) * cubeX;
+    var posX = 2 * size * (3 / 2) * cubeX;
     posY += size / 2;
     posX += size * Math.sqrt(3) / 2;
     return [posX, posY];
 };
 
-var drawHexagonalPointyBoard = function(a, b, c) {
+var drawHexagonalPointyBoard = function (a, b, c) {
     checkHexagonalDimensions(a, b, c);
     var $board = $('.board');
     var totalFieldSize = fieldSize + 2 * fieldMargin;
@@ -868,16 +911,7 @@ var drawHexagonalPointyBoard = function(a, b, c) {
     }
 };
 
-var drawTriangularFlatBoard = function(size) {
-    throw "TODO drawTriangularFlatBoard";
-};
-
-var drawTriangularPointyBoard = function(size) {
-    throw "TODO drawTriangularPointyBoard";
-};
-
-var drawAxis = function(type, dimensions, axis, corner) {
-    //displayWarning("TODO: corner za hexa/triangle");
+var drawAxis = function (type, dimensions, axis, corner) {
     var i = 0;
     if (axis.length !== 2) {
         throw "Očekuju se tačno dve liste simbola za označavanje."
@@ -885,6 +919,7 @@ var drawAxis = function(type, dimensions, axis, corner) {
     var $board = $('.board');
     axis[0] = axis[0].split(' ');
     axis[1] = axis[1].split(' ');
+    let firstHalf, secondHalf;
     switch (type) {
         case "rectangular":
             for (i = 0; i < 2; i++)
@@ -905,32 +940,48 @@ var drawAxis = function(type, dimensions, axis, corner) {
             var cornerMirrorYCols = 1;
             switch (corner) {
                 case "bottom-left":
-                    cornerOffsetXRows = 1; cornerOffsetYRows = 1;
-                    cornerMirrorXRows = -1; cornerMirrorYRows = -1;
-                    cornerOffsetXCols = 0; cornerOffsetYCols = 0;
-                    cornerMirrorXCols = 1; cornerMirrorYCols = 1;
+                    cornerOffsetXRows = 1;
+                    cornerOffsetYRows = 1;
+                    cornerMirrorXRows = -1;
+                    cornerMirrorYRows = -1;
+                    cornerOffsetXCols = 0;
+                    cornerOffsetYCols = 0;
+                    cornerMirrorXCols = 1;
+                    cornerMirrorYCols = 1;
                     break;
                 case "bottom-right":
-                    cornerOffsetXRows = 0; cornerOffsetYRows = 0;
-                    cornerMirrorXRows = 1; cornerMirrorYRows = 1;
-                    cornerOffsetXCols = 0; cornerOffsetYCols = 0;
-                    cornerMirrorXCols = 1; cornerMirrorYCols = 1;
+                    cornerOffsetXRows = 0;
+                    cornerOffsetYRows = 0;
+                    cornerMirrorXRows = 1;
+                    cornerMirrorYRows = 1;
+                    cornerOffsetXCols = 0;
+                    cornerOffsetYCols = 0;
+                    cornerMirrorXCols = 1;
+                    cornerMirrorYCols = 1;
                     axis[0] = axis[0].reverse();
                     axis[1] = axis[1].reverse();
                     break;
                 case "top-left":
-                    cornerOffsetXRows = 1; cornerOffsetYRows = 1;
-                    cornerMirrorXRows = -1; cornerMirrorYRows = -1;
-                    cornerOffsetXCols = 1; cornerOffsetYCols = 1;
-                    cornerMirrorXCols = -1; cornerMirrorYCols = -1;
+                    cornerOffsetXRows = 1;
+                    cornerOffsetYRows = 1;
+                    cornerMirrorXRows = -1;
+                    cornerMirrorYRows = -1;
+                    cornerOffsetXCols = 1;
+                    cornerOffsetYCols = 1;
+                    cornerMirrorXCols = -1;
+                    cornerMirrorYCols = -1;
                     axis[0] = axis[0].reverse();
                     axis[1] = axis[1].reverse();
                     break;
                 case "top-right":
-                    cornerOffsetXRows = 0; cornerOffsetYRows = 0;
-                    cornerMirrorXRows = 1; cornerMirrorYRows = 1;
-                    cornerOffsetXCols = 1; cornerOffsetYCols = 1;
-                    cornerMirrorXCols = -1; cornerMirrorYCols = -1;
+                    cornerOffsetXRows = 0;
+                    cornerOffsetYRows = 0;
+                    cornerMirrorXRows = 1;
+                    cornerMirrorYRows = 1;
+                    cornerOffsetXCols = 1;
+                    cornerOffsetYCols = 1;
+                    cornerMirrorXCols = -1;
+                    cornerMirrorYCols = -1;
                     break;
                 default:
                     displayWarning("Dobijeno " + corner + " za početni ugao. Očekuje se bottom-left, bottom-right, top-left ili top-right. Ignoriše se.");
@@ -960,21 +1011,22 @@ var drawAxis = function(type, dimensions, axis, corner) {
             }
             break;
         case "hexagonal-flat":
-            var firstHalf, secondHalf;
             switch (corner) {
                 case "top-left":
                     // clockwise
                     firstHalf = axis[0].slice(0, dimensions[1]);
                     secondHalf = axis[0].slice(dimensions[1], dimensions[1] + dimensions[2] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalFlatTop(firstHalf, dimensions);
                     displayAxisHexagonalFlatTopRight(secondHalf, dimensions);
                     // counter-clockwise
-                    firstHalf =axis[1].slice(0, dimensions[0]);
+                    firstHalf = axis[1].slice(0, dimensions[0]);
                     secondHalf = axis[1].slice(dimensions[0], dimensions[0] + dimensions[2] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalFlatTopLeft(firstHalf, dimensions);
                     displayAxisHexagonalFlatBottomLeft(secondHalf, dimensions);
                     break;
@@ -983,14 +1035,16 @@ var drawAxis = function(type, dimensions, axis, corner) {
                     firstHalf = axis[0].slice(0, dimensions[2]);
                     secondHalf = axis[0].slice(dimensions[2], dimensions[2] + dimensions[0] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalFlatBottomLeft(firstHalf.reverse(), dimensions);
                     displayAxisHexagonalFlatTopLeft(secondHalf.reverse(), dimensions);
                     // counter-clockwise
-                    firstHalf =axis[1].slice(0, dimensions[1]);
+                    firstHalf = axis[1].slice(0, dimensions[1]);
                     secondHalf = axis[1].slice(dimensions[1], dimensions[1] + dimensions[0] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalFlatBottom(firstHalf, dimensions);
                     displayAxisHexagonalFlatBottomRight(secondHalf, dimensions);
                     break;
@@ -999,14 +1053,16 @@ var drawAxis = function(type, dimensions, axis, corner) {
                     firstHalf = axis[0].slice(0, dimensions[2]);
                     secondHalf = axis[0].slice(dimensions[2], dimensions[2] + dimensions[0] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalFlatTopRight(firstHalf, dimensions);
-                    displayAxisHexagonalFlatBottomRight(secondHalf, dimensions);
+                    displayAxisHexagonalFlatBottomRight(secondHalf.reverse(), dimensions);
                     // counter-clockwise
-                    firstHalf =axis[1].slice(0, dimensions[1]);
+                    firstHalf = axis[1].slice(0, dimensions[1]);
                     secondHalf = axis[1].slice(dimensions[1], dimensions[1] + dimensions[0] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalFlatTop(firstHalf.reverse(), dimensions);
                     displayAxisHexagonalFlatTopLeft(secondHalf, dimensions);
                     break;
@@ -1015,14 +1071,16 @@ var drawAxis = function(type, dimensions, axis, corner) {
                     firstHalf = axis[0].slice(0, dimensions[1]);
                     secondHalf = axis[0].slice(dimensions[1], dimensions[1] + dimensions[2] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalFlatBottom(firstHalf.reverse(), dimensions);
                     displayAxisHexagonalFlatBottomLeft(secondHalf.reverse(), dimensions);
                     // counter-clockwise
-                    firstHalf =axis[1].slice(0, dimensions[0]);
+                    firstHalf = axis[1].slice(0, dimensions[0]);
                     secondHalf = axis[1].slice(dimensions[0], dimensions[0] + dimensions[2] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalFlatBottomRight(firstHalf, dimensions);
                     displayAxisHexagonalFlatTopRight(secondHalf.reverse(), dimensions);
                     break;
@@ -1031,14 +1089,16 @@ var drawAxis = function(type, dimensions, axis, corner) {
                     firstHalf = axis[0].slice(0, dimensions[0]);
                     secondHalf = axis[0].slice(dimensions[0], dimensions[0] + dimensions[1] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalFlatBottomRight(firstHalf.reverse(), dimensions);
                     displayAxisHexagonalFlatBottom(secondHalf.reverse(), dimensions);
                     // counter-clockwise
-                    firstHalf =axis[1].slice(0, dimensions[2]);
+                    firstHalf = axis[1].slice(0, dimensions[2]);
                     secondHalf = axis[1].slice(dimensions[2], dimensions[2] + dimensions[1] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalFlatTopRight(firstHalf.reverse(), dimensions);
                     displayAxisHexagonalFlatTop(secondHalf.reverse(), dimensions);
                     break;
@@ -1047,14 +1107,16 @@ var drawAxis = function(type, dimensions, axis, corner) {
                     firstHalf = axis[0].slice(0, dimensions[0]);
                     secondHalf = axis[0].slice(dimensions[0], dimensions[0] + dimensions[1] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalFlatTopLeft(firstHalf.reverse(), dimensions);
                     displayAxisHexagonalFlatTop(secondHalf, dimensions);
                     // counter-clockwise
-                    firstHalf =axis[1].slice(0, dimensions[2]);
+                    firstHalf = axis[1].slice(0, dimensions[2]);
                     secondHalf = axis[1].slice(dimensions[2], dimensions[2] + dimensions[1] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalFlatBottomLeft(firstHalf, dimensions);
                     displayAxisHexagonalFlatBottom(secondHalf, dimensions);
                     break;
@@ -1063,21 +1125,22 @@ var drawAxis = function(type, dimensions, axis, corner) {
             }
             break;
         case "hexagonal-pointy":
-            var firstHalf, secondHalf;
             switch (corner) {
                 case "bottom":
                     // clockwise
                     firstHalf = axis[0].slice(0, dimensions[1]);
                     secondHalf = axis[0].slice(dimensions[1], dimensions[1] + dimensions[2] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalPointyBottomLeft(firstHalf.reverse(), dimensions);
                     displayAxisHexagonalPointyLeft(secondHalf.reverse(), dimensions);
                     // counter-clockwise
-                    firstHalf =axis[1].slice(0, dimensions[0]);
+                    firstHalf = axis[1].slice(0, dimensions[0]);
                     secondHalf = axis[1].slice(dimensions[0], dimensions[0] + dimensions[2] - 1);
                     firstHalf.unshift(" ");
-                    secondHalf.push(" "); secondHalf.unshift(" ");
+                    secondHalf.push(" ");
+                    secondHalf.unshift(" ");
                     displayAxisHexagonalPointyBottomRight(firstHalf, dimensions);
                     displayAxisHexagonalPointyRight(secondHalf.reverse(), dimensions);
                     break;
@@ -1179,9 +1242,13 @@ var drawAxis = function(type, dimensions, axis, corner) {
         default:
             throw "Neočekivana greška.";
     }
-    $(".field").each(function() {
+    $(".field").each(function () {
         var coords = $(this).attr('data-coordinates').split('-').map(Number);
-        var displayCoordinates = internalToAxis(type, corner, axis, {a: dimensions[0], b: dimensions[1], c: dimensions[2]}, coords[0], coords[1]);
+        var displayCoordinates = internalToAxis(type, corner, axis, {
+            a: dimensions[0],
+            b: dimensions[1],
+            c: dimensions[2]
+        }, coords[0], coords[1]);
         $(this).append("<span class='display-coordinates'>" + displayCoordinates.join('-') + "</span>");
         $(this).attr("data-display-coordinates", displayCoordinates.join('-'));
     });
@@ -1190,11 +1257,11 @@ var drawAxis = function(type, dimensions, axis, corner) {
     axis[1] = axis[1].join(" ");
 };
 
-var internalToAxis = function(type, corner, axis, dims, x, y) {
+var internalToAxis = function (type, corner, axis, dims, x, y) {
     var newX = 0, newY = 0;
     switch (type) {
         case "rectangular":
-            switch(corner) {
+            switch (corner) {
                 case "top-left":
                     newX = dims.a - x - 1;
                     newY = dims.b - y - 1;
@@ -1223,15 +1290,17 @@ var internalToAxis = function(type, corner, axis, dims, x, y) {
                     newY = dims.a + dims.c - y;
                     break;
                 case "bottom-right":
-                    newX = - y + dims.b + dims.c - 2;
-                    newY = - x + dims.a + dims.c - 2;
+                    newX = -y + dims.b + dims.c - 2;
+                    newY = -x + dims.a + dims.c - 2;
                     break;
                 case "bottom-left":
-                    newX = - x + dims.a + dims.c - 2;
+                    newX = -x + dims.a + dims.c - 2;
                     newY = y - x + dims.a - 1;
                     break;
                 case "top-left":
+                    //noinspection JSSuspiciousNameCombination
                     newX = y;
+                    //noinspection JSSuspiciousNameCombination
                     newY = x;
                     break;
                 case "top-right":
@@ -1249,12 +1318,14 @@ var internalToAxis = function(type, corner, axis, dims, x, y) {
         case "hexagonal-pointy":
             switch (corner) {
                 case "top":
+                    //noinspection JSSuspiciousNameCombination
                     newX = y;
+                    //noinspection JSSuspiciousNameCombination
                     newY = x;
                     break;
                 case "bottom":
-                    newX = - y + dims.b + dims.c - 2;
-                    newY = - x + dims.a + dims.c - 2;
+                    newX = -y + dims.b + dims.c - 2;
+                    newY = -x + dims.a + dims.c - 2;
                     break;
                 case "top-left":
                     newX = y - x + dims.a - 1;
@@ -1265,12 +1336,12 @@ var internalToAxis = function(type, corner, axis, dims, x, y) {
                     newY = x - y + dims.b - 1;
                     break;
                 case "bottom-left":
-                    newX = - x + dims.c + dims.a - 2;
+                    newX = -x + dims.c + dims.a - 2;
                     newY = y - x + dims.a - 1;
                     break;
                 case "bottom-right":
                     newX = x - y + dims.b - 1;
-                    newY = - y + dims.c + dims.b - 2;
+                    newY = -y + dims.c + dims.b - 2;
                     break;
             }
             break;
@@ -1281,7 +1352,7 @@ var internalToAxis = function(type, corner, axis, dims, x, y) {
     return [axis[0][newX], axis[1][newY]];
 };
 
-var displayAxisHexagonalFlatBottomLeft = function(axis, dimensions) {
+var displayAxisHexagonalFlatBottomLeft = function (axis, dimensions) {
     var dims = {a: dimensions[0], b: dimensions[1], c: dimensions[2]};
     for (var i = 0; i <= dims.c; i++) {
         var pos = hexagonalFlatCoordinatesToPosition(dims.a + i - 1, i - 1, fieldSize + 2 * fieldMargin, dims);
@@ -1294,7 +1365,7 @@ var displayAxisHexagonalFlatBottomLeft = function(axis, dimensions) {
     }
 };
 
-var displayAxisHexagonalFlatTopRight = function(axis, dimensions) {
+var displayAxisHexagonalFlatTopRight = function (axis, dimensions) {
     var dims = {a: dimensions[0], b: dimensions[1], c: dimensions[2]};
     for (var i = 0; i <= dims.c; i++) {
         var pos = hexagonalFlatCoordinatesToPosition(i - 1, dims.b + i - 1, fieldSize + 2 * fieldMargin, dims);
@@ -1307,7 +1378,7 @@ var displayAxisHexagonalFlatTopRight = function(axis, dimensions) {
     }
 };
 
-var displayAxisHexagonalFlatTopLeft = function(axis, dimensions) {
+var displayAxisHexagonalFlatTopLeft = function (axis, dimensions) {
     var dims = {a: dimensions[0], b: dimensions[1], c: dimensions[2]};
     for (var i = 0; i <= dims.a; i++) {
         var pos = hexagonalFlatCoordinatesToPosition(i - 1, -1, fieldSize + 2 * fieldMargin, dims);
@@ -1320,7 +1391,7 @@ var displayAxisHexagonalFlatTopLeft = function(axis, dimensions) {
     }
 };
 
-var displayAxisHexagonalFlatTop = function(axis, dimensions) {
+var displayAxisHexagonalFlatTop = function (axis, dimensions) {
     var dims = {a: dimensions[0], b: dimensions[1], c: dimensions[2]};
     for (var i = 0; i <= dims.b; i++) {
         var pos = hexagonalFlatCoordinatesToPosition(-1, i - 1, fieldSize + 2 * fieldMargin, dims);
@@ -1333,7 +1404,7 @@ var displayAxisHexagonalFlatTop = function(axis, dimensions) {
     }
 };
 
-var displayAxisHexagonalFlatBottom = function(axis, dimensions) {
+var displayAxisHexagonalFlatBottom = function (axis, dimensions) {
     var dims = {a: dimensions[0], b: dimensions[1], c: dimensions[2]};
     for (var i = 0; i <= dims.b; i++) {
         var pos = hexagonalFlatCoordinatesToPosition(dims.a + dims.c - 1, dims.c + i - 1, fieldSize + 2 * fieldMargin, dims);
@@ -1346,7 +1417,7 @@ var displayAxisHexagonalFlatBottom = function(axis, dimensions) {
     }
 };
 
-var displayAxisHexagonalFlatBottomRight = function(axis, dimensions) {
+var displayAxisHexagonalFlatBottomRight = function (axis, dimensions) {
     var dims = {a: dimensions[0], b: dimensions[1], c: dimensions[2]};
     for (var i = 0; i <= dims.a; i++) {
         var pos = hexagonalFlatCoordinatesToPosition(dims.a + dims.c - 1 - i, dims.b + dims.c - 1, fieldSize + 2 * fieldMargin, dims);
@@ -1359,7 +1430,7 @@ var displayAxisHexagonalFlatBottomRight = function(axis, dimensions) {
     }
 };
 
-var displayAxisHexagonalPointyLeft = function(axis, dimensions) {
+var displayAxisHexagonalPointyLeft = function (axis, dimensions) {
     var dims = {a: dimensions[0], b: dimensions[1], c: dimensions[2]};
     for (var i = 0; i <= dims.c; i++) {
         var pos = hexagonalPointyCoordinatesToPosition(dims.a + i - 1, i - 1, fieldSize + 2 * fieldMargin, dims);
@@ -1372,7 +1443,7 @@ var displayAxisHexagonalPointyLeft = function(axis, dimensions) {
     }
 };
 
-var displayAxisHexagonalPointyRight = function(axis, dimensions) {
+var displayAxisHexagonalPointyRight = function (axis, dimensions) {
     var dims = {a: dimensions[0], b: dimensions[1], c: dimensions[2]};
     for (var i = 0; i <= dims.c; i++) {
         var pos = hexagonalPointyCoordinatesToPosition(i - 1, dims.b + i - 1, fieldSize + 2 * fieldMargin, dims);
@@ -1385,7 +1456,7 @@ var displayAxisHexagonalPointyRight = function(axis, dimensions) {
     }
 };
 
-var displayAxisHexagonalPointyTopLeft = function(axis, dimensions) {
+var displayAxisHexagonalPointyTopLeft = function (axis, dimensions) {
     var dims = {a: dimensions[0], b: dimensions[1], c: dimensions[2]};
     for (var i = 0; i <= dims.a; i++) {
         var pos = hexagonalPointyCoordinatesToPosition(i - 1, -1, fieldSize + 2 * fieldMargin, dims);
@@ -1398,7 +1469,7 @@ var displayAxisHexagonalPointyTopLeft = function(axis, dimensions) {
     }
 };
 
-var displayAxisHexagonalPointyTopRight = function(axis, dimensions) {
+var displayAxisHexagonalPointyTopRight = function (axis, dimensions) {
     var dims = {a: dimensions[0], b: dimensions[1], c: dimensions[2]};
     for (var i = 0; i <= dims.b; i++) {
         var pos = hexagonalPointyCoordinatesToPosition(-1, i - 1, fieldSize + 2 * fieldMargin, dims);
@@ -1411,7 +1482,7 @@ var displayAxisHexagonalPointyTopRight = function(axis, dimensions) {
     }
 };
 
-var displayAxisHexagonalPointyBottomLeft = function(axis, dimensions) {
+var displayAxisHexagonalPointyBottomLeft = function (axis, dimensions) {
     var dims = {a: dimensions[0], b: dimensions[1], c: dimensions[2]};
     for (var i = 0; i <= dims.b; i++) {
         var pos = hexagonalPointyCoordinatesToPosition(dims.a + dims.c - 1, dims.c + i - 1, fieldSize + 2 * fieldMargin, dims);
@@ -1424,7 +1495,7 @@ var displayAxisHexagonalPointyBottomLeft = function(axis, dimensions) {
     }
 };
 
-var displayAxisHexagonalPointyBottomRight = function(axis, dimensions) {
+var displayAxisHexagonalPointyBottomRight = function (axis, dimensions) {
     var dims = {a: dimensions[0], b: dimensions[1], c: dimensions[2]};
     for (var i = 0; i <= dims.a; i++) {
         var pos = hexagonalPointyCoordinatesToPosition(dims.a + dims.c - 1 - i, dims.b + dims.c - 1, fieldSize + 2 * fieldMargin, dims);
@@ -1437,7 +1508,7 @@ var displayAxisHexagonalPointyBottomRight = function(axis, dimensions) {
     }
 };
 
-var drawChess = function() {
+var drawChess = function () {
     var $board = $(".board");
     var $fields = $board.children(".field");
 
@@ -1446,19 +1517,26 @@ var drawChess = function() {
     switch (dataBoardType) {
         case "hexagonal-flat":
         case "hexagonal-pointy":
-            $fields.each(function() {
+            $fields.each(function () {
                 var coords = $(this).attr("data-coordinates").split('-').map(Number);
                 switch ((coords[0] + coords[1]) % 3) {
-                    case 0: $(this).addClass("chess-white"); break;
-                    case 1: $(this).addClass("chess-middle"); break;
-                    case 2: $(this).addClass("chess-black"); break;
-                    default: throw "Maths has been broken."
+                    case 0:
+                        $(this).addClass("chess-white");
+                        break;
+                    case 1:
+                        $(this).addClass("chess-middle");
+                        break;
+                    case 2:
+                        $(this).addClass("chess-black");
+                        break;
+                    default:
+                        throw "Maths has been broken."
                 }
             });
             break;
 
         case "rectangular":
-            $fields.each(function() {
+            $fields.each(function () {
                 var dataCoordinates = $(this).attr("data-coordinates").split('-');
                 if ((dataCoordinates[0] % 2 + dataCoordinates[1] % 2) % 2 === 0) {
                     $(this).addClass("chess-white");
@@ -1473,19 +1551,20 @@ var drawChess = function() {
     }
 };
 
-var drawGoStyle = function() {
+var drawGoStyle = function () {
     var $board = $(".board");
     var $fields = $board.children(".field");
 
     // Determine # of rows and # of columns
-    var cols = 0; var rows = 0;
-    $fields.each(function() {
+    var cols = 0;
+    var rows = 0;
+    $fields.each(function () {
         var dataCoordinates = $(this).attr("data-coordinates").split('-').map(Number);
         if (dataCoordinates[1] > cols) cols = dataCoordinates[1];
         if (dataCoordinates[0] > rows) rows = dataCoordinates[0];
     });
 
-    $fields.each(function() {
+    $fields.each(function () {
         var dataCoordinates = $(this).attr("data-coordinates").split('-').map(Number);
         if (dataCoordinates[0] === 0 && dataCoordinates[1] === 0) {
             $(this).addClass("go-style--corner-t-l");
@@ -1509,9 +1588,9 @@ var drawGoStyle = function() {
     });
 };
 
-var drawCircleStyle = function() {
+var drawCircleStyle = function () {
     var $fields = $('.board').children('.field');
-    $fields.each(function() {
+    $fields.each(function () {
         $(this).addClass("circle-style size-" + fieldSizeName);
     });
 };
@@ -1521,12 +1600,12 @@ var drawCircleStyle = function() {
 // -------------  DATA STATE ------------- //
 // --------------------------------------- //
 
-var displayDataState = function(state) {
+var displayDataState = function (state) {
     // foreach state
     for (var i = 0; i < state.length; i++) {
         // foreach field
         for (var j = 0; j < state[i].fields.length; j++) {
-            var query = state[i].fields[j][0]+ '-' + state[i].fields[j][1];
+            var query = state[i].fields[j][0] + '-' + state[i].fields[j][1];
             var $field = $("[data-display-coordinates=" + query + "]");
             if (!$field.length) {
                 displayWarning("Dobijen zahtev da se na polje " + query +
@@ -1535,9 +1614,9 @@ var displayDataState = function(state) {
             }
             if ($field.hasClass("occupied")) {
                 // get the shape it already has
-                var theClass;
+                var theClass = "";
                 var classes = $field.children(".piece").attr("class").split(' ');
-                $.each(classes, function(i, e) {
+                $.each(classes, function (i, e) {
                     if (e.indexOf("shape--") === 0) {
                         theClass = e;
                     }
@@ -1560,7 +1639,7 @@ var displayDataState = function(state) {
 // ------------  DATA MARKINGS ----------- //
 // --------------------------------------- //
 
-var displayDataMarkings = function(markings) {
+var displayDataMarkings = function (markings) {
     //foreach marking
     for (var i = 0; i < markings.length; i++) {
         //foreach field
@@ -1574,7 +1653,7 @@ var displayDataMarkings = function(markings) {
             }
             $field.addClass("marked");
             $("<div/>", {
-                class: 'marking color--' + markings[i].style.color+ ' ' + 'shape--' + markings[i].style.shape
+                class: 'marking color--' + markings[i].style.color + ' ' + 'shape--' + markings[i].style.shape
             }).appendTo($field);
         }
     }
@@ -1584,7 +1663,7 @@ var displayDataMarkings = function(markings) {
 // -------------  DATA PLAYER ------------ //
 // --------------------------------------- //
 
-var displayDataPlayer = function(player) {
+var displayDataPlayer = function (player) {
     var order = player.order + "";
     var query = "player" + order;
     var $player = $("." + query);
@@ -1604,7 +1683,7 @@ var displayDataPlayer = function(player) {
 // -------------  DATA REMOVED ----------- //
 // --------------------------------------- //
 
-var displayDataRemoved = function(removed) {
+var displayDataRemoved = function (removed) {
     // foreach player
     if (removed.length != 2) {
         throw "Neočekivana greška. Niz \"removed\" mora imati tačno dva podniza. " +
@@ -1618,7 +1697,7 @@ var displayDataRemoved = function(removed) {
             // draw a figure NUMBER times
             for (var k = 0; k < removed[i][j].number; k++) {
                 $("<div/>", {
-                    class: 'piece piece-removed color--' + removed[i][j].style.color+ ' ' + 'shape--' + removed[i][j].style.shape
+                    class: 'piece piece-removed color--' + removed[i][j].style.color + ' ' + 'shape--' + removed[i][j].style.shape
                 }).appendTo($removed);
             }
         }
@@ -1627,11 +1706,11 @@ var displayDataRemoved = function(removed) {
 
 // Very simple markdown parser.
 // Doesn't allow nested formatting.
-var parseMarkdown = function(message) {
+var parseMarkdown = function (message) {
     var currentMode = ""; // Bold, Italic, Code (in order: *, _, `)
     var output = "";
     for (var i = 0; i < message.length; i++) {
-        switch(message[i]) {
+        switch (message[i]) {
             case "*":
                 if (currentMode === "b") {
                     output += "</strong>";
@@ -1666,16 +1745,16 @@ var parseMarkdown = function(message) {
     return output;
 };
 
-var displayError = function(message) {
+var displayError = function (message) {
     displayMessage(message, "ERROR");
 };
 
-var displayWarning = function(message) {
+var displayWarning = function (message) {
     console.warn(message);
     displayMessage(message, "WARNING");
 };
 
-var displayMessage = function(message, type) {
+var displayMessage = function (message, type) {
     type = type || "INFO";
     messages.push({
         type: type,
@@ -1684,7 +1763,7 @@ var displayMessage = function(message, type) {
     displayMessages();
 };
 
-var displayMessages = function() {
+var displayMessages = function () {
     var $messages = $("#messages");
 
     // remove all messages
@@ -1700,32 +1779,37 @@ var displayMessages = function() {
             .append("<div class='message-close'></div>")
             .appendTo($messages);
     }
-    
+
     // if more than one message, create a "dissmiss all" button
     if (messages.length >= 2) {
         $("<div/>", {
             id: "dismiss-all-messages"
         })
-            .append("<span>Ukloni sve</span>")
+            .append("<span>Ukloni sve (<code>q</code>)</span>")
             .prependTo($messages);
     }
 };
 
-var dismissMessage = function(index) {
+var dismissMessage = function (index) {
     messages.splice(index, 1);
     displayMessages();
 };
 
-$("#messages").on("click", ".message-close", function() {
+var dismissAllMessages = function () {
+    messages = [];
+    displayMessages();
+};
+
+var $messages = $("#messages");
+
+$messages.on("click", ".message-close", function () {
     dismissMessage($(this).parent().attr("data-index"));
 });
 
-$("#messages").on("click", "#dismiss-all-messages", function() {
-    messages = [];
-    displayMessages();
-});
+$messages.on("click", "#dismiss-all-messages", dismissAllMessages);
+$(document).bind("keyup", "q", dismissAllMessages);
 
-$(document).ready(function() {
+$(document).ready(function () {
     //displayMessage("TutiFruti :: version 0.0");
     displayData(data1);
 });
@@ -1744,7 +1828,7 @@ example.chess = {
         //enumerationStyle: "out",
         coloring: "chess",
         mode: "classic",
-        size: "xxl",
+        size: "xxl"
     },
     player: {
         name: "La Plávusha",
@@ -1894,11 +1978,11 @@ example.hexaChess = {
         corner: "bottom-left",
         axis: [
             "A B C D E F G H I J K L M N O P Q",
-            "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20",
+            "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20"
         ],
         coloring: "chess",
         mode: "classic",
-        size: "xxl",
+        size: "xxl"
     },
     player: {
         name: "La Plávusha",
@@ -2024,11 +2108,11 @@ example.hexaChess = {
     markings: [
         {
             fields: [
-                ["F", "5"],
+                ["F", "5"]
             ],
             style: {
                 color: "pink",
-                shape: "star",
+                shape: "star"
             }
         }
     ]
@@ -2146,7 +2230,7 @@ example.gomokuEastern = {
 
 
 //TODO pomeri odavde
-$('#button').click(function() {
+$('#button').click(function () {
     $('.info').toggleClass('hidden');
     $('.generator').toggleClass('hidden');
 });
