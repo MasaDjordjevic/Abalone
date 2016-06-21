@@ -432,16 +432,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_neophodne_instalacije">Neophodne instalacije</a></li>
 <li><a href="#_pokretanje_servera">Pokretanje servera</a></li>
+<li><a href="#_korišćenje_primera">Korišćenje primera</a></li>
 </ul>
 </li>
 <li><a href="#_osnovna_struktura">Osnovna struktura</a>
 <ul class="sectlevel2">
 <li><a href="#_parametri">Parametri</a></li>
 <li><a href="#_funkcije">Funkcije</a></li>
+<li><a href="#_port">Port</a></li>
 <li><a href="#_vaš_zadatak">Vaš zadatak</a></li>
 </ul>
 </li>
-<li><a href="#_kako_projekat_radi">Kako projekat radi?</a></li>
+<li><a href="#_kako_dodati_api_funkciju">Kako dodati api funkciju?</a>
+<ul class="sectlevel2">
+<li><a href="#_server">Server</a></li>
+<li><a href="#_javascript">JavaScript</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -474,6 +481,13 @@ Instalirati chrome plugin: <code><a href="https://chrome.google.com/webstore/det
 <p>Najpre je potrebno kompajlrati i učitati fajl <code>setup.cl</code> (on pribavlja neophodne biblioteke), zatim fajl <code>server.cl</code> koji je sam veb api.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_korišćenje_primera">Korišćenje primera</h3>
+<div class="paragraph">
+<p>U samu aplikaciju je ugrađeno nekoliko primera. Svaki, i na serveru i u aplikaciji, počinje sa <code>example</code> i predstavlja samo primer stanja table.
+Kako je trenutna implementacija funkcije <code>odigraj-potez</code> siromašna i vrlo ograničena, moguće je je pokrenuti samo ukoliko je trenutno prikazan <code>example xo</code>.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -495,6 +509,27 @@ Funkcija <code>reset</code> šalje informacije o tabli i igraču.
 Ne sadrži nikakvu logiku, niti koristi dobijene parametre već samo postavlja osnovne podatke.
 Funkcija <code>odigraj-potez</code> dobija stanje table i postavlja verdnosti globalnih parametara na osnovu dobijenih podataka.
 Zatim izvršava potez igrača i vraća novo stanje table.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_port">Port</h3>
+<div class="paragraph">
+<p>Na kraju fajla <code>server.cl</code> se nalazi komanda <code>(defparameter <strong>server</strong> (start (make-instance 'easy-acceptor :address "localhost" :port 8081)))</code> na kraju koje se definiše port na kome server radi.
+Jako je važno da broj porta na serveru bude isti kao broj porta koji se nalazi na samoj aplikaciji kako biste komunicirali baš sa vašim serverom.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Za testiranje logike aplikacije možete staviti isti broj porta za oba igrača.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 <div class="sect2">
@@ -534,15 +569,36 @@ Dat je primer njegove implementacije čiji cilj nije odigravanje poteza već uka
 </div>
 </div>
 <div class="sect1">
-<h2 id="_kako_projekat_radi">Kako projekat radi?</h2>
+<h2 id="_kako_dodati_api_funkciju">Kako dodati api funkciju?</h2>
 <div class="sectionbody">
-
+<div class="sect2">
+<h3 id="_server">Server</h3>
+<div class="paragraph">
+<p>Kreirati ajax funkciju po uzoru na ostale <code>(defun-ajax odigraj-potez (data)(<strong>ajax-processor</strong> :method :post :callback-data :response-text)</code>.
+Ukoliko želimo da obrađuje <code>GET</code> zahteve uklonimo <code>:method :post</code>.
+Rezultat funkcije je string koji se dobija <code>(fromat nil &#8230;&#8203; )</code> naredbom.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_javascript">JavaScript</h3>
+<div class="paragraph">
+<p>Na početku fajla <code>server.js</code> se nalazi objekat <code>smackjack</code> koji sadrži niz podržanih funkcija. Dodati svoju po uzoru na ostale.
+Napisati samo funkcuju npr. `  function reset(data, callback, errorHandler = null, port = "8081") {
+return ajaxCall("RESET", [data], "GET", callback, errorHandler, responseText, port);}`.
+Prvi parametar koji se prosleđuje funkciji <code>ajaxCall</code> je naziv funkcije na serveru. Voditi računa da mora biti napisan velikim slovima.
+Treći parametar je vrta HTTP zahteva i mora odgovorati onom na serveru.
+Dodati funckiju <code>smackjack</code> objektu: <code>smackjack.reset = reset</code>.</p>
+</div>
+<div class="paragraph">
+<p>Sada je moguće pozvati ovu funkciju <code>smackjack.reset("", parse, null)</code>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-06-20 20:22:38 Central Europe Daylight Time
+Last updated 2016-06-21 13:08:41 Central Europe Daylight Time
 </div>
 </div>
 </body>
