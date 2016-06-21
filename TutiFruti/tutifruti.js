@@ -1786,7 +1786,7 @@ var displayMessages = function () {
         $("<div/>", {
             id: "dismiss-all-messages"
         })
-            .append("<span>Ukloni sve</span>")
+            .append("<span>Ukloni sve (<code>q</code>)</span>")
             .prependTo($messages);
     }
 };
@@ -1796,16 +1796,19 @@ var dismissMessage = function (index) {
     displayMessages();
 };
 
+var dismissAllMessages = function () {
+    messages = [];
+    displayMessages();
+};
+
 var $messages = $("#messages");
 
 $messages.on("click", ".message-close", function () {
     dismissMessage($(this).parent().attr("data-index"));
 });
 
-$messages.on("click", "#dismiss-all-messages", function () {
-    messages = [];
-    displayMessages();
-});
+$messages.on("click", "#dismiss-all-messages", dismissAllMessages);
+$(document).bind("keyup", "q", dismissAllMessages);
 
 $(document).ready(function () {
     //displayMessage("TutiFruti :: version 0.0");

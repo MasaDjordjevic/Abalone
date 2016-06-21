@@ -1,3 +1,5 @@
+"use strict";
+
 var receivedData = null;
 var stop = false;
 var log = false;
@@ -51,9 +53,10 @@ window.onload = function() {
         stop = true;
     });
 
-    $("#gen-generate").click(function () {
+    $(".generator form").submit(function() {
         generate();
-    })
+        return false; // prevent page refresh on submit
+    });
 };
 
 function parse(data) {
@@ -254,11 +257,15 @@ options._stateShape = ["O", "X", "circle", "square", "star", "arrow-left", "arro
 
 
 function drawGenerator() {
-    var div = $(".generator");
+
+    var $generator = $(".generator");
+    var $generatorForm = $("<form/>", {
+        id: "generator-form"
+    })
+        .appendTo($generator);
     var r = new RegExp("[A-Z].*");
 
     $.each(options, function (key, value) {
-
         var id = "gen" + key;
         var innerDiv = $("<div/>");
         var label = $("<label/>", {
@@ -282,76 +289,75 @@ function drawGenerator() {
             drawString(id, value, innerDiv);
         }
 
-        div.append(innerDiv);
+        $generatorForm.append(innerDiv);
     });
 
-    var id, innerDiv;
+    var id, $innerDiv;
 
     id = "gen_stateColor-2";
-    innerDiv = $("<div/>");
+    $innerDiv = $("<div/>");
     $("<label/>", {
         "for": id
     })
         .append("Color")
-        .appendTo(innerDiv);
-    drawSelect(id, options._stateColor, innerDiv, 5);
-    div.append(innerDiv);
+        .appendTo($innerDiv);
+    drawSelect(id, options._stateColor, $innerDiv, 5);
+    $generatorForm.append($innerDiv);
 
     id = "gen_stateShape-2";
-    innerDiv = $("<div/>");
+    $innerDiv = $("<div/>");
     $("<label/>", {
         "for": id
     })
         .append("Shape")
-        .appendTo(innerDiv);
-    drawSelect(id, options._stateShape, innerDiv, 13);
-    div.append(innerDiv);
+        .appendTo($innerDiv);
+    drawSelect(id, options._stateShape, $innerDiv, 13);
+    $generatorForm.append($innerDiv);
 
-    var button = $("<button/>", {
-        "type": "button",
+    $("<button/>", {
+        "type": "submit",
         "id": "gen-generate"
-    }).append("Generisi");
-
-    div.append(button);
+    })
+        .append("Generisi")
+        .appendTo($generatorForm);
 
 }
 
-function drawString(id, value, container) {
+function drawString(id, value, $container) {
     var input = $("<input/>", {
         "type": "text",
         "value": value,
         "id": id
-    }).appendTo(container);
+    }).appendTo($container);
 }
 
-function drawDimensions(id, array, container) {
-    container.append("<br/>");
+function drawDimensions(id, array, $container) {
+    var $containerDiv = $("<div/>").appendTo($container);
     for (let i = 1; i <= 3; i++) {
         var label = $("<label/>", {
             "for": id + "-" + i
-        }).append("D" + i).appendTo(container);
+        }).append("D" + i).appendTo($containerDiv);
         var input = $("<input/>", {
             "id": id + "-" + i,
             "type": "number",
             "min": "1",
             "max": "20",
             "value": array[i - 1]
-        }).appendTo(container);
+        }).appendTo($containerDiv);
     }
 }
 
-function generateAxis(id, array, container) {
-    container.append("<br/>");
+function generateAxis(id, array, $container) {
+    var $containerDiv = $("<div/>").appendTo($container);
     for (let i = 1; i < 3; i++) {
         var label = $("<label/>", {
             "for": id + "-" + i
-        }).append("A" + i).appendTo(container);
+        }).append("A" + i).appendTo($containerDiv);
         var input = $("<input/>", {
             "id": id + "-" + i,
             "type": "text",
             "value": array[i - 1]
-        }).appendTo(container);
-        container.append("<br/>");
+        }).appendTo($containerDiv);
     }
 
 }

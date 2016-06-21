@@ -5,28 +5,30 @@
 @import "fa/scss/font-awesome.scss";
 
 @font-face {
-            font-family: Roboto;
-            src: url('../fonts/Roboto-Regular.ttf');
-        }
+  font-family: Roboto;
+  src: url('../fonts/Roboto-Regular.ttf');
+}
 
- @font-face {
-            font-family: Roboto;
-            src: url('../fonts/Roboto-Italic.ttf');
-            font-weight: normal;
-            font-style: italic;
- }
- @font-face {
-            font-family: Roboto;
-            src: url('../fonts/Roboto-Bold.ttf');
-            font-weight: bold;
-            font-style: normal;
- }
 @font-face {
-           font-family: Roboto;
-           src: url('../fonts/Roboto-BoldItalic.ttf');
-           font-weight: bold;
-           font-style: italic;
-          }
+  font-family: Roboto;
+  src: url('../fonts/Roboto-Italic.ttf');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('../fonts/Roboto-Bold.ttf');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('../fonts/Roboto-BoldItalic.ttf');
+  font-weight: bold;
+  font-style: italic;
+}
 
 @mixin icon($name) {
   &::before {
@@ -72,411 +74,382 @@ body {
     );
 
     @at-root .field {
-        $s: 26px;
-        $border: 1px;
-        margin: 0;
-        //box-shadow: 0 0 0 1px mix(black, white, 20%);
-        background-color: transparent;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
+      $s: 26px;
+      $border: 1px;
+      margin: 0;
+      //box-shadow: 0 0 0 1px mix(black, white, 20%);
+      background-color: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
 
-        span {
-          display: none;
-          font-size: .8em;
-          color: rgba(black, .72);
-          z-index: 2;
-        }
+      span {
+        display: none;
+        font-size: .8em;
+        color: rgba(black, .72);
+        z-index: 2;
+      }
 
-        span.display-coordinates {
-          display: none;
-        }
+      span.display-coordinates {
+        display: none;
+      }
 
-        @each $name, $s in $sizes {
-          &.rectangle.size-#{$name} {
-            width: $s;
-            height: $s;
-            box-shadow: 0 0 0 1px mix(black, white, 20%);
-
-            .piece {
-              left: 0.05 * $s;
-              right: 0.05 * $s;
-              width: 0.9 * $s;
-              height: 0.9 * $s;
-              font-size: 0.9 * $s;
-              line-height: 0.9 * $s;
-            }
-          }
-        }
-
-        @each $name, $s  in $sizes {
-          &%hexagon {
-            position: absolute;
-            box-sizing: border-box;
-
-            &::before,
-            &::after {
-              content: "";
-              position: absolute;
-              z-index: 1;
-              background-color: inherit;
-              box-sizing: border-box;
-            }
-          }
-
-          &.hexagon-pointy.size-#{$name} {
-            @extend %hexagon;
-            width: $s;
-            height: $s / $sqrt3;
-            border-left: solid $border mix(black, white, 20%);
-            border-right: solid $border mix(black, white, 20%);
-
-            &::before,  &::after {
-              width: $s / $sqrt2;
-              height: $s / $sqrt2;
-              transform: scaleY(0.5774) rotate(-45deg);
-              left: ($s - ($s / $sqrt2)) / 2 - $border + 1px;
-            }
-
-            &::before {
-              top: - ($s / $sqrt2)/2;
-              border-top:
-                      solid
-                      $border * $sqrt2
-                      mix(black, white, 20%);
-              border-right:
-                      solid
-                      $border * $sqrt2
-                      mix(black, white, 20%);
-            }
-
-            &::after {
-              bottom: - ($s / $sqrt2)/2;
-              border-bottom:
-                      solid
-                      $border * $sqrt2
-                      mix(black, white, 20%);
-              border-left:
-                      solid
-                      $border * $sqrt2
-                      mix(black, white, 20%);
-            }
-
-            .piece {
-              width: $s;
-              height: $s;
-              line-height: $s;
-              top: -$s / 4 / $sqrt3;
-              font-size: $s * 0.66!important;
-            }
-
-            &.circle-style {
-              margin-top: -($s / $sqrt2) / 2 / $sqrt3;
-            }
-          }
-
-          &.hexagon-flat.size-#{$name} {
-            @extend %hexagon;
-            width: $s / $sqrt3;
-            height: $s;
-            border-top: solid $border mix(black, white, 20%);
-            border-bottom: solid $border mix(black, white, 20%);
-
-            &::before, &::after {
-              width: $s / $sqrt2;
-              height: $s / $sqrt2;
-              transform: scaleX(0.5774) rotate(45deg);
-              top: ($s - ($s / $sqrt2)) / 2 - $border + 0px; // madjije
-            }
-
-            &::before {
-              left: - ($s / $sqrt2) / 2;
-              border-bottom:
-                      solid
-                      $border * $sqrt2
-                      mix(black, white, 20%);
-              border-left:
-                      solid
-                      $border * $sqrt2
-                      mix(black, white, 20%);
-            }
-
-            &::after {
-              right: - ($s / $sqrt2) / 2;
-              border-top:
-                      solid
-                      $border * $sqrt2
-                      mix(black, white, 20%);
-              border-right:
-                      solid
-                      $border * $sqrt2
-                      mix(black, white, 20%);
-            }
-
-            .piece {
-              //left: - $s / 4 / $sqrt3;
-              font-size: $s * 0.66!important;
-            }
-          }
-        }
-
-        @each $name, $s in $sizes {
-          &.circle-style.size-#{$name} {
-            box-shadow: 0 0 0 1px rgba(black, .2) inset;
-            background-color: palette($blue-grey, 50);
-            border-radius: 50%;
-            width: $s;
-            height: $s;
-            transform: scale(0.9);
-            top: 0;
-            left: 0;
-
-            &::before, &::after {
-              display: none;
-            }
-
-            .piece {
-              position: static;
-            }
-          }
-        }
-
-        &.chess-white {
-          background-color: palette($blue-grey, 50);
-        }
-
-        &.chess-middle {
-          background-color: palette($blue-grey, 200);
-        }
-
-        &.chess-black {
-          background-color: palette($blue-grey, 400);
-        }
-
-        &.go-style--corner-t-l,
-        &.go-style--corner-t-r,
-        &.go-style--corner-b-l,
-        &.go-style--corner-b-r,
-        &.go-style--edge-t,
-        &.go-style--edge-b,
-        &.go-style--edge-l,
-        &.go-style--edge-r,
-        &.go-style--middle {
-          box-shadow: none !important;
+      @each $name, $s in $sizes {
+        &.rectangle.size-#{$name} {
+          width: $s;
+          height: $s;
+          box-shadow: 0 0 0 1px mix(black, white, 20%);
 
           .piece {
-            /*left: .0 * $s;
-            top: .0 * $s;
-            width: 1 * $s;
-            height: 1 * $s;
-            font-size: 1 * $s;*/
+            left: 0.05 * $s;
+            right: 0.05 * $s;
+            width: 0.9 * $s;
+            height: 0.9 * $s;
+            font-size: 0.9 * $s;
+            line-height: 0.9 * $s;
+          }
+        }
+      }
+
+      @each $name, $s in $sizes {
+        &%hexagon {
+          position: absolute;
+          box-sizing: border-box;
+
+          &::before,
+          &::after {
+            content: "";
+            position: absolute;
+            z-index: 1;
+            background-color: inherit;
+            box-sizing: border-box;
           }
         }
 
-        &.go-style--middle,
-        &.go-style--corner-b-r,
-        &.go-style--edge-r,
-        &.go-style--edge-b {
+        &.hexagon-pointy.size-#{$name} {
+          @extend %hexagon;
+          width: $s;
+          height: $s / $sqrt3;
+          border-left: solid $border mix(black, white, 20%);
+          border-right: solid $border mix(black, white, 20%);
+
+          &::before, &::after {
+            width: $s / $sqrt2;
+            height: $s / $sqrt2;
+            transform: scaleY(0.5774) rotate(-45deg);
+            left: ($s - ($s / $sqrt2)) / 2 - $border + 1px;
+          }
+
           &::before {
-            z-index: 1;
-            content: "";
-            width: 100%;
-            height: 100%;
-            top: - 50%;
-            left: - 50%;
-            position: absolute;
-            box-shadow: 0 0 0 1px mix(black, white, 20%);
+            top: - ($s / $sqrt2)/2;
+            border-top: solid $border * $sqrt2 mix(black, white, 20%);
+            border-right: solid $border * $sqrt2 mix(black, white, 20%);
+          }
+
+          &::after {
+            bottom: - ($s / $sqrt2)/2;
+            border-bottom: solid $border * $sqrt2 mix(black, white, 20%);
+            border-left: solid $border * $sqrt2 mix(black, white, 20%);
+          }
+
+          .piece {
+            width: $s;
+            height: $s;
+            line-height: $s;
+            top: -$s / 4 / $sqrt3;
+            font-size: $s * 0.66 !important;
+          }
+
+          &.circle-style {
+            margin-top: -($s / $sqrt2) / 2 / $sqrt3;
           }
         }
+
+        &.hexagon-flat.size-#{$name} {
+          @extend %hexagon;
+          width: $s / $sqrt3;
+          height: $s;
+          border-top: solid $border mix(black, white, 20%);
+          border-bottom: solid $border mix(black, white, 20%);
+
+          &::before, &::after {
+            width: $s / $sqrt2;
+            height: $s / $sqrt2;
+            transform: scaleX(0.5774) rotate(45deg);
+            top: ($s - ($s / $sqrt2)) / 2 - $border + 0px;
+          }
+
+          &::before {
+            left: - ($s / $sqrt2) / 2;
+            border-bottom: solid $border * $sqrt2 mix(black, white, 20%);
+            border-left: solid $border * $sqrt2 mix(black, white, 20%);
+          }
+
+          &::after {
+            right: - ($s / $sqrt2) / 2;
+            border-top: solid $border * $sqrt2 mix(black, white, 20%);
+            border-right: solid $border * $sqrt2 mix(black, white, 20%);
+          }
+
+          .piece {
+            //left: - $s / 4 / $sqrt3;
+            font-size: $s * 0.66 !important;
+          }
+        }
+      }
+
+      @each $name, $s in $sizes {
+        &.circle-style.size-#{$name} {
+          box-shadow: 0 0 0 1px rgba(black, .2) inset;
+          background-color: palette($blue-grey, 50);
+          border-radius: 50%;
+          width: $s;
+          height: $s;
+          transform: scale(0.9);
+          top: 0;
+          left: 0;
+
+          &::before, &::after {
+            display: none;
+          }
+
+          .piece {
+            position: static;
+          }
+        }
+      }
+
+      &.chess-white {
+        background-color: palette($blue-grey, 50);
+      }
+
+      &.chess-middle {
+        background-color: palette($blue-grey, 200);
+      }
+
+      &.chess-black {
+        background-color: palette($blue-grey, 400);
+      }
+
+      &.go-style--corner-t-l,
+      &.go-style--corner-t-r,
+      &.go-style--corner-b-l,
+      &.go-style--corner-b-r,
+      &.go-style--edge-t,
+      &.go-style--edge-b,
+      &.go-style--edge-l,
+      &.go-style--edge-r,
+      &.go-style--middle {
+        box-shadow: none !important;
 
         .piece {
-          z-index: 5;
-          //width: $s * .9;
-          //height: $s * .9;
+          /*left: .0 * $s;
+          top: .0 * $s;
+          width: 1 * $s;
+          height: 1 * $s;
+          font-size: 1 * $s;*/
+        }
+      }
+
+      &.go-style--middle,
+      &.go-style--corner-b-r,
+      &.go-style--edge-r,
+      &.go-style--edge-b {
+        &::before {
+          z-index: 1;
+          content: "";
+          width: 100%;
+          height: 100%;
+          top: - 50%;
+          left: - 50%;
           position: absolute;
-          left: $s * 0.05;
-          top: $s * 0.05;
-          //font-size: $s * .9;
-          //line-height: $s * .9;
-          text-align: center;
-          text-shadow: 0 0 2px rgba(black, .4);
+          box-shadow: 0 0 0 1px mix(black, white, 20%);
+        }
+      }
+
+      .piece {
+        z-index: 5;
+        //width: $s * .9;
+        //height: $s * .9;
+        position: absolute;
+        left: $s * 0.05;
+        top: $s * 0.05;
+        //font-size: $s * .9;
+        //line-height: $s * .9;
+        text-align: center;
+        text-shadow: 0 0 2px rgba(black, .4);
+      }
+
+      @at-root .piece {
+
+        // Colors
+        $colors: (
+                red: $red,
+                pink: $pink,
+                purple: $purple,
+                deep-purple: $deep-purple,
+                indigo: $indigo,
+                blue: $blue,
+                light-blue: $light-blue,
+                cyan: $cyan,
+                teal: $teal,
+                green: $green,
+                light-green: $light-green,
+                lime: $lime,
+                yellow: $yellow,
+                amber: $amber,
+                orange: $orange,
+                deep-orange: $deep-orange,
+                brown: $brown,
+                grey: $grey,
+                blue-grey: $blue-grey,
+        );
+
+        @each $key, $value in $colors {
+          &.color--#{$key} {
+            color: palette($value);
+          }
         }
 
-        @at-root .piece {
+        &.color--black {
+          color: black;
+        }
 
-          // Colors
+        &.color--white {
+          color: white;
+          text-shadow: 0 1px 3px rgba(black, .8);
+        }
 
-          $colors: (
-                  red: $red,
-                  pink: $pink,
-                  purple: $purple,
-                  deep-purple: $deep-purple,
-                  indigo: $indigo,
-                  blue: $blue,
-                  light-blue: $light-blue,
-                  cyan: $cyan,
-                  teal: $teal,
-                  green: $green,
-                  light-green: $light-green,
-                  lime: $lime,
-                  yellow: $yellow,
-                  amber: $amber,
-                  orange: $orange,
-                  deep-orange: $deep-orange,
-                  brown: $brown,
-                  grey: $grey,
-                  blue-grey: $blue-grey,
-          );
+        // Shapes
+        $shapes-icons: (
+          // osnovne
+                circle: $fa-var-circle, // krug
+                circle-outline: $fa-var-circle-o,
+                square: $fa-var-square, // kvadrat
+                square-outline: $fa-var-square-o,
+                star: $fa-var-star, // zvezda
+                X: $fa-var-times, // iks
+                O: $fa-var-circle-o, // oks
+          // strelice
+                arrow-left: $fa-var-arrow-left,
+                arrow-right: $fa-var-arrow-right,
+                arrow-up: $fa-var-arrow-up,
+                arrow-down: $fa-var-arrow-down,
+                angle-left: $fa-var-angle-left,
+                angle-right: $fa-var-angle-right,
+                angle-up: $fa-var-angle-up,
+                angle-down: $fa-var-angle-down,
+                angle-double-left: $fa-var-angle-double-left,
+                angle-double-right: $fa-var-angle-double-right,
+                angle-double-up: $fa-var-angle-double-up,
+                angle-double-down: $fa-var-angle-double-down,
+          // uglavnom za markings, mada moze i kao shape:
+                crosshairs: $fa-var-crosshairs,
+                bullseye: $fa-var-bullseye,
+                check: $fa-var-check,
+                check-circle: $fa-var-check-circle,
+                minus: $fa-var-minus,
+                plus: $fa-var-plus,
+        );
 
-          @each $key, $value in $colors {
-            &.color--#{$key} {
-              color: palette($value);
-            }
+        @each $key, $value in $shapes-icons {
+          &.shape--#{$key} {
+            @include icon($value);
           }
+        }
 
-          &.color--black {
-            color: black;
+        $shapes-unicode: (
+                bullet: "•",
+          // znaci sa karata (suites)
+                suit-spade-fill: "\2660",
+                suit-spade-outline: "\2664",
+                suit-heart-fill: "\2665",
+                suit-heart-outline: "\2661",
+                suit-diamond-fill: "\2666",
+                suit-diamond-outline: "\2662",
+                suit-club-fill: "\2663",
+                suit-club-outline: "\2667",
+        );
+
+        @each $key, $value in $shapes-unicode {
+          &.shape--#{$key}::before {
+            content: $value;
           }
+        }
 
-          &.color--white {
-            color: white;
-            text-shadow: 0 1px 3px rgba(black, .8);
+        // Brojke
+        @for $i from 1 through 99 {
+          &.shape--number-#{$i}::before {
+            content: "#{$i}";
           }
+        }
 
-          // Shapes
-
-          $shapes-icons: (
-                  // osnovne
-                  circle: $fa-var-circle, // krug
-                  circle-outline: $fa-var-circle-o,
-                  square: $fa-var-square, // kvadrat
-                  square-outline: $fa-var-square-o,
-                  star: $fa-var-star,     // zvezda
-                  X: $fa-var-times,       // iks
-                  O: $fa-var-circle-o,    // oks
-                  // strelice
-                  arrow-left: $fa-var-arrow-left,
-                  arrow-right: $fa-var-arrow-right,
-                  arrow-up: $fa-var-arrow-up,
-                  arrow-down: $fa-var-arrow-down,
-                  angle-left: $fa-var-angle-left,
-                  angle-right: $fa-var-angle-right,
-                  angle-up: $fa-var-angle-up,
-                  angle-down: $fa-var-angle-down,
-                  angle-double-left: $fa-var-angle-double-left,
-                  angle-double-right: $fa-var-angle-double-right,
-                  angle-double-up: $fa-var-angle-double-up,
-                  angle-double-down: $fa-var-angle-double-down,
-                  // uglavnom za markings, mada moze i kao shape:
-                  crosshairs: $fa-var-crosshairs,
-                  bullseye: $fa-var-bullseye,
-                  check: $fa-var-check,
-                  check-circle: $fa-var-check-circle,
-                  minus: $fa-var-minus,
-                  plus: $fa-var-plus,
-          );
-
-          @each $key, $value in $shapes-icons {
-            &.shape--#{$key} {
-              @include icon($value);
-            }
+        // Slova
+        @each $i in A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z {
+          &.shape--letter-#{$i}::before {
+            content: "#{$i}";
           }
+        }
 
-          $shapes-unicode: (
-                  bullet: "•",
-            // znaci sa karata (suites)
-                  suit-spade-fill: "\2660",
-                  suit-spade-outline: "\2664",
-                  suit-heart-fill: "\2665",
-                  suit-heart-outline: "\2661",
-                  suit-diamond-fill: "\2666",
-                  suit-diamond-outline: "\2662",
-                  suit-club-fill: "\2663",
-                  suit-club-outline: "\2667",
-          );
+        // Chess-specific shapes
+        &%chess {
+          /*text-shadow: 0 0 3px rgba(black, .5);*/
+        }
 
-          @each $key, $value in $shapes-unicode {
-            &.shape--#{$key}::before {
+        $shapes-chess: (
+                king-outline: "\2654",
+                king-fill: "\265A",
+                queen-outline: "\2655",
+                queen-fill: "\265B",
+                rook-outline: "\2656",
+                rook-fill: "\265C",
+                bishop-outline: "\2657",
+                bishop-fill: "\265D",
+                knight-outline: "\2658",
+                knight-fill: "\265E",
+                pawn-outline: "\2659",
+                pawn-fill: "\265F",
+        );
+
+        @each $key, $value in $shapes-chess {
+          &.shape--chess-#{$key} {
+            @extend %chess;
+            &::before {
               content: $value;
             }
           }
-
-          // Brojke
-          @for $i from 1 through 99 {
-            &.shape--number-#{$i}::before {
-              content: "#{$i}";
-            }
-          }
-
-          // Slova
-          @each $i in A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-                      a b c d e f g h i j k l m n o p q r s t u v w x y z {
-            &.shape--letter-#{$i}::before {
-              content: "#{$i}";
-            }
-          }
-
-          // Chess-specific shapes
-
-          &%chess {
-            /*text-shadow: 0 0 3px rgba(black, .5);*/
-          }
-
-          $shapes-chess: (
-                  king-outline: "\2654",
-                  king-fill: "\265A",
-                  queen-outline: "\2655",
-                  queen-fill: "\265B",
-                  rook-outline: "\2656",
-                  rook-fill: "\265C",
-                  bishop-outline: "\2657",
-                  bishop-fill: "\265D",
-                  knight-outline: "\2658",
-                  knight-fill: "\265E",
-                  pawn-outline: "\2659",
-                  pawn-fill: "\265F",
-          );
-
-          @each $key, $value in $shapes-chess {
-            &.shape--chess-#{$key} {
-              @extend %chess;
-              &::before {
-                content: $value;
-              }
-            }
-          }
-
-          // Shogi-specific shapes
-
-          &.shape--shogi-king-black.color--black {
-            &::before {
-              content: "\2617";
-              font-size: $s;
-            }
-            &::after {
-              position: absolute;
-              left: 0;
-              top: 3px;
-              content: "玉";
-              height: $s - 12px;
-              width: $s - 12px;
-              font-size: $s * .4;
-              line-height: $s - 12px;
-              text-align: center;
-              color: white;
-            }
-          }
-
         }
 
-        .marking {
-          @extend .piece;
-          opacity: .75;
-          transform: scale(.6);
+        // Shogi-specific shapes
+        &.shape--shogi-king-black.color--black {
+          &::before {
+            content: "\2617";
+            font-size: $s;
+          }
+          &::after {
+            position: absolute;
+            left: 0;
+            top: 3px;
+            content: "玉";
+            height: $s - 12px;
+            width: $s - 12px;
+            font-size: $s * .4;
+            line-height: $s - 12px;
+            text-align: center;
+            color: white;
+          }
         }
 
       }
+
+      .marking {
+        @extend .piece;
+        opacity: .75;
+        transform: scale(.6);
+      }
+
+    }
 
     .axis-field {
       color: rgba(black, .5);
@@ -544,9 +517,7 @@ body {
         left: calc(50% - 12.5px);
         transform: rotate(63deg) skew(36deg) scale(.6);
         width: 25px;
-        box-shadow:
-                -3px -2.5px 4px 1px
-                rgba(black, .1);
+        box-shadow: -3px -2.5px 4px 1px rgba(black, .1);
       }
     }
   }
@@ -565,10 +536,7 @@ body {
     .message {
 
       &::before {
-        transform:
-                rotate(180deg + 63deg)
-                skew(36deg)
-                scale(.6);
+        transform: rotate(180deg + 63deg) skew(36deg) scale(.6);
         top: auto;
         bottom: -6px;
       }
@@ -591,7 +559,7 @@ body {
   }
 }
 
-.generator {
+.generator form {
   box-sizing: border-box;
   padding: 1.2em;
 
@@ -607,12 +575,39 @@ body {
     display: flex;
 
     > label {
-      width: 50%;
+      width: 30%;
+      font-weight: bold;
     }
 
-    > input, >select {
-      width: 50%;
+    > input, > select {
+      width: 70%;
     }
+
+    // Nested controls
+    > div {
+      width: 70%;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      > label {
+        width: 15%;
+      }
+
+      > input {
+        width: calc(85% - #{4px});
+      }
+    }
+  }
+
+  input, select, button {
+    box-sizing: content-box; // sweet jesus
+    margin-bottom: 2px;
+    font-family: Roboto, sans-serif;
+  }
+
+  button {
+    margin-top: 1em;
   }
 }
 
@@ -674,19 +669,14 @@ body {
   }
 
   #dismiss-all-messages {
-    background-color: palette($green);
+    background-color: rgba(palette($green, 700), .8);
+    color: black;
     border-radius: 10px;
     align-self: flex-start;
     padding: .6em 1em;
     display: flex;
     align-items: baseline;
     cursor: pointer;
-    @include icon($fa-var-times);
-
-    span {
-      display: inline-block;
-      margin-left: .6em;
-    }
   }
 
   .message {
@@ -736,7 +726,7 @@ body {
       cursor: pointer;
       transition: opacity .33s ease;
       @include icon($fa-var-times);
-      
+
       &:hover {
         opacity: 1;
       }
@@ -761,3 +751,9 @@ body {
   }
 }
 
+code {
+  font-family: Consolas, monospace;
+  font-weight: bold;
+  border-radius: .1em;
+  padding: .06em .15em;
+}
