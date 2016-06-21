@@ -199,8 +199,8 @@ options._boardAxis = [];
 options._boardAxis[0] = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15";
 options._boardAxis[1] = "A B C D E F G H I J K L M N O";
 options._boardColoring = ["classic", "chess"];
-options._boardMode = ["classic", "circles"];
-options._boardSize = ["xxs", "xs", "s", "m", "l", "xl", "xxl"];
+options._boardMode = ["classic", "circles", "go"];
+options._boardSize = ["l","xxs", "xs", "s", "m", "xl", "xxl"];
 
 options._playerName = "La Plavusha";
 options._playerOrder = [1, 2];
