@@ -498,6 +498,7 @@ body {
   flex-direction: column;
   background-color: palette($blue-grey, 50);
   color: rgba(black, .86);
+  box-sizing: border-box;
 }
 
 .info.hidden, .generator.hidden {
@@ -590,6 +591,31 @@ body {
   }
 }
 
+.generator {
+  box-sizing: border-box;
+  padding: 1.2em;
+
+  br {
+    display: none;
+  }
+
+  display: flex;
+  flex-direction: column;
+
+  > div {
+    margin: .2em;
+    display: flex;
+
+    > label {
+      width: 50%;
+    }
+
+    > input, >select {
+      width: 50%;
+    }
+  }
+}
+
 .fab {
   //display: none;
   position: fixed;
@@ -627,35 +653,114 @@ body {
   position: fixed;
 }
 
-#message {
+#messages {
   position: fixed;
-  bottom: -100px;
-  background-color: rgba(black, .6);
-  border-radius: 10px;
-  @include z-depth(.5);
-  color: rgba(white, .86);
-  left: 15vw;
-  width: 70vw;
+  width: 50vw;
   display: flex;
+  flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
-  //font-weight: bold;
-  padding: 1em 2em;
+  align-items: stretch;
   z-index: 10;
   line-height: 3ex;
+  padding: 1em;
+  left: 0;
+  bottom: 0;
+  box-sizing: border-box;
+  opacity: .7;
+  transition: opacity .33s ease;
 
-  mark {
-    //TODO
-    display: none;
-    background-color: palette($red);
-    color: white;
+  &:hover {
+    opacity: 1;
   }
 
-  code {
-    font-family: Consolas, monospace;
-    font-weight: bold;
-    background-color: rgba(white, .15);
-    border-radius: .1em;
-    padding: .1em .3em;
+  #dismiss-all-messages {
+    background-color: palette($green);
+    border-radius: 10px;
+    align-self: flex-start;
+    padding: .6em 1em;
+    display: flex;
+    align-items: baseline;
+    cursor: pointer;
+    @include icon($fa-var-times);
+
+    span {
+      display: inline-block;
+      margin-left: .6em;
+    }
+  }
+
+  .message {
+    background-color: rgba(black, .6);
+    border-radius: 10px;
+    @include z-depth(.5);
+    color: rgba(white, .86);
+    padding: .8em 2.2em .8em 1.2em;
+    margin-top: 1em;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &.message-warning {
+      @include icon($fa-var-warning);
+
+      &::before {
+        font-size: 1.4em;
+        color: palette($orange);
+        @include text-border(2px, white, 0px);
+      }
+    }
+
+    &.message-error {
+      @include icon($fa-var-exclamation-circle);
+
+      &::before {
+        font-size: 1.4em;
+        color: palette($red);
+        @include text-border(2px, white, 0px);
+      }
+    }
+
+    .message-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 1em;
+      height: 1em;
+      line-height: 1em;
+      margin: .5em;
+      opacity: .4;
+      cursor: pointer;
+      transition: opacity .33s ease;
+      @include icon($fa-var-times);
+      
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    span {
+      display: block;
+      margin-left: 1em;
+
+      mark {
+        //TODO
+        display: none;
+        background-color: palette($red);
+        color: white;
+      }
+
+      code {
+        font-family: Consolas, monospace;
+        font-weight: bold;
+        background-color: rgba(white, .15);
+        border-radius: .1em;
+        padding: .1em .3em;
+      }
+    }
   }
 }
+
