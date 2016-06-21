@@ -1684,7 +1684,7 @@ var displayMessage = function(message, type) {
 
 $(document).ready(function() {
     //displayMessage("TutiFruti :: version 0.0");
-    displayData(data1);
+    displayData(example.gomokuEastern);
 
 });
 
@@ -1701,7 +1701,8 @@ example.chess = {
         ],
         //enumerationStyle: "out",
         coloring: "chess",
-        mode: "classic"
+        mode: "classic",
+        size: "xxl",
     },
     player: {
         name: "La Plávusha",
@@ -1716,7 +1717,7 @@ example.chess = {
             ],
             style: {
                 color: "black",
-                shape: "chess-pawn-black"
+                shape: "chess-pawn-fill"
             }
         },
         {
@@ -1726,7 +1727,7 @@ example.chess = {
             ],
             style: {
                 color: "white",
-                shape: "chess-pawn-black"
+                shape: "chess-pawn-fill"
             }
         },
         {
@@ -1736,7 +1737,7 @@ example.chess = {
             ],
             style: {
                 color: "black",
-                shape: "chess-rook-black"
+                shape: "chess-rook-fill"
             }
         },
         {
@@ -1745,7 +1746,7 @@ example.chess = {
             ],
             style: {
                 color: "black",
-                shape: "chess-knight-black"
+                shape: "chess-knight-fill"
             }
         },
         {
@@ -1754,7 +1755,7 @@ example.chess = {
             ],
             style: {
                 color: "black",
-                shape: "chess-bishop-black"
+                shape: "chess-bishop-fill"
             }
         },
         {
@@ -1763,7 +1764,7 @@ example.chess = {
             ],
             style: {
                 color: "black",
-                shape: "chess-queen-black"
+                shape: "chess-queen-fill"
             }
         },
         {
@@ -1772,7 +1773,7 @@ example.chess = {
             ],
             style: {
                 color: "black",
-                shape: "chess-king-black"
+                shape: "chess-king-fill"
             }
         },
         {
@@ -1782,7 +1783,7 @@ example.chess = {
             ],
             style: {
                 color: "white",
-                shape: "chess-rook-black"
+                shape: "chess-rook-fill"
             }
         },
         {
@@ -1791,7 +1792,7 @@ example.chess = {
             ],
             style: {
                 color: "white",
-                shape: "chess-knight-black"
+                shape: "chess-knight-fill"
             }
         },
         {
@@ -1800,7 +1801,7 @@ example.chess = {
             ],
             style: {
                 color: "white",
-                shape: "chess-bishop-black"
+                shape: "chess-bishop-fill"
             }
         },
         {
@@ -1809,7 +1810,7 @@ example.chess = {
             ],
             style: {
                 color: "white",
-                shape: "chess-queen-black"
+                shape: "chess-queen-fill"
             }
         },
         {
@@ -1818,17 +1819,29 @@ example.chess = {
             ],
             style: {
                 color: "white",
-                shape: "chess-king-black"
+                shape: "chess-king-fill"
             }
         }
     ],
     markings: [
         {
             fields: [
-                [1, 1],
-                [1, 2]
+                ["4", "D"],
+                ["3", "D"]
             ],
-            style: "move"
+            style: {
+                color: "blue",
+                shape: "circle"
+            }
+        },
+        {
+            fields: [
+                ["2", "D"]
+            ],
+            style: {
+                color: "yellow",
+                shape: "O"
+            }
         }
     ]
 };
@@ -1842,7 +1855,8 @@ example.hexaChess = {
             "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20",
         ],
         coloring: "chess",
-        mode: "classic"
+        mode: "classic",
+        size: "xxl",
     },
     player: {
         name: "La Plávusha",
@@ -1858,7 +1872,7 @@ example.hexaChess = {
             ],
             style: {
                 color: "black",
-                shape: "chess-pawn-black"
+                shape: "chess-pawn-fill"
             }
         },
         {
@@ -1869,7 +1883,7 @@ example.hexaChess = {
             ],
             style: {
                 color: "white",
-                shape: "chess-pawn-black"
+                shape: "chess-pawn-fill"
             }
         },
         {
@@ -1879,7 +1893,7 @@ example.hexaChess = {
             ],
             style: {
                 color: "black",
-                shape: "chess-rook-black"
+                shape: "chess-rook-fill"
             }
         },
         {
@@ -1888,7 +1902,7 @@ example.hexaChess = {
             ],
             style: {
                 color: "black",
-                shape: "chess-knight-black"
+                shape: "chess-knight-fill"
             }
         },
         {
@@ -1897,7 +1911,7 @@ example.hexaChess = {
             ],
             style: {
                 color: "black",
-                shape: "chess-bishop-black"
+                shape: "chess-bishop-fill"
             }
         },
         {
@@ -1906,7 +1920,7 @@ example.hexaChess = {
             ],
             style: {
                 color: "black",
-                shape: "chess-queen-black"
+                shape: "chess-queen-fill"
             }
         },
         {
@@ -1915,7 +1929,7 @@ example.hexaChess = {
             ],
             style: {
                 color: "black",
-                shape: "chess-king-black"
+                shape: "chess-king-fill"
             }
         },
         {
@@ -1925,7 +1939,7 @@ example.hexaChess = {
             ],
             style: {
                 color: "white",
-                shape: "chess-rook-black"
+                shape: "chess-rook-fill"
             }
         },
         {
@@ -1934,7 +1948,7 @@ example.hexaChess = {
             ],
             style: {
                 color: "white",
-                shape: "chess-knight-black"
+                shape: "chess-knight-fill"
             }
         },
         {
@@ -1943,7 +1957,7 @@ example.hexaChess = {
             ],
             style: {
                 color: "white",
-                shape: "chess-bishop-black"
+                shape: "chess-bishop-fill"
             }
         },
         {
@@ -1952,7 +1966,7 @@ example.hexaChess = {
             ],
             style: {
                 color: "white",
-                shape: "chess-queen-black"
+                shape: "chess-queen-fill"
             }
         },
         {
@@ -1961,17 +1975,19 @@ example.hexaChess = {
             ],
             style: {
                 color: "white",
-                shape: "chess-king-black"
+                shape: "chess-king-fill"
             }
         }
     ],
     markings: [
         {
             fields: [
-                [1, 1],
-                [1, 2]
+                ["F", "5"],
             ],
-            style: "move"
+            style: {
+                color: "pink",
+                shape: "star",
+            }
         }
     ]
 };
