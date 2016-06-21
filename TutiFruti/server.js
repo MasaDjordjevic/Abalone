@@ -1,12 +1,10 @@
 var smackjack = {
-    echo: function (data, callback, errorHandler) { },
-    test: function (data, callback, errorHandler) { },
-    prvi: function (data, callback, errorHandler) { },
-    drugi: function (data, callback, errorHandler) { },
+    echo: function (data, callback, errorHandler) { },  
     exampleChess: function (data, callback, errorHandler) { },
     exampleHexaChess: function (data, callback, errorHandler) { },
     exampleGomokuEastern: function (data, callback, errorHandler) { },
     exampleGomokuWestern: function (data, callback, errorHandler) { },
+    exampleXo: function (data, callback, errorHandler) { },
     odigrajPotez: function (data, callback, errorHandler) { },
 
 };
@@ -160,25 +158,31 @@ var smackjack = {
     smackjack.drugi = drugi;
 
     function exampleChess(data, callback, errorHandler = null) {
-        return ajaxCall("EXAMPLE-CHESS", [data], "POST", callback, errorHandler, responseText);
+        return ajaxCall("EXAMPLE-CHESS", [data], "GET", callback, errorHandler, responseText);
     }
     ;
     smackjack.exampleChess = exampleChess;
     function exampleHexaChess(data, callback, errorHandler = null) {
-        return ajaxCall("EXAMPLE-HEXA-CHESS", [data], "POST", callback, errorHandler, responseText);
+        return ajaxCall("EXAMPLE-HEXA-CHESS", [data], "GET", callback, errorHandler, responseText);
     }
     ;
     smackjack.exampleHexaChess = exampleHexaChess;
     function exampleGomokuEastern(data, callback, errorHandler = null) {
-        return ajaxCall("EXAMPLE-GOMOKU-EASTERN", [data], "POST", callback, errorHandler, responseText);
+        return ajaxCall("EXAMPLE-GOMOKU-EASTERN", [data], "GET", callback, errorHandler, responseText);
     }
     ;
     smackjack.exampleGomokuEastern = exampleGomokuEastern;
     function exampleGomokuWestern(data, callback, errorHandler = null) {
-        return ajaxCall("EXAMPLE-GOMOKU-WESTERN", [data], "POST", callback, errorHandler, responseText);
+        return ajaxCall("EXAMPLE-GOMOKU-WESTERN", [data], "GET", callback, errorHandler, responseText);
     }
     ;
     smackjack.exampleGomokuWestern = exampleGomokuWestern;
+
+    function exampleXo(data, callback, errorHandler = null) {
+        return ajaxCall("EXAMPLE-XO", [data], "GET", callback, errorHandler, responseText);
+    }
+    ;
+    smackjack.exampleXo = exampleXo;
 
 
     function reset(data, callback, errorHandler = null, port = "8081") {
