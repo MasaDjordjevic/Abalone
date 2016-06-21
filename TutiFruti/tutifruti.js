@@ -384,27 +384,31 @@ var validate = function(data) {
 
     //  Coloring
     if (isNullOrUndefined(data.board.coloring)) {
-        displayWarning("coloring not set");
+        displayWarning("Dobijena vrednost svojstva `coloring` je `" + data.board.coloring + "`. " +
+            "Očekivane vrednosti su `" + _boardColoring.join("`, `") + "`. " +
+            "Postavlja se na podrazumevanu vrednost `classic`.");
         data.board.coloring = "classic";
     }
     if ($.inArray(data.board.coloring, _boardColoring) === -1) {
-        throw "Dobijena vrednost svojstva `coloring` je `" + data.board.coloring + ". " +
+        throw "Dobijena vrednost svojstva `coloring` je `" + data.board.coloring + "`. " +
         "Očekivane vrednosti su `" + _boardColoring.join("`, `") + "`."
     }
     
     // Mode
     if (isNullOrUndefined(data.board.mode)) {
-        displayWarning("mode not set");
+        displayWarning("Dobijena vrednost svojstva `mode` je `" + data.board.mode + "`. " +
+            "Očekivane vrednosti su `" + _boardModeHexagonal.join("`, `") + "`. " +
+            "Postavlja se na podrazumevanu vrednosti `classic`.");
         data.board.mode = "classic";
     }
     if (isHexagonal(data)) {
         if ($.inArray(data.board.mode, _boardModeHexagonal) === -1) {
-            throw "Dobijena vrednost svojstva `mode` je `" + data.board.mode + ". " +
+            throw "Dobijena vrednost svojstva `mode` je `" + data.board.mode + "`. " +
             "Očekivane vrednosti su `" + _boardModeHexagonal.join("`, `") + "`."
         }
     } else if (isRectangular(data)) {
         if ($.inArray(data.board.mode, _boardModeRectangular) === -1) {
-            throw "Dobijena vrednost svojstva `mode` je `" + data.board.mode + ". " +
+            throw "Dobijena vrednost svojstva `mode` je `" + data.board.mode + "`. " +
             "Očekivane vrednosti su `" + _boardModeRectangular.join("`, `") + "`."
         }
     } else {
@@ -414,11 +418,13 @@ var validate = function(data) {
 
     //  Size
     if (isNullOrUndefined(data.board.size)) {
-        displayWarning("coloring not set");
+        displayWarning("Dobijena vrednost svojstva `size` je `" + data.board.size + "`. " +
+            "Očekivane vrednosti su `" + _boardSize.join("`, `") + "`. " +
+            "Postavlja se na porrazumevanu vrednost `m`.");
         data.board.size = "m";
     }
     if ($.inArray(data.board.size, _boardSize) === -1) {
-        throw "Dobijena vrednost svojstva `coloring` je `" + data.board.size + ". " +
+        throw "Dobijena vrednost svojstva `size` je `" + data.board.size + "`. " +
         "Očekivane vrednosti su `" + _boardSize.join("`, `") + "`."
     }
 
@@ -430,7 +436,7 @@ var validate = function(data) {
     // Order
     if (isNullOrUndefined(data.player.order)) {
         throw "Svojstvo `player.order` nije postavljeno. " +
-        "Očekivane vrednosti: `1` ili `2`";
+        "Očekivane vrednosti: `1` ili `2`.";
     }
     if (+data.player.order !== 1 && +data.player.order !== 2) {
         throw "Svojstvo `player.order` je postavljeno na `" +
@@ -501,7 +507,6 @@ var validate = function(data) {
     // Removed
     for (let i = 0; i < data.removed.length; i++) {
         for (let j = 0; j < 2; j++) {
-            debugger;
             if (data.removed[j].length === 0) continue;
             if (isNullOrUndefined(data.removed[j][i].number) && isNullOrUndefined(data.removed[j][i].style)) {
                 displayWarning("Element `removed[" + j + "][" + i + "]` nema postavljeno ni `number` ni `style`.");
