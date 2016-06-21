@@ -140,32 +140,6 @@ function generate() {
 
   }
 
-
-  var lisp = "";
-  lisp += '(setq _board \'(\n' +
-      '\t(type . "' + board.type + '")\n' +
-      '\t(dimensions . (' + board.dimensions.join(' ') + '))\n' +
-      '\t(corner . "' + board.corner + '")\n' +
-      '\t(axis . ("' + board.axis[0] + '" "' + board.axis[1] + '"))\n' +
-      '\t(mode . "' + board.mode + '")\n' +
-      '\t(coloring . "' + board.coloring + '")\n' +
-      '\t(size . ' + board.size + ')))\n' +
-      '(setq _player \'(\n' +
-      '\t(name . "' + player.name + '")\n' +
-      '\t(order . ' + player.order + ')\n' +
-      '\t(message . "' + player.message + '")))\n' +
-      '(setq _state \'(\n' +
-      '\t(\n' +
-      '\t\t(fields . ((' + rand.map(el => '"' + el[0] +'" "' + el[1] + '"').join(")(") + ')))\n' +
-      '\t\t(style . (\n' +
-      '\t\t\t(color . "' + state.color + '")\n' +
-      '\t\t\t(shape . "' + state.shape + '"))))\n' +
-      '\t(\n'+
-      '\t\t(fields . ( (' + rand2.map(el => '"' + el[0] +'" "' + el[1] + '"').join(")(") + ')))\n' +
-      '\t\t(style . (\n' +
-      '\t\t\t(color . "' + state2.color + '")\n' +
-      '\t\t\t(shape . "' + state2.shape + '"))))))';
-
   if(log)
     console.log(lisp);
 
@@ -187,7 +161,38 @@ function generate() {
    removed: [],
   }
 
+  var lisp = getListpCode(data);
+  console.log(lisp);
+
   displayData(data);
+}
+
+function getListpCode(data) {
+  var lisp = "";
+  lisp += '(setq _board \'(\n' +
+      '\t(type . "' + data.board.type + '")\n' +
+      '\t(dimensions . (' + data.board.dimensions.join(' ') + '))\n' +
+      '\t(corner . "' + data.board.corner + '")\n' +
+      '\t(axis . ("' + data.board.axis[0] + '" "' + data.board.axis[1] + '"))\n' +
+      '\t(mode . "' + data.board.mode + '")\n' +
+      '\t(coloring . "' + data.board.coloring + '")\n' +
+      '\t(size . ' + data.board.size + ')))\n' +
+      '(setq _player \'(\n' +
+      '\t(name . "' + data.player.name + '")\n' +
+      '\t(order . ' + data.player.order + ')\n' +
+      '\t(message . "' + data.player.message + '")))\n' +
+      '(setq _state \'(\n' +
+      '\t(\n' +
+      '\t\t(fields . ((' + data.state[0].fields.map(el => '"' + el[0] +'" "' + el[1] + '"').join(")(") + ')))\n' +
+  '\t\t(style . (\n' +
+  '\t\t\t(color . "' + data.state[0].style.color + '")\n' +
+  '\t\t\t(shape . "' + data.state[0].style.shape + '"))))\n' +
+  '\t(\n'+
+  '\t\t(fields . ( (' + data.state[1].fields.map(el => '"' + el[0] +'" "' + el[1] + '"').join(")(") + ')))\n' +
+  '\t\t(style . (\n' +
+  '\t\t\t(color . "' + data.state[1].style.color + '")\n' +
+  '\t\t\t(shape . "' + data.state[1].style.shape + '"))))))';
+  return lisp;
 }
 
 var options = {};
