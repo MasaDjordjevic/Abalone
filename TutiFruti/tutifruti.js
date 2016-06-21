@@ -1684,14 +1684,17 @@ var displayDataPlayer = function (player) {
 // --------------------------------------- //
 
 var displayDataRemoved = function (removed) {
-    // foreach player
+    // validate
     if (removed.length != 2) {
         throw "Neočekivana greška. Niz \"removed\" mora imati tačno dva podniza. " +
         "Dobijena duzina je " + removed.length + ".";
     }
+    // foreach player
     for (var i = 0; i < removed.length; i++) {
         var $player = $(".player" + (i + 1));
         var $removed = $player.children(".removed");
+        // clean first
+        $removed.html('');
         // for each removed figure
         for (var j = 0; j < removed[i].length; j++) {
             // draw a figure NUMBER times
