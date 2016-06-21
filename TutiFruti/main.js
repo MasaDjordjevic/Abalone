@@ -177,10 +177,15 @@ function generate() {
         removed: []
     };
 
+    // Vizuelni prikaz
+    // Mora prvo ovo, da bi prvo izvrsio validaciju i adekvatno izmenio objekat.
     displayData(data);
 
-    var lisp = getLispCode(data);
-    console.log(lisp);
+    // Sada je objekat potpuno ispravan, jer je gore validiran.
+
+    // Lisp i JSON
+    $("#lispCode").val(getLispCode(data));
+    $("#jsonCode").val(JSON.stringify(data));
 }
 
 function getLispCode(data) {
@@ -329,6 +334,42 @@ function drawGenerator() {
         .append("Generisi")
         .appendTo($generatorForm);
 
+    var $outputs = $("<div>", {
+        id: "gen-outputs"
+    });
+
+    $("<div/>", {
+        id: "jsonCodeOutput"
+    })
+        .append("<h3>JSON</h3>")
+        .append($("<textarea/>", {
+            readonly: "readonly",
+            id: "jsonCode"
+        }))
+        .append($("<input/>", {
+            type: "button",
+            value: "Kopiraj",
+            id: "jsonCopy"
+        }))
+        .appendTo($outputs);
+
+    $("<div/>", {
+        id: "lispCodeOutput"
+    })
+        .append("<h3>Lisp</h3>")
+        .append($("<textarea/>", {
+            readonly: "readonly",
+            id: "lispCode"
+        }))
+        .append($("<input/>", {
+            type: "button",
+            value: "Kopiraj",
+            id: "lispCopy"
+        }))
+        .appendTo($outputs);
+
+    $outputs.appendTo($generatorForm);
+
 }
 
 function drawString(id, value, $container) {
@@ -382,3 +423,23 @@ function drawSelect(id, array, container, selected = 0) {
     }
     container.append(select);
 }
+
+// Kopiranje kodova sa dna (na klik)
+
+var copyToClipboard = function(textArea) {
+    textArea.selectionStart = 0;
+    textArea.selectionEnd = textArea.value.length;
+    document.execCommand("copy");
+    textArea.selectionEnd = 0; // deselektiramo
+};
+
+var copyJsonCode = function() {
+    copyToClipboard(document.getElementById("jsonCode"));
+};
+
+var copyLispCode = function() {
+    copyToClipboard(document.getElementById("lispCode"));
+};
+
+$(".generator").on("click", "#jsonCopy", copyJsonCode);
+$(".generator").on("click", "#lispCopy", copyLispCode);

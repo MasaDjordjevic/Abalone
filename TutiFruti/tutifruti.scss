@@ -157,7 +157,8 @@ body {
             width: $s;
             height: $s;
             line-height: $s;
-            top: -$s / 4 / $sqrt3;
+            top: - ($s / 2) * (1 - 1 / $sqrt3);
+            left: 0;
             font-size: $s * 0.66 !important;
           }
 
@@ -445,8 +446,8 @@ body {
 
       .marking {
         @extend .piece;
-        opacity: .75;
-        transform: scale(.6);
+        opacity: .66;
+        transform: scale(0.75);
       }
 
     }

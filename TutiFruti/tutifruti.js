@@ -8,7 +8,7 @@ var messages = [];
 
 var data1 = {
     board: {
-        type: "hexagonal-pointy",
+        type: "hexagonal-flat",
         dimensions: [3, 4, 5],
         corner: "bottom-left",
         axis: [
@@ -17,7 +17,7 @@ var data1 = {
         ],
         coloring: "chess",
         mode: "classic",
-        size: "m"
+        size: "xxl"
     },
     player: {
         name: "La Plávusha",
@@ -47,11 +47,11 @@ var data1 = {
     markings: [
         {
             fields: [
-                ["3", "C"]
+                ["1", "A"]
             ],
             style: {
                 color: "pink",
-                shape: "crosshairs"
+                shape: "circle"
             }
         }
     ],
@@ -1825,7 +1825,7 @@ $(document).bind("keyup", "q", dismissAllMessages);
 
 $(document).ready(function () {
     //displayMessage("TutiFruti :: version 0.0");
-    displayData(data1);
+    displayData(example.chess);
 });
 
 var example = {};
@@ -1839,7 +1839,6 @@ example.chess = {
             "1 2 3 4 5 6 7 8",
             "A B C D E F G H"
         ],
-        //enumerationStyle: "out",
         coloring: "chess",
         mode: "classic",
         size: "xxl"
@@ -1971,7 +1970,7 @@ example.chess = {
             ],
             style: {
                 color: "blue",
-                shape: "circle"
+                shape: "O"
             }
         },
         {
@@ -1979,7 +1978,25 @@ example.chess = {
                 ["2", "D"]
             ],
             style: {
-                color: "yellow",
+                color: "blue",
+                shape: "circle"
+            }
+        },
+        {
+            fields: [
+                ["8", "G"]
+            ],
+            style: {
+                color: "red",
+                shape: "circle"
+            }
+        },
+        {
+            fields: [
+                ["6", "F"], ["6", "H"]
+            ],
+            style: {
+                color: "red",
                 shape: "O"
             }
         }
