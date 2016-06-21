@@ -6,12 +6,22 @@ var log = false;
 window.onload = function () {
     drawGenerator();
 
-     smackjack.reset(JSON.stringify(example.chess), parse, null);
+    console.log(getLispCode(example.chess));
+    console.log(getLispCode(example.hexaChess));
+
+
+     smackjack.reset("", parse, null);
      $("#example-chess").click(function(){
        smackjack.exampleChess("", parse, null);
      })
-     $("#odigraj-potez").click(function(){
-       smackjack.odigrajPotez(JSON.stringify(receivedData), parse, null);
+     $("#example-hexa-chess").click(function(){
+       smackjack.exampleHexaChess("", parse, null);
+     })
+     $("#example-gomoku-eastern").click(function(){
+       smackjack.exampleGomokuEastern("", parse, null);
+     })
+     $("#example-gomoku-western").click(function(){
+       smackjack.exampleGomokuWestern("", parse, null);
      })
 
     $("#odigraj-potez-1").click(function(){
@@ -161,13 +171,14 @@ function generate() {
    removed: [],
   }
 
-  var lisp = getListpCode(data);
+  var lisp = getLispCode(data);
   console.log(lisp);
 
   displayData(data);
 }
 
-function getListpCode(data) {
+function getLispCode(data) {
+  validate(data);
   var lisp = "";
   lisp += '(setq _board \'(\n' +
       '\t(type . "' + data.board.type + '")\n' +
@@ -176,22 +187,46 @@ function getListpCode(data) {
       '\t(axis . ("' + data.board.axis[0] + '" "' + data.board.axis[1] + '"))\n' +
       '\t(mode . "' + data.board.mode + '")\n' +
       '\t(coloring . "' + data.board.coloring + '")\n' +
-      '\t(size . ' + data.board.size + ')))\n' +
+      '\t(size . "' + data.board.size + '")))\n' +
       '(setq _player \'(\n' +
       '\t(name . "' + data.player.name + '")\n' +
       '\t(order . ' + data.player.order + ')\n' +
       '\t(message . "' + data.player.message + '")))\n' +
-      '(setq _state \'(\n' +
-      '\t(\n' +
-      '\t\t(fields . ((' + data.state[0].fields.map(el => '"' + el[0] +'" "' + el[1] + '"').join(")(") + ')))\n' +
-  '\t\t(style . (\n' +
-  '\t\t\t(color . "' + data.state[0].style.color + '")\n' +
-  '\t\t\t(shape . "' + data.state[0].style.shape + '"))))\n' +
-  '\t(\n'+
-  '\t\t(fields . ( (' + data.state[1].fields.map(el => '"' + el[0] +'" "' + el[1] + '"').join(")(") + ')))\n' +
-  '\t\t(style . (\n' +
-  '\t\t\t(color . "' + data.state[1].style.color + '")\n' +
-  '\t\t\t(shape . "' + data.state[1].style.shape + '"))))))';
+      '(setq _state \'(\n' ;
+  for(let i=0; i< data.state.length; i++) {
+    lisp +=
+          '\t(\n' +
+          '\t\t(fields . ((' + data.state[i].fields.map(el => '"' + el[0] +'" "' + el[1] + '"').join(")(") + ')))\n' +
+          '\t\t(style . (\n' +
+          '\t\t\t(color . "' + data.state[i].style.color + '")\n' +
+          '\t\t\t(shape . "' + data.state[i].style.shape + '"))))\n';
+  }
+  lisp +="))\n";
+
+  lisp += '(setq _markings \'(\n' ;
+  for(let i=0; i< data.markings.length; i++) {
+    lisp +=
+        '\t(\n' +
+        '\t\t(fields . ((' + data.markings[i].fields.map(el => '"' + el[0] +'" "' + el[1] + '"').join(")(") + ')))\n' +
+    '\t\t(style . (\n' +
+    '\t\t\t(color . "' + data.markings[i].style.color + '")\n' +
+    '\t\t\t(shape . "' + data.markings[i].style.shape + '"))))\n';
+  }
+  lisp +="))\n";
+
+  if(data.removed[0].length != 0) {
+    lisp += '(setq _removed \'(\n' ;
+    for(let i=0; i< data.removed.length; i++) {
+      lisp +=
+          '\t(\n' +
+          '\t\t(fields . ' + data.removed[i].number + ')\n'+
+          '\t\t(style . (\n' +
+          '\t\t\t(color . "' + data.removed[i].style.color + '")\n' +
+          '\t\t\t(shape . "' + data.removed[i].style.shape + '"))))\n';
+    }
+    lisp +="))";
+  }
+
   return lisp;
 }
 

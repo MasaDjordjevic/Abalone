@@ -4,6 +4,9 @@ var smackjack = {
     prvi: function (data, callback, errorHandler) { },
     drugi: function (data, callback, errorHandler) { },
     exampleChess: function (data, callback, errorHandler) { },
+    exampleHexaChess: function (data, callback, errorHandler) { },
+    exampleGomokuEastern: function (data, callback, errorHandler) { },
+    exampleGomokuWestern: function (data, callback, errorHandler) { },
     odigrajPotez: function (data, callback, errorHandler) { },
 
 };
@@ -161,6 +164,22 @@ var smackjack = {
     }
     ;
     smackjack.exampleChess = exampleChess;
+    function exampleHexaChess(data, callback, errorHandler = null) {
+        return ajaxCall("EXAMPLE-HEXA-CHESS", [data], "POST", callback, errorHandler, responseText);
+    }
+    ;
+    smackjack.exampleHexaChess = exampleHexaChess;
+    function exampleGomokuEastern(data, callback, errorHandler = null) {
+        return ajaxCall("EXAMPLE-GOMOKU-EASTERN", [data], "POST", callback, errorHandler, responseText);
+    }
+    ;
+    smackjack.exampleGomokuEastern = exampleGomokuEastern;
+    function exampleGomokuWestern(data, callback, errorHandler = null) {
+        return ajaxCall("EXAMPLE-GOMOKU-WESTERN", [data], "POST", callback, errorHandler, responseText);
+    }
+    ;
+    smackjack.exampleGomokuWestern = exampleGomokuWestern;
+
 
     function reset(data, callback, errorHandler = null, port = "8081") {
         return ajaxCall("RESET", [data], "GET", callback, errorHandler, responseText, port);
