@@ -52,9 +52,11 @@
 (defparameter _markings 0)
 
 (defparameter _removed 0)
+
+(defparameter _report 0)
          
 
-(defparameter _send-data '( (board . 0) (player . 0) (state . 0) (markings . 0) (removed . 0)))
+(defparameter _send-data '( (board . 0) (player . 0) (state . 0) (markings . 0) (removed . 0) (report . 0)))
 
 (defun reset-paremeters ()
   (progn
@@ -405,20 +407,22 @@
     (json:with-decoder-simple-list-semantics
                   (with-input-from-string     
                       (s data)
-                    (simple-json-bind (board player state markings removed) s
+                    (simple-json-bind (board player state markings removed report) s
                                       (progn
                                         (setq _board board)
                                         (setq _player player)
                                         (setq _state state)
                                         (setq _markings markings)
-                                        (setq _removed removed)))))
+                                        (setq _removed removed)
+                                        (setq _report report)))))
     (_odigraj-potez)
-
+    
     (rplacd (assoc 'board _send-data) _board)
     (rplacd (assoc 'player _send-data) _player)
     (rplacd (assoc 'state _send-data) _state)    
     (rplacd (assoc 'markings _send-data) _markings)
     (rplacd (assoc 'removed _send-data) _removed)
+    (rplacd (assoc 'report _send-data) _report)
     (format nil "~S~%" (json:encode-json-to-string _send-data))))
 
 (defparameter _x 0)
