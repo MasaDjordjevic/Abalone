@@ -560,8 +560,7 @@ var validate = function (data) {
     // Removed
     for (let i = 0; i < data.removed.length; i++) {
         for (let j = 0; j < 2; j++) {
-
-            if (data.removed[j].length === 0) continue;
+            if (data.removed[j] == null || data.removed[j].length === 0) continue;
             if (isNullOrUndefined(data.removed[j][i].number) && isNullOrUndefined(data.removed[j][i].style)) {
                 displayWarning("Element `removed[" + j + "][" + i + "]` nema postavljeno ni `number` ni `style`.");
             } else if (!isNullOrUndefined(data.removed[j][i].style) &&

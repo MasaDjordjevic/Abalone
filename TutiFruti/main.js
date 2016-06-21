@@ -8,6 +8,11 @@ window.onload = function() {
     drawGenerator();
 
     smackjack.reset("", parse, null);
+
+    $("#example-xo").click(function(){
+        smackjack.exampleXo("", parse, null);
+    });
+
     $("#example-chess").click(function () {
         smackjack.exampleChess("", parse, null);
     });

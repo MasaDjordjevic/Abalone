@@ -5,8 +5,6 @@
 
 (in-package :jank-repl)
 
-; Allow cl-who and parenscript to work together
-;(setf *js-string-delimiter* #\")
 
 (defparameter *ajax-processor*
   (make-instance 'ajax-processor :server-uri "/repl-api"))
@@ -95,9 +93,47 @@
     (rplacd (assoc 'removed _send-data) _removed)
     (format nil "~S~%" (json:encode-json-to-string _send-data))))
 
-(defun-ajax example-gomoku-eastern (data)(*ajax-processor* :method :post :callback-data :response-text)
+(defun-ajax example-xo (data)(*ajax-processor* :callback-data :response-text)
   (progn
-    (setq *data* data)    
+    (setq *data* data)   
+    (reset-paremeters)
+    
+    (setq _board '(
+                   (type . "rectangular")
+                   (dimensions . (15 15))
+                   (corner . "bottom-left")
+                   (axis . ("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15" "A B C D E F G H I J K L M N O"))
+                   (mode . "classic")
+                   (coloring . "classic")
+                   (size . "m")))
+    (setq _player '(
+                    (name . "La Plavusha")
+                    (order . 1)
+                    (message . "Zdravo deco")))
+    (setq _state '(
+                   (
+                    (fields . (("7" "O")("12" "D")("9" "H")))
+                    (style . (
+                              (color . "red")
+                              (shape . "X"))))
+                   (
+                    (fields . (("14" "H")("10" "C")("1" "A")))
+                    (style . (
+                              (color . "blue")
+                              (shape . "O"))))))
+    (setq _markings '())   
+    
+    (rplacd (assoc 'board _send-data) _board)
+    (rplacd (assoc 'player _send-data) _player)
+    (rplacd (assoc 'state _send-data) _state)    
+    (rplacd (assoc 'markings _send-data) _markings)
+    (rplacd (assoc 'removed _send-data) _removed)  
+    
+    (format nil "~S~%" (json:encode-json-to-string _send-data))))
+
+(defun-ajax example-gomoku-eastern (data)(*ajax-processor* :callback-data :response-text)
+  (progn
+    (setq *data* data) 
     (reset-paremeters)
     
     (setq _board '(
@@ -132,7 +168,7 @@
     
     (format nil "~S~%" (json:encode-json-to-string _send-data))))
 
-(defun-ajax example-gomoku-western (data)(*ajax-processor* :method :post :callback-data :response-text)
+(defun-ajax example-gomoku-western (data)(*ajax-processor* :callback-data :response-text)
   (progn
     (setq *data* data)   
     (reset-paremeters)
@@ -168,7 +204,7 @@
     
     (format nil "~S~%" (json:encode-json-to-string _send-data))))
 
-(defun-ajax example-hexa-chess (data)(*ajax-processor* :method :post :callback-data :response-text)
+(defun-ajax example-hexa-chess (data)(*ajax-processor*  :callback-data :response-text)
   (progn
     (setq *data* data)   
     (reset-paremeters)
@@ -262,7 +298,7 @@
     
     (format nil "~S~%" (json:encode-json-to-string _send-data))))
 
-(defun-ajax example-chess (data)(*ajax-processor* :method :post :callback-data :response-text)
+(defun-ajax example-chess (data)(*ajax-processor*  :callback-data :response-text)
   (progn
     (setq *data* data)    
     (reset-paremeters)
