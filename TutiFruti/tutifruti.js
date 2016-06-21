@@ -634,9 +634,9 @@ var ___stateShape = ["O", "X", "circle", "square", "star", "circle-outline", "sq
     "chess-rook-outline", "chess-rook-fill", "chess-bishop-outline", "chess-bishop-fill",
     "chess-knight-outline", "chess-knight-fill", "chess-pawn-outline", "chess-pawn-fill"].map(i => i.trim());
 const _stateShape = ___stateShape
-    .concat((new Array(99)).fill(1).map((e, i) => e + i).map(String))
-    .concat((new Array(26)).fill(0x41).map((e, i) => e + i).map(i => String.fromCharCode(i)))
-    .concat((new Array(26)).fill(0x61).map((e, i) => e + i).map(i => String.fromCharCode(i)));
+    .concat((new Array(99)).fill(1).map((e, i) => e + i).map(String).map(i => "number-" + i))
+    .concat((new Array(26)).fill(0x41).map((e, i) => e + i).map(i => String.fromCharCode(i)).map(i => "letter-" + i))
+    .concat((new Array(26)).fill(0x61).map((e, i) => e + i).map(i => String.fromCharCode(i)).map(i => "letter-" + i));
 
 
 // --------------------------------------- //
