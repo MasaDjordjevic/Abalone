@@ -464,6 +464,11 @@ var validate = function (data) {
             throw "Dobijena vrednost svojstva `mode` je `" + data.board.mode + "`. " +
             "Očekivane vrednosti su `" + _boardModeRectangular.join("`, `") + "`."
         }
+        // Do not allow combination coloring = chess / mode = go.
+        if (data.board.coloring === "chess" && data.board.mode === "go") {
+            throw "Nije dozvoljena kombinacija gde je svojstvo `coloring` postavljeno na `chess`," +
+            " a `mode` na `go`.";
+        }
     } else {
         debugger;
         throw "Neočekivana greška!";
@@ -1608,23 +1613,29 @@ var displayDataState = function (state) {
             var query = state[i].fields[j][0] + '-' + state[i].fields[j][1];
             var $field = $("[data-display-coordinates=" + query + "]");
             if (!$field.length) {
-                displayWarning("Dobijen zahtev da se na polje " + query +
-                    " smesti oblik \"" + state[i].style.shape +
-                    "\". Ovo polje nije deo definisane table. Ignoriše se.");
+                displayWarning("Dobijen zahtev da se na polje *" + query +
+                    "* smesti oblik `" + state[i].style.shape +
+                    "` boje `" + state[i].style.color + "`. " +
+                    "Ovo polje nije deo definisane table. Ignoriše se.");
             }
             if ($field.hasClass("occupied")) {
                 // get the shape it already has
-                var theClass = "";
+                var theColor = "";
+                var theShape = "";
                 var classes = $field.children(".piece").attr("class").split(' ');
                 $.each(classes, function (i, e) {
                     if (e.indexOf("shape--") === 0) {
-                        theClass = e;
+                        theShape = e.substring(7);
+                    }
+                    if (e.indexOf("color--") === 0) {
+                        theColor = e.substring(7);
                     }
                 });
-                displayWarning("Dobijen zahtev da se na polje " + query +
-                    " smesti oblik \"" + state[i].style.shape +
-                    "\". Ovo polje već na sebi ima figuru \"" +
-                    theClass.substring(7) + "\"."
+                displayWarning("Dobijen zahtev da se na polje *" + query +
+                    "* smesti oblik `" + state[i].style.shape +
+                    "` boje `" + state[i].style.color + "`. " +
+                    "Ovo polje već na sebi ima figuru oblika `" +
+                    theShape + "` boje `" + theColor + "`."
                 );
             }
             $field.addClass("occupied");
