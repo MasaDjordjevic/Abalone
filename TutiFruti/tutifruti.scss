@@ -30,7 +30,7 @@
 
 @mixin icon($name) {
   &::before {
-    font-family: FontAwesome;
+    font-family: FontAwesome, sans-serif;
     content: $name;
   }
 }
@@ -747,10 +747,7 @@ body {
       margin-left: 1em;
 
       mark {
-        //TODO
         display: none;
-        background-color: palette($red);
-        color: white;
       }
 
       code {

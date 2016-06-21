@@ -112,11 +112,6 @@ $screen-md-max: $screen-lg-min - 1px;
     @content;
   }
 }
-@mixin lg-and-below {
-  @media (max-width: #{$screen-lg-max}) {
-    @content;
-  }
-}
 
 //
 //  ╔════════╗

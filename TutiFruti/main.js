@@ -1,348 +1,370 @@
-
 var receivedData = null;
 var stop = false;
 var log = false;
 
-window.onload = function () {
+window.onload = function() {
     drawGenerator();
 
-    console.log(getLispCode(example.chess));
-    console.log(getLispCode(example.hexaChess));
+    smackjack.reset("", parse, null);
+    $("#example-chess").click(function () {
+        smackjack.exampleChess("", parse, null);
+    });
 
+    $("#example-hexa-chess").click(function () {
+        smackjack.exampleHexaChess("", parse, null);
+    });
 
-     smackjack.reset("", parse, null);
-     $("#example-chess").click(function(){
-       smackjack.exampleChess("", parse, null);
-     })
-     $("#example-hexa-chess").click(function(){
-       smackjack.exampleHexaChess("", parse, null);
-     })
-     $("#example-gomoku-eastern").click(function(){
-       smackjack.exampleGomokuEastern("", parse, null);
-     })
-     $("#example-gomoku-western").click(function(){
-       smackjack.exampleGomokuWestern("", parse, null);
-     })
+    $("#example-gomoku-eastern").click(function () {
+        smackjack.exampleGomokuEastern("", parse, null);
+    });
 
-    $("#odigraj-potez-1").click(function(){
-      var port = $("#port-1").val();
-      smackjack.odigrajPotez(JSON.stringify(receivedData), parse, null, port);
+    $("#example-gomoku-western").click(function () {
+        smackjack.exampleGomokuWestern("", parse, null);
+    });
+
+    $("#odigraj-potez-1").click(function () {
+        var port = $("#port-1").val();
+        smackjack.odigrajPotez(JSON.stringify(receivedData), parse, null, port);
+    });
+
+    $("#reset-1").click(function () {
+        var port = $("#port-1").val();
+        smackjack.reset(JSON.stringify(receivedData), parse, null, port);
+    });
+
+    $("#odigraj-potez-2").click(function () {
+        var port = $("#port-2").val();
+        smackjack.odigrajPotez(JSON.stringify(receivedData), parse, null, port);
+    });
+
+    $("#reset-2").click(function () {
+        var port = $("#port-2").val();
+        smackjack.reset(JSON.stringify(receivedData), parse, null, port);
+    });
+
+    $("#igraj").click(function () {
+        stop = false;
+        zoviPrvog();
+    });
+
+    $("#stop").click(function () {
+        stop = true;
+    });
+
+    $("#gen-generate").click(function () {
+        generate();
     })
-
-    $("#reset-1").click(function(){
-      var port = $("#port-1").val();
-      smackjack.reset(JSON.stringify(receivedData), parse, null, port);
-    })
-
-    $("#odigraj-potez-2").click(function(){
-      var port = $("#port-2").val();
-      smackjack.odigrajPotez(JSON.stringify(receivedData), parse, null, port);
-    })
-
-    $("#reset-2").click(function(){
-      var port = $("#port-2").val();
-      smackjack.reset(JSON.stringify(receivedData), parse, null, port);
-    })
-
-    $("#igraj").click(function(){
-      stop = false;
-      zoviPrvog();
-    })
-
-    $("#stop").click(function(){
-      stop = true;
-    })
-
-   $("#gen-generate").click(function() {
-     generate();
-   })
-}
+};
 
 function parse(data) {
-  receivedData = (JSON.parse((JSON.parse(data))));
+    receivedData = (JSON.parse((JSON.parse(data))));
 
-  displayData(receivedData);
+    displayData(receivedData);
 }
 
 function zoviPrvog() {
-  if(log){
-    console.log("zovem prvog");
-  }
-  var port = $("#port-1").val();
-  smackjack.odigrajPotez(JSON.stringify(receivedData), prviCallback, null, port);
+    if (log) {
+        console.log("zovem prvog");
+    }
+    var port = $("#port-1").val();
+    smackjack.odigrajPotez(JSON.stringify(receivedData), prviCallback, null, port);
 }
 
 function prviCallback(data) {
-  receivedData = (JSON.parse((JSON.parse(data))));
-  displayData(receivedData);
+    receivedData = (JSON.parse((JSON.parse(data))));
+    displayData(receivedData);
 
-  if(log){
-    console.log("dobio sam od prvog: ");
-    console.log(receivedData);
-  }
+    if (log) {
+        console.log("dobio sam od prvog: ");
+        console.log(receivedData);
+    }
 
-  if(stop) return;
-  var delay = +$("#delay").val();
-  setTimeout(zoviDrugog, delay);
+    if (stop) return;
+    var delay = +$("#delay").val();
+    setTimeout(zoviDrugog, delay);
 }
 
 function zoviDrugog() {
-  if(log){
-    console.log("zovem drugog");
-  }
-  var port = $("#port-2").val();
-  smackjack.odigrajPotez(JSON.stringify(receivedData), drugiCallback, null, port);
+    if (log) {
+        console.log("zovem drugog");
+    }
+    var port = $("#port-2").val();
+    smackjack.odigrajPotez(JSON.stringify(receivedData), drugiCallback, null, port);
 }
 
 function drugiCallback(data) {
-  receivedData = (JSON.parse((JSON.parse(data))));
-  displayData(receivedData);
-  if(log){
-    console.log("dobio sam od drugog: ");
-    console.log(receivedData);
-  }
-  if(stop) return;
-  var delay = +$("#delay").val();
-  setTimeout(zoviPrvog, delay);
+    receivedData = (JSON.parse((JSON.parse(data))));
+    displayData(receivedData);
+    if (log) {
+        console.log("dobio sam od drugog: ");
+        console.log(receivedData);
+    }
+    if (stop) return;
+    var delay = +$("#delay").val();
+    setTimeout(zoviPrvog, delay);
 }
 
 
 function generate() {
-  var board = {};
-  board.type = $("#gen_boardType").val();
-  board.dimensions = [];
-  board.dimensions[0] = +$("#gen_boardDimensions-1").val();
-  board.dimensions[1] = +$("#gen_boardDimensions-2").val();
-  board.dimensions[2] = +$("#gen_boardDimensions-3").val();
-  board.corner = $("#gen_boardCorner").val();
-  board.axis = [];
-  board.axis[0] = $("#gen_boardAxis-1").val();
-  board.axis[1] = $("#gen_boardAxis-2").val();
-  board.coloring = $("#gen_boardColoring").val();
-  board.mode = $("#gen_boardMode").val();
-  board.size = $("#gen_boardSize").val();
+    var board = {};
+    board.type = $("#gen_boardType").val();
+    board.dimensions = [];
+    board.dimensions[0] = +$("#gen_boardDimensions-1").val();
+    board.dimensions[1] = +$("#gen_boardDimensions-2").val();
+    board.dimensions[2] = +$("#gen_boardDimensions-3").val();
+    board.corner = $("#gen_boardCorner").val();
+    board.axis = [];
+    board.axis[0] = $("#gen_boardAxis-1").val();
+    board.axis[1] = $("#gen_boardAxis-2").val();
+    board.coloring = $("#gen_boardColoring").val();
+    board.mode = $("#gen_boardMode").val();
+    board.size = $("#gen_boardSize").val();
 
-  var player = {};
-  player.name = $("#gen_playerName").val();
-  player.order = +$("#gen_playerOrder").val();
-  player.message = $("#gen_playerMessage").val();
+    var player = {};
+    player.name = $("#gen_playerName").val();
+    player.order = +$("#gen_playerOrder").val();
+    player.message = $("#gen_playerMessage").val();
 
-  var state = {};
-  state.color = $("#gen_stateColor").val();
-  state.shape = $("#gen_stateShape").val();
+    var state = {};
+    state.color = $("#gen_stateColor").val();
+    state.shape = $("#gen_stateShape").val();
 
-  var state2 = {};
-  state2.color = $("#gen_stateColor-2").val();
-  state2.shape = $("#gen_stateShape-2").val();
+    var state2 = {};
+    state2.color = $("#gen_stateColor-2").val();
+    state2.shape = $("#gen_stateShape-2").val();
 
-  var ax = [];
-  ax[0] = board.axis[0].split(' ');
-  ax[1] = board.axis[1].split(' ');
-  var rand = [];
-  var rand2 = [];
-  for(let i=0; i < Math.min(...board.dimensions); i++) {
-    var a = ax[0][Math.floor(Math.random()*board.dimensions[0])];
-    var b = ax[1][Math.floor(Math.random()*board.dimensions[1])];
-    if(i%2 == 0)
-      rand.push([a, b]);
-    else
-      rand2.push([a, b]);
+    var ax = [];
+    ax[0] = board.axis[0].split(' ');
+    ax[1] = board.axis[1].split(' ');
+    var rand = [];
+    var rand2 = [];
+    for (let i = 0; i < Math.min(...board.dimensions); i++) {
+        var a = ax[0][Math.floor(Math.random() * board.dimensions[0])];
+        var b = ax[1][Math.floor(Math.random() * board.dimensions[1])];
+        if (i % 2 == 0)
+            rand.push([a, b]);
+        else
+            rand2.push([a, b]);
 
-  }
+    }
 
-  if(log)
-    console.log(lisp);
-
-  var data = {
-    board: board,
-    player: player,
-    state: [
-        {
-            // Crni pešaci
-            fields: rand,
-            style: state
-        },
-        {
-          fields: rand2,
-          style: state2
-        }
+    var data = {
+        board: board,
+        player: player,
+        state: [
+            {
+                // Crni pešaci
+                fields: rand,
+                style: state
+            },
+            {
+                fields: rand2,
+                style: state2
+            }
         ],
-   markings: [],
-   removed: [],
-  }
+        markings: [],
+        removed: []
+    };
 
-  var lisp = getLispCode(data);
-  console.log(lisp);
+    displayData(data);
 
-  displayData(data);
+    var lisp = getLispCode(data);
+    console.log(lisp);
 }
 
 function getLispCode(data) {
-  validate(data);
-  var lisp = "";
-  lisp += '(setq _board \'(\n' +
-      '\t(type . "' + data.board.type + '")\n' +
-      '\t(dimensions . (' + data.board.dimensions.join(' ') + '))\n' +
-      '\t(corner . "' + data.board.corner + '")\n' +
-      '\t(axis . ("' + data.board.axis[0] + '" "' + data.board.axis[1] + '"))\n' +
-      '\t(mode . "' + data.board.mode + '")\n' +
-      '\t(coloring . "' + data.board.coloring + '")\n' +
-      '\t(size . "' + data.board.size + '")))\n' +
-      '(setq _player \'(\n' +
-      '\t(name . "' + data.player.name + '")\n' +
-      '\t(order . ' + data.player.order + ')\n' +
-      '\t(message . "' + data.player.message + '")))\n' +
-      '(setq _state \'(\n' ;
-  for(let i=0; i< data.state.length; i++) {
-    lisp +=
-          '\t(\n' +
-          '\t\t(fields . ((' + data.state[i].fields.map(el => '"' + el[0] +'" "' + el[1] + '"').join(")(") + ')))\n' +
-          '\t\t(style . (\n' +
-          '\t\t\t(color . "' + data.state[i].style.color + '")\n' +
-          '\t\t\t(shape . "' + data.state[i].style.shape + '"))))\n';
-  }
-  lisp +="))\n";
-
-  lisp += '(setq _markings \'(\n' ;
-  for(let i=0; i< data.markings.length; i++) {
-    lisp +=
-        '\t(\n' +
-        '\t\t(fields . ((' + data.markings[i].fields.map(el => '"' + el[0] +'" "' + el[1] + '"').join(")(") + ')))\n' +
-    '\t\t(style . (\n' +
-    '\t\t\t(color . "' + data.markings[i].style.color + '")\n' +
-    '\t\t\t(shape . "' + data.markings[i].style.shape + '"))))\n';
-  }
-  lisp +="))\n";
-
-  if(data.removed[0].length != 0) {
-    lisp += '(setq _removed \'(\n' ;
-    for(let i=0; i< data.removed.length; i++) {
-      lisp +=
-          '\t(\n' +
-          '\t\t(fields . ' + data.removed[i].number + ')\n'+
-          '\t\t(style . (\n' +
-          '\t\t\t(color . "' + data.removed[i].style.color + '")\n' +
-          '\t\t\t(shape . "' + data.removed[i].style.shape + '"))))\n';
+    var lisp = "";
+    lisp += '(setq _board \'(\n' +
+        '\t(type . "' + data.board.type + '")\n' +
+        '\t(dimensions . (' + data.board.dimensions.join(' ') + '))\n' +
+        '\t(corner . "' + data.board.corner + '")\n' +
+        '\t(axis . ("' + data.board.axis[0] + '" "' + data.board.axis[1] + '"))\n' +
+        '\t(mode . "' + data.board.mode + '")\n' +
+        '\t(coloring . "' + data.board.coloring + '")\n' +
+        '\t(size . "' + data.board.size + '")))\n' +
+        '(setq _player \'(\n' +
+        '\t(name . "' + data.player.name + '")\n' +
+        '\t(order . ' + data.player.order + ')\n' +
+        '\t(message . "' + data.player.message + '")))\n' +
+        '(setq _state \'(\n';
+    for (let i = 0; i < data.state.length; i++) {
+        lisp +=
+            '\t(\n' +
+            '\t\t(fields . ((' +
+            data.state[i].fields.map(el => '"' + el[0] + '" "' + el[1] + '"').join(")(") + ')))\n' +
+            '\t\t(style . (\n' +
+            '\t\t\t(color . "' + data.state[i].style.color + '")\n' +
+            '\t\t\t(shape . "' + data.state[i].style.shape + '"))))\n';
     }
-    lisp +="))";
-  }
+    lisp += "))\n";
 
-  return lisp;
+    lisp += '(setq _markings \'(\n';
+    for (let i = 0; i < data.markings.length; i++) {
+        lisp +=
+            '\t(\n' +
+            '\t\t(fields . ((' +
+            data.markings[i].fields.map(el => '"' + el[0] + '" "' + el[1] + '"').join(")(") + ')))\n' +
+            '\t\t(style . (\n' +
+            '\t\t\t(color . "' + data.markings[i].style.color + '")\n' +
+            '\t\t\t(shape . "' + data.markings[i].style.shape + '"))))\n';
+    }
+    lisp += "))\n";
+
+    if (data.removed[0].length != 0) {
+        lisp += '(setq _removed \'(\n';
+        for (let i = 0; i < data.removed.length; i++) {
+            lisp +=
+                '\t(\n' +
+                '\t\t(fields . ' + data.removed[i].number + ')\n' +
+                '\t\t(style . (\n' +
+                '\t\t\t(color . "' + data.removed[i].style.color + '")\n' +
+                '\t\t\t(shape . "' + data.removed[i].style.shape + '"))))\n';
+        }
+        lisp += "))";
+    }
+
+    return lisp;
 }
 
 var options = {};
-options._boardType =  ["rectangular", "hexagonal-flat", "hexagonal-pointy"];
-options._boardDimensions = [15,15,6];
+options._boardType = ["rectangular", "hexagonal-flat", "hexagonal-pointy"];
+options._boardDimensions = [15, 15, 6];
 options._boardCorner = ["bottom-left", "top-left", "top-right", "bottom-right", "left", "right", "bottom", "top"];
 options._boardAxis = [];
 options._boardAxis[0] = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15";
 options._boardAxis[1] = "A B C D E F G H I J K L M N O";
 options._boardColoring = ["classic", "chess"];
 options._boardMode = ["classic", "circles", "go"];
-options._boardSize = ["l","xxs", "xs", "s", "m", "xl", "xxl"];
+options._boardSize = ["l", "xxs", "xs", "s", "m", "xl", "xxl"];
 
 options._playerName = "La Plavusha";
 options._playerOrder = [1, 2];
 options._playerMessage = "Zdravo deco";
 
-options._stateColor = ["red", "pink", "purple", "deep-purple", "indigo", "blue", "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow", "amber", "deep-orange", "brown", "grey", "blue-grey", "black ", "white"];
-options._stateShape = ["O", "X", "circle", "square", "star", "arrow-left", "arrow-right", "arrow-up", "arrow-down", "angle-left", "angle-right", "angle-up", "angle-down", "angle-double-left", "angle-double-right", "angle-double-up", "angle-double-down", "crosshairs", "bullseye", "check", "check-circle", "minus", "plus", "suit-spade-fill", "suit-spade-outline", "suit-heart-fill", "suit-heart-outline", "suit-diamond-fill", "suit-diamond-outline", "suit-club-fill", "suit-club-outline", "number-1", "number-2", "number-46", "number-53", "letter-A", "letter-B", "letter-M", "letter-a", "letter-s", "letter-q", "chess-king-outline", "chess-king-fill", "chess-queen-outline", "chess-queen-fill", "chess-rook-outline", "chess-rook-fill", "chess-bishop-outline", "chess-bishop-fill", "chess-knight-outline", "chess-knight-fill", "chess-pawn-outline", "chess-pawn-fill"];
+options._stateColor = ["red", "pink", "purple", "deep-purple", "indigo", "blue", "light-blue", "cyan", "teal", "green",
+    "light-green", "lime", "yellow", "amber", "deep-orange", "brown", "grey", "blue-grey", "black ", "white"];
+options._stateShape = ["O", "X", "circle", "square", "star", "arrow-left", "arrow-right", "arrow-up", "arrow-down",
+    "angle-left", "angle-right", "angle-up", "angle-down", "angle-double-left", "angle-double-right",
+    "angle-double-up", "angle-double-down", "crosshairs", "bullseye", "check", "check-circle", "minus", "plus",
+    "suit-spade-fill", "suit-spade-outline", "suit-heart-fill", "suit-heart-outline", "suit-diamond-fill",
+    "suit-diamond-outline", "suit-club-fill", "suit-club-outline", "number-1", "number-2", "number-46", "number-53",
+    "letter-A", "letter-B", "letter-M", "letter-a", "letter-s", "letter-q", "chess-king-outline", "chess-king-fill",
+    "chess-queen-outline", "chess-queen-fill", "chess-rook-outline", "chess-rook-fill", "chess-bishop-outline",
+    "chess-bishop-fill", "chess-knight-outline", "chess-knight-fill", "chess-pawn-outline", "chess-pawn-fill"];
 
 
 function drawGenerator() {
-  var div = $(".generator");
-  r = new RegExp(/[A-Z].*/);
+    var div = $(".generator");
+    var r = new RegExp("[A-Z].*");
 
-  $.each( options, function( key, value ) {
+    $.each(options, function (key, value) {
 
-    var id = "gen" + key;
-    var innerDiv = $("<div/>");
-    var label =  $("<label/>", {"for": id,}).append(key.match(r)).appendTo(innerDiv);
+        var id = "gen" + key;
+        var innerDiv = $("<div/>");
+        var label = $("<label/>", {
+            "for": id
+        })
+            .append(key.match(r))
+            .appendTo(innerDiv);
 
-    if( Object.prototype.toString.call( value ) === '[object Array]' ) {
-      switch (key) {
-        case "_boardDimensions": drawDimensions(id, value, innerDiv);
-        break;
-        case "_boardAxis": generateAxis(id, value, innerDiv);
-          break;
-        default: drawSelect(id, value, innerDiv);
-      }
-    }else if( typeof value == "string") {
-      drawString(id, value, innerDiv);
-    }
+        if (Object.prototype.toString.call(value) === '[object Array]') {
+            switch (key) {
+                case "_boardDimensions":
+                    drawDimensions(id, value, innerDiv);
+                    break;
+                case "_boardAxis":
+                    generateAxis(id, value, innerDiv);
+                    break;
+                default:
+                    drawSelect(id, value, innerDiv);
+            }
+        } else if (typeof value == "string") {
+            drawString(id, value, innerDiv);
+        }
 
+        div.append(innerDiv);
+    });
+
+    var id, innerDiv;
+
+    id = "gen_stateColor-2";
+    innerDiv = $("<div/>");
+    $("<label/>", {
+        "for": id
+    })
+        .append("Color")
+        .appendTo(innerDiv);
+    drawSelect(id, options._stateColor, innerDiv, 5);
     div.append(innerDiv);
-  });
 
-  var id="gen_stateColor-2";
-  var innerDiv = $("<div/>");
-  var label =  $("<label/>", {"for": id,}).append("Color").appendTo(innerDiv);
-  drawSelect(id, options._stateColor, innerDiv, 5);
-  div.append(innerDiv);
-  var id= "gen_stateShape-2";
-  var innerDiv = $("<div/>");
-  var label =  $("<label/>", {"for": id,}).append("Shape").appendTo(innerDiv);
-  drawSelect(id, options._stateShape, innerDiv, 13);
-  div.append(innerDiv);
+    id = "gen_stateShape-2";
+    innerDiv = $("<div/>");
+    $("<label/>", {
+        "for": id
+    })
+        .append("Shape")
+        .appendTo(innerDiv);
+    drawSelect(id, options._stateShape, innerDiv, 13);
+    div.append(innerDiv);
 
-  var button = $("<button/>", {
-    "type" : "button",
-    "id" : "gen-generate"
-  }).append("Generisi");
+    var button = $("<button/>", {
+        "type": "button",
+        "id": "gen-generate"
+    }).append("Generisi");
 
-  div.append(button);
+    div.append(button);
 
 }
 
 function drawString(id, value, container) {
-  var input = $("<input/>", {
-    "type": "text",
-    "value" : value,
-    "id": id
-  }).appendTo(container);
+    var input = $("<input/>", {
+        "type": "text",
+        "value": value,
+        "id": id
+    }).appendTo(container);
 }
 
 function drawDimensions(id, array, container) {
-  container.append("<br/>");
-  for (let i=1; i<=3 ; i++) {
-    var label =  $("<label/>", {
-      "for": id + "-" + i,
-    }).append("D" + i).appendTo(container);
-    var input = $("<input/>", {
-      "id":  id + "-" + i,
-      "type": "number",
-      "min": "1",
-      "max": "20",
-      "value" : array[i-1],
-    }).appendTo(container);
-  }
+    container.append("<br/>");
+    for (let i = 1; i <= 3; i++) {
+        var label = $("<label/>", {
+            "for": id + "-" + i
+        }).append("D" + i).appendTo(container);
+        var input = $("<input/>", {
+            "id": id + "-" + i,
+            "type": "number",
+            "min": "1",
+            "max": "20",
+            "value": array[i - 1]
+        }).appendTo(container);
+    }
 }
 
 function generateAxis(id, array, container) {
-  container.append("<br/>");
-  for (let i=1; i<3 ; i++) {
-    var label =  $("<label/>", {
-      "for": id + "-" + i,
-    }).append("A" + i).appendTo(container);
-    var input = $("<input/>", {
-      "id": id + "-" + i,
-      "type": "text",
-      "value": array[i-1]
-    }).appendTo(container);
     container.append("<br/>");
-  }
+    for (let i = 1; i < 3; i++) {
+        var label = $("<label/>", {
+            "for": id + "-" + i
+        }).append("A" + i).appendTo(container);
+        var input = $("<input/>", {
+            "id": id + "-" + i,
+            "type": "text",
+            "value": array[i - 1]
+        }).appendTo(container);
+        container.append("<br/>");
+    }
 
 }
 
 function drawSelect(id, array, container, selected = 0) {
-  var select = $("<select/>", {
-    "id": id
-  });
-  for (let i=0; i < array.length; i++) {
-      var option = $("<option/>", {
-        "value" : array[i],
-        "selected" : i == selected
-      }).append(array[i]).appendTo(select);
+    var select = $("<select/>", {
+        "id": id
+    });
+    for (let i = 0; i < array.length; i++) {
+        var option = $("<option/>", {
+            "value": array[i],
+            "selected": i == selected
+        }).append(array[i]).appendTo(select);
     }
-  container.append(select);
-  }
+    container.append(select);
+}
