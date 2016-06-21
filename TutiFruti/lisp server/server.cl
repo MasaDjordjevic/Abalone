@@ -416,9 +416,10 @@
                                         (setq _removed removed)
                                         (setq _report report)))))
     (_odigraj-potez)
+    (setq _report "Porukica")
     
     (rplacd (assoc 'board _send-data) _board)
-    (rplacd (assoc 'player _send-data) _player)
+    ;(rplacd (assoc 'player _send-data) _player)
     (rplacd (assoc 'state _send-data) _state)    
     (rplacd (assoc 'markings _send-data) _markings)
     (rplacd (assoc 'removed _send-data) _removed)
