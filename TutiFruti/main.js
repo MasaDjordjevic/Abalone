@@ -1,8 +1,9 @@
 "use strict";
 
 var receivedData = null;
-var stop = false;
-var log = false;
+var _stop = false;
+var _nextPlayer = 1;
+var log = true;
 
 window.onload = function() {
     drawGenerator();
@@ -50,17 +51,17 @@ window.onload = function() {
     });
 
     var play = function() {
-        stop = false;
-        zoviPrvog();
+        _stop = false;
+        odigraj();
     };
     $("#igraj").click(play);
     $(document).bind("keyup", "i", play);
 
     var stop = function() {
-        stop = true;
+        _stop = true;
     };
     $("#stop").click(stop);
-    $(document).bind("keyup", "s", stop);
+    $(document).bind("keyup", "p", stop);
 
     $(".generator form").submit(function() {
         generate();
@@ -73,46 +74,27 @@ function parse(data) {
     displayData(receivedData);
 }
 
-function zoviPrvog() {
+function odigraj() {
     if (log) {
-        console.log("zovem prvog");
+        console.log("zovem " + _nextPlayer);
     }
-    var port = $("#port-1").val();
-    smackjack.odigrajPotez(JSON.stringify(receivedData), prviCallback, null, port);
+    var port = $("#port-" + _nextPlayer).val();
+    smackjack.odigrajPotez(JSON.stringify(receivedData), odigrajCallback, null, port);
 }
 
-function prviCallback(data) {
+function odigrajCallback(data) {
     receivedData = (JSON.parse((JSON.parse(data))));
     displayData(receivedData);
 
     if (log) {
-        console.log("dobio sam od prvog: ");
+        console.log("dobio sam od " + _nextPlayer);
         console.log(receivedData);
     }
+    _nextPlayer = _nextPlayer == 1 ? 2 : 1;
 
-    if (stop) return;
+    if (_stop) return;
     var delay = +$("#delay").val();
-    setTimeout(zoviDrugog, delay);
-}
-
-function zoviDrugog() {
-    if (log) {
-        console.log("zovem drugog");
-    }
-    var port = $("#port-2").val();
-    smackjack.odigrajPotez(JSON.stringify(receivedData), drugiCallback, null, port);
-}
-
-function drugiCallback(data) {
-    receivedData = (JSON.parse((JSON.parse(data))));
-    displayData(receivedData);
-    if (log) {
-        console.log("dobio sam od drugog: ");
-        console.log(receivedData);
-    }
-    if (stop) return;
-    var delay = +$("#delay").val();
-    setTimeout(zoviPrvog, delay);
+    setTimeout(odigraj, delay);
 }
 
 
