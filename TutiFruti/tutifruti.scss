@@ -471,6 +471,7 @@ body {
   flex-direction: column;
   background-color: palette($blue-grey, 50);
   color: rgba(black, .86);
+  padding: 1em;
   box-sizing: border-box;
 }
 
@@ -488,15 +489,14 @@ body {
 
     .name {
       font-size: 2em;
-      text-align: center;
-      padding: 1em;
+      text-align: right;
       font-weight: bold;
     }
 
     .message {
       background-color: palette($blue-grey, 900);
       color: rgba(white, .84);
-      margin: 1em;
+      margin: 1em 0;
       padding: 1em;
       border-radius: .33em;
       @include z-depth(1);
@@ -514,20 +514,37 @@ body {
         height: 20px;
         position: absolute;
         top: -6px;
-        left: calc(50% - 12.5px);
         transform: rotate(63deg) skew(36deg) scale(.6);
         width: 25px;
         box-shadow: -3px -2.5px 4px 1px rgba(black, .1);
+        right: 20px;
       }
+    }
+
+    .player-settings {
+      display: flex;
+      justify-content: flex-end;
     }
   }
 
+  .player1 {
+    order: 1;
+  }
+
+  .player2 {
+    order: 3;
+  }
+
+  .controls {
+    order: 2;
+  }
+
   .player1 .message {
-    margin-top: 0;
+    margin-top: 1em;
   }
 
   .player2 .message {
-    margin-bottom: 0;
+    margin-bottom: 1em;
   }
 
   .player2 {
@@ -544,7 +561,6 @@ body {
   }
 
   .removed {
-    padding: 1em;
     display: flex;
     flex-direction: row-reverse;
 
@@ -555,6 +571,105 @@ body {
       height: $r-s;
       font-size: $r-s;
       line-height: $r-s;
+    }
+  }
+
+  .controls, .player {
+
+    .examples {
+      //display: none;
+      margin: 2em;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    button, input {
+      padding: .5em 1em;
+      margin: .2em;
+      font-family: Roboto, sans-serif;
+    }
+
+    .input {
+      display: inline-block;
+      width: 60px;
+      position: relative;
+      margin: .2em;
+    }
+
+    input {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      color: palette($blue-grey, 400);
+      border-bottom: 1px palette($blue-grey, 500) solid;
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0;
+      transition: all .33s ease;
+
+      + span {
+        display: block;
+        padding: 0;
+        width: 0;
+        margin: auto;
+        height: 3px;
+        background-color: palette($blue-grey, 700);
+        opacity: 0;
+        transition: all .33s ease;
+      }
+
+      &:focus {
+        color: palette($blue-grey, 700);
+
+        + span {
+          width: 100%;
+          opacity: 1;
+        }
+      }
+    }
+
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+
+    button {
+      text-transform: uppercase;
+      background-color: palette($blue-grey, 700);
+      border: none;
+      outline: none;
+      border-radius: 3px;
+      @include z-depth(1);
+      color: rgba(white, .86);
+      font-weight: bold;
+      cursor: pointer;
+      transition: all .33s ease;
+
+      span::first-letter {
+        text-decoration: underline;
+      }
+
+      &:hover {
+        background-color: lighten(palette($blue-grey, 700), 10%);
+        @include z-depth(1.5);
+      }
+    }
+
+    .autoplay {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+
+      button {
+        margin: 0 2em;
+
+        span {
+          display: inline-block;
+          margin-left: .4em;
+        }
+      }
     }
   }
 }
@@ -614,8 +729,8 @@ body {
 .fab {
   //display: none;
   position: fixed;
-  bottom: 12px;
-  right: 12px;
+  top: 12px;
+  left: 12px;
   background-color: palette($green);
   border-radius: 50%;
   width: 64px;

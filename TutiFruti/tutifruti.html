@@ -6,52 +6,71 @@
     <link rel="stylesheet" href="tutifruti.css">
 </head>
 <body>
-    <div class="board-container">
-        <!-- board center -->
-        <div class="board"></div>
-    </div>
-    <div class="info hidden">
-        <div class="player player1">
-            <div class="name"></div>
-            <div class="message"></div>
-            <div class="removed"></div>
-            <div class="other"></div>
-        </div>
-        <div class="controls">
-          <button id="example-xo">Example xo</button>
-          <button id="example-chess">Example chess</button>
-          <button id="example-hexa-chess">Example hexa chess</button>
-          <button id="example-gomoku-eastern">Example gomoku eastern</button>
-          <button id="example-gomoku-western">Example gomoku western</button>
-          <button id="odigraj-potez">Odigraj potez</button>
-            <div>
+<div class="board-container">
+    <!-- board center -->
+    <div class="board"></div>
+</div>
+<div class="info">
+    <div class="player player1">
+        <div class="name"></div>
+        <div class="message"></div>
+        <div class="removed"></div>
+        <div class="player-settings">
+            <div class="input">
                 <input title="Port prvog igrača" type="text" id="port-1" value="8081">
-                <button id="odigraj-potez-1">Odrigraj potez</button>
-                <button id="reset-1">Reset</button>
+                <span></span>
             </div>
-            <div>
+            <button id="odigraj-potez-1">Potez</button>
+            <button id="reset-1">Reset</button>
+        </div>
+    </div>
+    <div class="player player2">
+        <div class="name">placeholder</div>
+        <div class="message">placeholder</div>
+        <div class="removed"></div>
+        <div class="player-settings">
+            <div class="input">
                 <input title="Port drugog igrača" type="text" id="port-2" value="8082">
-                <button id="odigraj-potez-2">Odrigraj potez</button>
-                <button id="reset-2">Reset</button>
+                <span></span>
             </div>
-            <input title="Pauza između poteza" type="text" id="delay" value="1000">
-            <button id="igraj">Igraj</button>
-            <button id="stop">Stop</button>
-        </div>
-        <div class="player player2">
-            <div class="name">placeholder</div>
-            <div class="message">placeholder</div>
-            <div class="removed"></div>
-            <div class="other"></div>
+            <button id="odigraj-potez-2">Potez</button>
+            <button id="reset-2">Reset</button>
         </div>
     </div>
-    <div class="generator">
+    <div class="controls">
+        <div class="examples">
+            <button id="example-xo">X-O</button>
+            <button id="example-chess">Šah</button>
+            <button id="example-hexa-chess">Hex Šah</button>
+            <button id="example-gomoku-western">Gomoku 1</button>
+            <button id="example-gomoku-eastern">Gomoku 2</button>
+        </div>
+        <div class="autoplay">
+            <button id="igraj">
+                <i class="fa fa-play"></i>
+                <span>Igraj</span>
+            </button>
+            <div class="input">
+                <input title="Pauza između poteza"
+                       type="number" id="delay"
+                       value="1000" min="0" max="10000"
+                       step="50">
+                <span></span>
+            </div>
+            <button id="stop">
+                <i class="fa fa-pause"></i>
+                <span>Pauza</span>
+            </button>
+        </div>
     </div>
-    <div class="fab" id="button">
-        <span><!--icon--></span>
-    </div>
-    <div class="settings">s</div>
-    <div id="messages"></div>
+</div>
+<div class="generator hidden">
+</div>
+<div class="fab" id="button">
+    <span><!--icon--></span>
+</div>
+<div class="settings">s</div>
+<div id="messages"></div>
 </body>
 <script src="jquery-3.0.0.min.js"></script>
 <script src="jquery.hotkeys.js"></script>

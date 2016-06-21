@@ -49,14 +49,18 @@ window.onload = function() {
         smackjack.reset(JSON.stringify(receivedData), parse, null, port);
     });
 
-    $("#igraj").click(function () {
+    var play = function() {
         stop = false;
         zoviPrvog();
-    });
+    };
+    $("#igraj").click(play);
+    $(document).bind("keyup", "i", play);
 
-    $("#stop").click(function () {
+    var stop = function() {
         stop = true;
-    });
+    };
+    $("#stop").click(stop);
+    $(document).bind("keyup", "s", stop);
 
     $(".generator form").submit(function() {
         generate();
@@ -66,7 +70,6 @@ window.onload = function() {
 
 function parse(data) {
     receivedData = (JSON.parse((JSON.parse(data))));
-
     displayData(receivedData);
 }
 
