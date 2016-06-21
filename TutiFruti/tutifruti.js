@@ -260,11 +260,11 @@ var validate = function(data) {
             if (axisLength[i] < data.board.dimensions[i]) {
                 justWarning.push(false);
                 dimension.push(i);
-                len.push(i);
+                len.push(data.board.dimensions[i]);
             } else if (axisLength[i] > data.board.dimensions[i]) {
                 justWarning.push(true);
                 dimension.push(i);
-                len.push(i);
+                len.push(data.board.dimensions[i]);
             }
         }
     }
