@@ -91,6 +91,7 @@
                    (dimensions . (15 15 6))
                    (corner . "bottom-left")
                    (axis . ("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15" "A B C D E F G H I J K L M N O"))
+                   (mode . "classic")
                    (coloring . "classic")
                    (size . xxs)))
     (setq _player '(
@@ -99,16 +100,15 @@
                     (message . "Zdravo deco")))
     (setq _state '(
                    (
-                    (fields . (("13" "K")("12" "N")("9" "H")))
+                    (fields . (("3" "L")("9" "B")("9" "N")))
                     (style . (
                               (color . "red")
                               (shape . "O"))))
                    (
-                    (fields . ( ("4" "I")("15" "H")("14" "C")))
+                    (fields . ( ("13" "B")("6" "D")("7" "K")))
                     (style . (
                               (color . "blue")
-                              (shape . "arrow-up"))))))
-  
+                              (shape . "angle-double-left"))))))
   
   (rplacd (assoc 'board _send-data) _board)
   (rplacd (assoc 'player _send-data) _player)

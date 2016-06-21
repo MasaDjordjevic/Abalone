@@ -148,6 +148,7 @@ function generate() {
       '\t(dimensions . (' + board.dimensions.join(' ') + '))\n' +
       '\t(corner . "' + board.corner + '")\n' +
       '\t(axis . ("' + board.axis[0] + '" "' + board.axis[1] + '"))\n' +
+      '\t(mode . "' + board.mode + '")\n' +
       '\t(coloring . "' + board.coloring + '")\n' +
       '\t(size . ' + board.size + ')))\n' +
       '(setq _player \'(\n' +

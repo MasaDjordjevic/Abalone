@@ -391,7 +391,7 @@ var validate = function(data) {
         throw "Dobijena vrednost svojstva `coloring` je `" + data.board.coloring + ". " +
         "Očekivane vrednosti su `" + _boardColoring.join("`, `") + "`."
     }
-    
+
     // Mode
     if (isNullOrUndefined(data.board.mode)) {
         displayWarning("mode not set");
@@ -501,7 +501,7 @@ var validate = function(data) {
     // Removed
     for (let i = 0; i < data.removed.length; i++) {
         for (let j = 0; j < 2; j++) {
-            debugger;
+            
             if (data.removed[j].length === 0) continue;
             if (isNullOrUndefined(data.removed[j][i].number) && isNullOrUndefined(data.removed[j][i].style)) {
                 displayWarning("Element `removed[" + j + "][" + i + "]` nema postavljeno ni `number` ni `style`.");
@@ -1430,9 +1430,9 @@ var displayAxisHexagonalPointyBottomRight = function(axis, dimensions) {
 var drawChess = function() {
     var $board = $(".board");
     var $fields = $board.children(".field");
-    
+
     var dataBoardType = $board.attr('data-board-type');
-    
+
     switch (dataBoardType) {
         case "hexagonal-flat":
         case "hexagonal-pointy":
@@ -1446,7 +1446,7 @@ var drawChess = function() {
                 }
             });
             break;
-            
+
         case "rectangular":
             $fields.each(function() {
                 var dataCoordinates = $(this).attr("data-coordinates").split('-');
@@ -1457,7 +1457,7 @@ var drawChess = function() {
                 }
             });
             break;
-        
+
         default:
             throw "Neočekivana greška. Iz data-board-type pročitano " + dataBoardType + ".";
     }
@@ -1679,7 +1679,7 @@ var displayMessage = function(message, type) {
 $(document).ready(function() {
     //displayMessage("TutiFruti :: version 0.0");
     displayData(data1);
-    
+
 });
 
 var example = {};
@@ -2086,5 +2086,3 @@ $('#button').click(function() {
     $('.info').toggleClass('hidden');
     $('.generator').toggleClass('hidden');
 });
-
-
