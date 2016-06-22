@@ -21,11 +21,10 @@
 <div id="toctitle">Sadržaj</div>
 <ul class="sectlevel1">
 <li><a href="#_o_programu">O programu</a></li>
-<li><a href="#_kako_pokrenuti_projekat">Kako pokrenuti projekat</a>
+<li><a href="#_pokretanje_projekta">Pokretanje projekta</a>
 <ul class="sectlevel2">
 <li><a href="#_neophodne_instalacije">Neophodne instalacije</a></li>
 <li><a href="#_pokretanje_servera">Pokretanje servera</a></li>
-<li><a href="#_korišćenje_primera">Korišćenje primera</a></li>
 </ul>
 </li>
 <li><a href="#_osnovna_struktura">Osnovna struktura</a>
@@ -36,7 +35,7 @@
 <li><a href="#_vaš_zadatak">Vaš zadatak</a></li>
 </ul>
 </li>
-<li><a href="#_kako_dodati_api_funkciju">Kako dodati api funkciju?</a>
+<li><a href="#_dodavanje_api_funkcije">Dodavanje API funkcije</a>
 <ul class="sectlevel2">
 <li><a href="#_server">Server</a></li>
 <li><a href="#_javascript">JavaScript</a></li>
@@ -50,36 +49,64 @@
 <h2 id="_o_programu"><a class="link" href="#_o_programu">O programu</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Serverski deo ove aplikacije je realizovan u Lispu.
-Svaki igrač, odnosno njegov agent, je jedan lisp server.
-On predstavlja veb api čije se funkcije pozivaju Ajax pozivima.</p>
+<p>TutiFruti je mala veb-aplikacija koja koristi precizno definisan protokol za prikaz i razmenu poteza kod igara na tabli za dva igrača.
+Razvijena je od strane dvoje studenta za potrebe predmeta <strong>Veštačka inteligencija</strong> koji se sluša na trećoj godini osnovnih akademskih studija na Elektronskom fakultetu u Nišu, u okviru koga se tradicionalno svake godine održava turnir gde se inteligentni agenti koje su timovi razvili takmiče u igri koju na početku semestra definišu asistenti.</p>
+</div>
+<div class="paragraph">
+<p>Serverski deo aplikacije je realizovan u Lispu i svaki igrač (odnosno njegov agent) je jedan Lisp server koji predstavlja veb-API čije se funkcije zovu Ajaks pozivima.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Nije potrebno nikakvo prethodno iskustvo niti znanje o radu servera da bi se koristio TuriFruti.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_kako_pokrenuti_projekat"><a class="link" href="#_kako_pokrenuti_projekat">Kako pokrenuti projekat</a></h2>
+<h2 id="_pokretanje_projekta"><a class="link" href="#_pokretanje_projekta">Pokretanje projekta</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_neophodne_instalacije"><a class="link" href="#_neophodne_instalacije">Neophodne instalacije</a></h3>
 <div class="paragraph">
-<p>Potrebno je instalirati Quicklisp, on upravlja Lisp bibliotekama i omogućava njihovo lako korišćenje u projektu.
-<code>File &#8594; Load &#8594; quicklisp.lisp</code>.
-Potrebno je omogućiti <code>remote ajax call</code> s obzirom da se javascript koji poziva server nije na samom serveru.
-Instalirati chrome plugin: <code><a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en" class="bare">https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en</a></code>.</p>
+<p>Potrebno je instalirati Quicklisp koji upravlja Lisp bibliotekama i omogućava njihovo lako korišćenje u projektu.
+Iz programskog okruženja <strong>Allegro</strong>, izabrati <code>File</code> &#8594; <code>Load</code> &#8594; <code>quicklisp.lisp</code>.
+Pošto se <code>html</code> fajlovi otvaraju lokalno, a server podiže na <code>localhost</code>, brauzeri iz bezbednosnih razloga ne dozvoljavaju razmenu Ajaks objekata među njima.
+Ova varijera se može prevazići instaliranjem dodataka za brauzer koji dopuštaju <em>cross-origin</em> Ajaks pozive.</p>
+</div>
+<div class="paragraph">
+<p>Na primer, za Chrome se može instalirati <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">CORS</a>.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_pokretanje_servera"><a class="link" href="#_pokretanje_servera">Pokretanje servera</a></h3>
 <div class="paragraph">
-<p>Najpre je potrebno kompajlrati i učitati fajl <code>setup.cl</code> (on pribavlja neophodne biblioteke), zatim fajl <code>server.cl</code> koji je sam veb api.
-Ukoliko dodje do greške prilikom učitavanja fajla izabrati opciju <code>skip</code>.</p>
+<p>Najpre je potrebno kompajlrati i učitati fajl <code>setup.cl</code> (pribavlja neophodne biblioteke), a zatim i`server.cl` koji predstavlja sâm veb-API.
+Ukoliko dođe do greške prilikom učitavanja fajla izabrati opciju <em>Skip</em>.</p>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_korišćenje_primera"><a class="link" href="#_korišćenje_primera">Korišćenje primera</a></h3>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>U samu aplikaciju je ugrađeno nekoliko primera. Svaki, i na serveru i u aplikaciji, počinje sa <code>example</code> i predstavlja samo primer stanja table.
-Kako je trenutna implementacija funkcije <code>odigraj-potez</code> siromašna i vrlo ograničena, moguće je je pokrenuti samo ukoliko je trenutno prikazan <code>example xo</code>.</p>
+<p>U aplikaciju je ugrađeno nekoliko primera stanja table.
+Na serveru, primeri počinju prefiksom <code>example</code>, a u JavaScript kodu se nalaze u objektu <code>example</code>.
+Testiranje servera se može obaviti učitavanjem primera <code>example xo</code> i pokretanjem igre iz GUI-ja.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -90,37 +117,66 @@ Kako je trenutna implementacija funkcije <code>odigraj-potez</code> siromašna i
 <div class="sect2">
 <h3 id="_parametri"><a class="link" href="#_parametri">Parametri</a></h3>
 <div class="paragraph">
-<p>Server sadrži 5 globalno definisana parametra koji odgovaraju objektu opisanom u odelju <code>reffff</code>.
+<p>Server sadrži šest globalno definisanih parametara koji odgovaraju objektu opisanom u <a href="docs.asc">Strukturi objekta</a>.
 Oni predstvaljaju podatke koje je server dobio u poslednjem pozivu funkcije <code>odigraj-potez</code>.
-Može im se pristupiti iz konzole u bilo kom trenutku što može biti zgodno prilikom debagiranja.</p>
+Može im se pristupiti iz konzole u bilo kom trenutku, što može biti od koristi prilikom debagiranja.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_funkcije"><a class="link" href="#_funkcije">Funkcije</a></h3>
 <div class="paragraph">
-<p>Postoje dve funkcije koje obezbeđuju komunikaciju: <code>reset</code> i <code>odigraj-potez</code>.
-Funkcija <code>reset</code> šalje informacije o tabli i igraču.
-Ne sadrži nikakvu logiku, niti koristi dobijene parametre već samo postavlja osnovne podatke.
-Funkcija <code>odigraj-potez</code> dobija stanje table i postavlja verdnosti globalnih parametara na osnovu dobijenih podataka.
+<p>Postoje dve funkcije koje obezbeđuju komunikaciju: <code>reset</code> i <code>odigraj-potez</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Funkcija <code>reset</code> šalje informacije o tabli i igraču.
+Ne sadrži nikakvu logiku, niti koristi dobijene parametre već samo <strong>postavlja osnovne podatke</strong>.</p>
+</li>
+<li>
+<p>Funkcija <code>odigraj-potez</code> <strong>pribavlja stanje</strong> table i postavlja vrednosti globalnih parametara na osnovu dobijenih podataka.
 Zatim izvršava potez igrača i vraća novo stanje table.</p>
+</li>
+</ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_port"><a class="link" href="#_port">Port</a></h3>
 <div class="paragraph">
-<p>Na kraju fajla <code>server.cl</code> se nalazi komanda <code>(defparameter *server\* (start (make-instance 'easy-acceptor :address "localhost" :port 8081)))</code> na kraju koje se definiše port na kome server radi.
-Jako je važno da broj porta na serveru bude isti kao broj porta koji se nalazi na samoj aplikaciji kako biste komunicirali baš sa vašim serverom.</p>
+<p>Na kraju fajla <code>server.cl</code> se nalazi sledeća komanda.</p>
 </div>
-<div class="admonitionblock note">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-lisp" data-lang="lisp">(defparameter *server*
+    (start
+        (make-instance 'easy-acceptor :address "localhost" :port 8081)))</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Poslednji parametar funkcije <code>make-instance</code> je port na kome server radi.</p>
+</div>
+<div class="admonitionblock caution">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-caution" title="Caution"></i>
 </td>
 <td class="content">
-<div class="paragraph">
-<p>Za testiranje logike aplikacije možete staviti isti broj porta za oba igrača.</p>
+Jako je važno da broj porta na kom je podignut server bude isti kao broj porta koji je upisan na GUI-ju, kako bi se mogla uspostaviti komunikacija.
+</td>
+</tr>
+</table>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Za testiranje logike aplikacije možete staviti isti broj porta za oba igrača.
+Tako će inteligentni agent igrati sam sa sobom.
+Polje <code>message</code> (vidi <a href="docs.asc">Strukturu objekta</a>) možete iskoristiti npr. za prikaz vrednosti heuristike, itd.
 </td>
 </tr>
 </table>
@@ -130,12 +186,13 @@ Jako je važno da broj porta na serveru bude isti kao broj porta koji se nalazi 
 <h3 id="_vaš_zadatak"><a class="link" href="#_vaš_zadatak">Vaš zadatak</a></h3>
 <div class="paragraph">
 <p>Potrebno je implementirati odigravanje poteza odnosno funkciju <code>_odigraj-potez</code>.
-Dat je primer njegove implementacije čiji cilj nije odigravanje poteza već ukazuje na strukturu funkcije.</p>
+Dat je primer njene implementacije (u primeru cilj nije odigravanje poteza već struktura funkcije).</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>read-state</code> prevodi dobijeno stanje table u interno stanje table. To su dve liste <code>_x</code> i <code>_o</code> koje čuvaju listu koordinata na kojima se nalaze odgovarajući znaci.</p>
+<p><code>read-state</code> prevodi dobijeno stanje table u interno stanje table.
+To su dve liste <code>_x</code> i <code>_o</code> koje čuvaju listu koordinata na kojima se nalaze odgovarajući znaci.</p>
 </li>
 <li>
 <p><code>pomeri</code> uvećava prvu koordintatu svakog elementa iz liste <code>_x</code> tj. pomera sve znake <code>x</code> na dole.</p>
@@ -145,6 +202,16 @@ Dat je primer njegove implementacije čiji cilj nije odigravanje poteza već uka
 </li>
 </ul>
 </div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_dodavanje_api_funkcije"><a class="link" href="#_dodavanje_api_funkcije">Dodavanje API funkcije</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>TutiFruti je po strukturi dosta skalabilan, tako da je moguće lako dodavanje novih mogućnosti ukoliko za tim javi potreba.
+Nadalje su ukratko upisani ključni delovi implementacije, kao i smernice za neke korake koje treba izvršiti u slučaju dodavanja novih funkcionalnosti.</p>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -153,7 +220,59 @@ Dat je primer njegove implementacije čiji cilj nije odigravanje poteza već uka
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Validacija stanja nije implementirana.</p>
+<p>Članove tima koji je razvio TutiFruti možete da kontaktirate putem mejla <a href="mailto:lazar.ljubenovic.1995@gmail.com"><code>lazar.ljubenovic.1995@gmail.com</code></a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_server"><a class="link" href="#_server">Server</a></h3>
+<div class="paragraph">
+<p>Ajaks funkcije ne treba definisati sa <code>defun</code>, nego sa <code>defun-ajax</code>, po uzoru na ostale.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-lisp" data-lang="lisp">(defun-ajax odigraj-potez (data)
+    (*ajax-processor* :method :post :callback-data :response-text)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Ako treba obrađivati GET zahteve, dovoljno je samo ukloniti parametar <code>:method :post</code>.
+Rezultat funkcije je string koji se dobija pozivom funkcije <code>(format nil &#8230;&#8203; )</code>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_javascript"><a class="link" href="#_javascript">JavaScript</a></h3>
+<div class="paragraph">
+<p>Na početku fajla <code>server.js</code> se nalazi objekat <code>smackjack</code> koji sadrži niz podržanih funkcija.
+Dodati svoju po uzoru na ostale.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript" data-lang="javascript">function reset(data, callback, errorHandler = null, port = "8081") {
+    return ajaxCall("RESET", [data], "GET", callback, errorHandler, responseText, port);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prvi parametar koji se prosleđuje funkciji <code>ajaxCall</code> je naziv funkcije na serveru.
+Treći parametar je vrsta HTTP zahteva i mora odgovorati onom na serveru.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Svaku novu funkciju treba pridružiti ključu u objektu <code>smackjack</code>.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-javascript" data-lang="javascript">smackjack.reset = reset</code></pre>
+</div>
 </div>
 </td>
 </tr>
@@ -167,80 +286,11 @@ Dat je primer njegove implementacije čiji cilj nije odigravanje poteza već uka
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Validacija stanja nije implementirana.</p>
+<p>Voditi računa da ime funkcije koja se poziva (u ovom primeru <code>RESET</code>) mora biti napisano velikim slovima, u skladu sa konvencijom u Lispu.</p>
 </div>
 </td>
 </tr>
 </table>
-</div>
-<div class="admonitionblock tip">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-tip" title="Tip"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Validacija stanja nije implementirana.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-important" title="Important"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Validacija stanja nije implementirana.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="admonitionblock caution">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-caution" title="Caution"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Validacija stanja nije implementirana.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_kako_dodati_api_funkciju"><a class="link" href="#_kako_dodati_api_funkciju">Kako dodati api funkciju?</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_server"><a class="link" href="#_server">Server</a></h3>
-<div class="paragraph">
-<p>Kreirati ajax funkciju po uzoru na ostale <code>(defun-ajax odigraj-potez (data)(*ajax-processor\* :method :post :callback-data :response-text)</code>.
-Ukoliko želimo da obrađuje <code>GET</code> zahteve uklonimo <code>:method :post</code>.
-Rezultat funkcije je string koji se dobija <code>(fromat nil &#8230;&#8203; )</code> naredbom.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_javascript"><a class="link" href="#_javascript">JavaScript</a></h3>
-<div class="paragraph">
-<p>Na početku fajla <code>server.js</code> se nalazi objekat <code>smackjack</code> koji sadrži niz podržanih funkcija. Dodati svoju po uzoru na ostale.
-Napisati samo funkcuju npr. `  function reset(data, callback, errorHandler = null, port = "8081") {
-return ajaxCall("RESET", [data], "GET", callback, errorHandler, responseText, port);}`.
-Prvi parametar koji se prosleđuje funkciji <code>ajaxCall</code> je naziv funkcije na serveru. Voditi računa da mora biti napisan velikim slovima.
-Treći parametar je vrta HTTP zahteva i mora odgovorati onom na serveru.
-Dodati funckiju <code>smackjack</code> objektu: <code>smackjack.reset = reset</code>.</p>
-</div>
-<div class="paragraph">
-<p>Sada je moguće pozvati ovu funkciju <code>smackjack.reset("", parse, null)</code>.</p>
 </div>
 </div>
 </div>
@@ -248,8 +298,11 @@ Dodati funckiju <code>smackjack</code> objektu: <code>smackjack.reset = reset</c
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-06-21 22:37:08 Central Europe Daylight Time
+Last updated 2016-06-22 22:08:43 Central Europe Daylight Time
 </div>
 </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/monokai.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/highlight.min.js"></script>
+<script>hljs.initHighlighting()</script>
 </body>
 </html>

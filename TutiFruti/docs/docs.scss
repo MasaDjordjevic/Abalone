@@ -126,6 +126,21 @@ code {
   color: shade($color, 30%);
 }
 
+.listingblock {
+  border-radius: .5em;
+  background-color: rgba(black, .9);
+  padding: .3em;
+
+  pre {
+    margin: 0;
+  }
+
+  code {
+    background-color: transparent;
+    color: rgba(white, .86);
+  }
+}
+
 a code {
   padding: 0 .2em;
   font-weight: bold;
@@ -148,6 +163,10 @@ a code {
     margin-top: 1em;
   }
 
+  table {
+    width: 100%;
+  }
+
   table tr {
     display: flex;
     align-items: stretch;
@@ -155,7 +174,7 @@ a code {
 
   td:first-child {
     padding: .2em;
-    padding-right: calc(1em + 6px);
+    padding-right: 1em;
     padding-left: 0;
     display: flex;
     justify-content: center;
@@ -164,6 +183,7 @@ a code {
 
   td:last-child {
     padding: .5em;
+    width: 100%;
   }
 
   .icon {
@@ -201,8 +221,8 @@ a code {
 
 #footer {
   color: white;
-  background-color: #4caf50;
-  box-shadow: 900px 0 0 0 #4caf50, -900px 0 0 0 #4caf50;
+  background-color: $color;
+  box-shadow: 900px 0 0 0 $color, -900px 0 0 0 $color;
   margin-top: 2em;
   padding: 3em 0 2em 0;
 }
