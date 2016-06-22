@@ -2210,7 +2210,7 @@ body {
 
 a {
   text-decoration: none;
-  color: #3d8c40; }
+  color: #164b1a; }
 
 h1, h2, h3, h4, h5, h6 {
   line-height: 2ex; }
@@ -2219,7 +2219,7 @@ h1 {
   font-size: 4em;
   font-weight: 300;
   color: rgba(255, 255, 255, 0.86);
-  background-color: #4caf50;
+  background-color: #326e36;
   box-sizing: border-box;
   height: 300px;
   top: 0;
@@ -2236,7 +2236,7 @@ h1 {
   padding-top: 30px; }
 
 .details {
-  color: #4caf50;
+  color: #1b5e20;
   font-size: 1.2em;
   font-weight: 300;
   display: flex;
@@ -2254,7 +2254,7 @@ h2 {
   font-size: 3.5em;
   font-weight: 100;
   text-align: right;
-  color: #4caf50;
+  color: #1b5e20;
   margin-bottom: 1ex; }
 
 h3 {
@@ -2278,20 +2278,20 @@ h6 {
 
 code {
   font-family: Consolas, monospace;
-  background-color: #d2ebd3;
+  background-color: #c6d7c7;
   padding: .1em .2em;
   border-radius: .3em;
-  color: #357b38; }
+  color: #134216; }
 
 a code {
   padding: 0 .2em;
   font-weight: bold;
-  text-shadow: 0.03em 0 #d2ebd3, -0.03em 0 #d2ebd3, 0 0.03em #d2ebd3, 0 -0.03em #d2ebd3, 0.06em 0 #d2ebd3, -0.06em 0 #d2ebd3, 0.09em 0 #d2ebd3, -0.09em 0 #d2ebd3, 0.12em 0 #d2ebd3, -0.12em 0 #d2ebd3, 0.15em 0 #d2ebd3, -0.15em 0 #d2ebd3;
-  background-image: linear-gradient(#357b38, #357b38);
+  text-shadow: 0.03em 0 #c6d7c7, -0.03em 0 #c6d7c7, 0 0.03em #c6d7c7, 0 -0.03em #c6d7c7, 0.06em 0 #c6d7c7, -0.06em 0 #c6d7c7, 0.09em 0 #c6d7c7, -0.09em 0 #c6d7c7, 0.12em 0 #c6d7c7, -0.12em 0 #c6d7c7, 0.15em 0 #c6d7c7, -0.15em 0 #c6d7c7;
+  background-image: linear-gradient(#134216, #134216);
   background-size: 1px 1px;
   background-repeat: repeat-x;
   background-position: 0% 95%;
-  color: #357b38;
+  color: #134216;
   text-decoration: none; }
   a code::selection {
     text-shadow: 0.03em 0 rgba(255, 235, 59, 0.5), -0.03em 0 rgba(255, 235, 59, 0.5), 0 0.03em rgba(255, 235, 59, 0.5), 0 -0.03em rgba(255, 235, 59, 0.5), 0.06em 0 rgba(255, 235, 59, 0.5), -0.06em 0 rgba(255, 235, 59, 0.5), 0.09em 0 rgba(255, 235, 59, 0.5), -0.09em 0 rgba(255, 235, 59, 0.5), 0.12em 0 rgba(255, 235, 59, 0.5), -0.12em 0 rgba(255, 235, 59, 0.5), 0.15em 0 rgba(255, 235, 59, 0.5), -0.15em 0 rgba(255, 235, 59, 0.5);
@@ -2304,14 +2304,14 @@ a code {
   a code *:before, a code:before {
     text-shadow: none; }
   a code:visited {
-    color: #357b38; }
+    color: #134216; }
 
 .admonitionblock {
   margin: 1em 0;
   padding: .5em 1.5em;
-  border-top: solid 2px rgba(76, 175, 80, 0.3);
-  border-bottom: solid 2px rgba(76, 175, 80, 0.3);
-  background-color: rgba(76, 175, 80, 0.1); }
+  border-top: solid 2px rgba(27, 94, 32, 0.3);
+  border-bottom: solid 2px rgba(27, 94, 32, 0.3);
+  background-color: rgba(27, 94, 32, 0.1); }
   .admonitionblock p {
     margin: 0;
     padding: 0; }

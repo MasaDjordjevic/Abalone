@@ -4,7 +4,7 @@
 
 $font-stack: Roboto, Noto, sans-serif;
 $font-stack-mono: Consolas, monospace;
-$color: palette($green);
+$color: palette($green, 900);
 
 $background-color: mix(black, white, 5%);
 $selection-color: rgba(palette($yellow), .5);
@@ -51,7 +51,7 @@ h1 {
   font-size: 4em;
   font-weight: 300;
   color: rgba(white, 0.86);
-  background-color: $color;
+  background-color: tint($color, 10%);
   box-sizing: border-box;
   height: 300px;
   top: 0;

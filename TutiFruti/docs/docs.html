@@ -53,8 +53,18 @@
 <li><a href="#_primeri_3">Primeri</a></li>
 </ul>
 </li>
-<li><a href="#_grupa_code_report_code">Grupa <code>report</code></a></li>
-<li><a href="#_kompletni_primeri">Kompletni primeri</a></li>
+<li><a href="#_grupa_code_report_code">Grupa <code>report</code></a>
+<ul class="sectlevel2">
+<li><a href="#_primer_5">Primer</a></li>
+</ul>
+</li>
+<li><a href="#_kompletni_primeri">Kompletni primeri</a>
+<ul class="sectlevel2">
+<li><a href="#_Šah">Šah</a></li>
+<li><a href="#_heksa_šah">Heksa-šah</a></li>
+<li><a href="#_Šah_u_šahu">Šah u šahu</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -98,6 +108,27 @@
 <p>Podobjekat <code>board</code> u sebi sadrži osnovne informacije o tipu, veličini i izgledu table.
 Ovaj objekat u skoro svim igrama ostaje nepromenjen dokom trajanja partije.
 Sadrži svojstva <code>type</code>, <code>dimensions</code>, <code>corner</code>, <code>axis</code>, <code>coloring</code>, <code>mode</code> i <code>size</code>.</p>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-caution" title="Caution"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Većina (verovatno sve) igre na tabli imaju fiksiranu tablu (dimenzije, oblik, boja polja, itd), koja se tokom partije ne menja.</p>
+</div>
+<div class="paragraph">
+<p>Kako TutiFruti svaki put iznova iscrtava celu tablu (a ne samo njeno stanje), trebalo bi da <strong>oba igrača imaju podešene iste parametre</strong>.
+Inače će se pri svakom novom potezu tabla predstaviti na drugačiji način, što verovatno nije ono što se očekuje.</p>
+</div>
+<div class="paragraph">
+<p>Ovo bi trebalo da profesor definiše u opisu projekta koji se realizuje.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="sect2">
 <h3 id="_svojstvo_code_type_code"><a class="link" href="#_svojstvo_code_type_code">Svojstvo <code>type</code></a></h3>
@@ -603,16 +634,25 @@ Program prijavljuje grešku ukoliko dobije objekat koji sadrži nevalidnu vredno
 </div>
 <div class="sect2">
 <h3 id="_svojstvo_code_message_code"><a class="link" href="#_svojstvo_code_message_code">Svojstvo <code>message</code></a></h3>
+<div class="sect3">
+<h4 id="_podržane_vrednosti_10"><a class="link" href="#_podržane_vrednosti_10">Podržane vrednosti</a></h4>
 <div class="paragraph">
-<p><strong>Podržane vrednosti</strong>: String enkodovan koristeći UTF-8.</p>
+<p>String proizvoljne dužine.</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_podrzaumevana_vrednost"><a class="link" href="#_podrzaumevana_vrednost">Podrzaumevana vrednost</a></h4>
 <div class="paragraph">
-<p><strong>Podrzaumevana vrednost</strong>: Prazan string.</p>
+<p>Prazan string.</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_opis_9"><a class="link" href="#_opis_9">Opis</a></h4>
 <div class="paragraph">
 <p>Može se koristiti za bilo koju svrhu.
 Služi za komunikaciju između mašine i čoveka.
 Može sadržati neke informacije od koristi za debagiranje (npr. odigrani potez), ili šaljive poruke.</p>
+</div>
 </div>
 </div>
 </div>
@@ -642,7 +682,7 @@ Podržane su sledeće vrednosti:</p>
 </ul>
 </div>
 <div class="paragraph">
-<p><code>shape</code> je string koji određuje <strong>oblik</strong> kojim figura terba da bude predstavljena.
+<p><code>shape</code> je string koji određuje <strong>oblik</strong> kojim figura treba da bude predstavljena.
 Podržane su sledeće vrednosti:</p>
 </div>
 <div class="ulist">
@@ -884,7 +924,36 @@ U pitanju je niz od dva elemenata: prvi element se odnosi na prvog, a drugi na d
 </div>
 <div class="sect2">
 <h3 id="_primeri_3"><a class="link" href="#_primeri_3">Primeri</a></h3>
-
+<div class="paragraph">
+<p>U sledećem primeri, prvi igrač (beli) ima sledeće izbačenu kraljicu, četiri pešaka i oba topa.
+Drugi igrač ima izbačena tri pešaka.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json" data-lang="json">"removed": [
+        [
+            {
+                "number": 1,
+                "style": { "color": "white", "shape": "chess-knight-fill" }
+            },
+            {
+                "number": 4,
+                "style": { "color": "white", "shape": "chess-pawn-fill" }
+            },
+            {
+                "number": 2,
+                "style": { "color": "white", "shape": "chess-rook-fill" }
+            }
+        ],
+        [
+            {
+                "number": 3,
+                "style": { "color": "black", "shape": "chess-pawn-fill" }
+            }
+        ]
+    ]</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -892,21 +961,146 @@ U pitanju je niz od dva elemenata: prvi element se odnosi na prvog, a drugi na d
 <h2 id="_grupa_code_report_code"><a class="link" href="#_grupa_code_report_code">Grupa <code>report</code></a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><code>report</code> je opcina struktura koji služi za pojednostavljeni prikaz table koji je čitljiv mašinama.
+<p><code>report</code> je opciona struktura koji služi za pojednostavljeni prikaz table koji je čitljiv mašinama.
 Ne utiče na prikaz; TutiFruti ga ignoriše i samo ga prosleđuje među takmičarima.</p>
+</div>
+<div class="sect2">
+<h3 id="_primer_5"><a class="link" href="#_primer_5">Primer</a></h3>
+<div class="paragraph">
+<p>Sledeći string prikazuje interno stanje u igri Abalone.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json" data-lang="json">"report": "xxx-ooxxxooo-xx-oo---------------------------oo-xx-oooxxxoo-xx"</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>U ovom primeru, takmičari su se dogovorili da prvi karakter označava koji igrač treba da odigra potez.
+Ovde je to <code>x</code> (po konvenciji takmičara, to je crni igrač).
+Preostali karakteri označavaju redom polja na tabli (interni dogovor je da <code>-</code> označava prazno polje).</p>
+</div>
+<div class="paragraph">
+<p>Dakle, ovaj string je veb-agentu beskoristan i nigde ne prikazuje na tabli, ali nudi mogućnosti igračima da pored prikaza za GUI razmenjuju i informacije u nekom drugim obliku, koji će njima biti razumljiviji.</p>
+</div>
+<div class="paragraph">
+<p>U ovom slučaju je jednostavnije proći kroz string i ispuniti stanje table u zavinosti od toga da li je karakter <code>x</code>, <code>o</code> ili <code>-</code>, nego obrađivati listu i ispitivati boje (<code>black</code>), oblike (<code>circle</code>) i pozicije (<code>4-C</code>).</p>
+</div>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="_kompletni_primeri"><a class="link" href="#_kompletni_primeri">Kompletni primeri</a></h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>Slede primeri JSON fajlova sa kratkim opisom i pojašnjenjima.
+Primeri se nalaze u folderu <a href="examples/"><code>examples</code></a>.</p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Svaki primer na početku ima link to JSON fajla.
+Klikom na link, fajl se otvara u brauzeru.
+Radi lakšeg čitanja JSON fajla, savetujemo korišćenje dodatka koji formatira JSON format.</p>
+</div>
+<div class="paragraph">
+<p>Za Google Chrome to može biti, na primer, <a href="https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc"><strong>JSONView</strong></a>.
+Po instaliranju, desni klik na ikonicu dodatka &#8594; <em>Manage extensions</em> &#8594; dozvoliti opciju <em>Allow access to file URLs</em>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Cilj primerā je da razjasni sadržaj objekta, ali i da sugeriše primere upotrebe nekih od svojstava koje objekat može da poseduje.</p>
+</div>
+<div class="sect2">
+<h3 id="_Šah"><a class="link" href="#_Šah">Šah</a></h3>
+<div class="paragraph">
+<p>Primer se nalazi u fajlu <a href="examples/chess.json"><code>chess.json</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>Ovo je primer početne pozicije u šahu, sa obeleženim mogućim potezima za belog pešaka s polja <strong>2-D</strong> na <strong>3-D</strong> i <strong>4-D</strong> i crnog konja s polja <strong>8-G</strong> na <strong>6-F</strong> i <strong>H-F</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Izabrana je <strong>pravougaona</strong> tabla dimenzija <strong>8 × 8</strong>, sa oznakama <strong>1</strong>-<strong>8</strong> i <strong>A</strong>-<strong>H</strong> koje počinju u <strong>donjem levom</strong> uglu table.
+Obojena je kao <strong>šahovska</strong> tabla, pri čemu su polja <strong>kvadrati</strong> (<code>classic</code>).
+Tabla je relativno mala, pa je izabrana <strong>najveća veličina</strong> polja (<code>xxl</code>).</p>
+</div>
+<div class="paragraph">
+<p>Stanje table je poslao <strong>prvi</strong> igrač, sa imenom <strong>La Plávusha</strong> i porukom <strong>TutiFruti je awesome!</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Zatim sledi niz objekata koji opisuju stanje table.
+U ovom primeru, prvi takav objekat je niz crnih (<code>black</code>) pešaka (<code>chess-pawn-fill</code>), koji se smeštaju na pozicije <strong>7-A</strong>, <strong>7-B</strong>, <strong>7-C</strong>, <strong>7-D</strong>, <strong>7-E</strong>, <strong>7-F</strong>, <strong>7-G</strong> i <strong>7-H</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Kako je u pitanju početna pozicija, još uvek nema izbačenih figura, pa je <code>markings</code> prazan niz.</p>
+</div>
+<div class="paragraph">
+<p>Objekat <code>report</code> sadrži string kojim agenti interno parsiraju stanje.
+Ovde velika slova predstavljaju crne, a mala&#8201;&#8212;&#8201;bele figure.
+Blanko znaci označavaju prelazak u novi red.
+Naravno, ovaj string nema uticaja na izgled prikaza i nije morao imati goreopisanu strukturu.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_heksa_šah"><a class="link" href="#_heksa_šah">Heksa-šah</a></h3>
+<div class="paragraph">
+<p>Primer se nalazi u fajlu <a href="examples/hexachess.json"><code>hexachess.json</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>U pitanju je igra slična šahu koja koristi iste figure kao i klasičan šah, ali se igra na šestougaonoj tabli (pri čemu je tabla rotirana tako da šestougao koji se formira ima teme koje pokazuje nagore&#8201;&#8212;&#8201;stoga <code>hexagonal-pointy</code>, dok su polja table zapravo šestougovi kojima stranica pokazuje nagore) dimenzija <strong>5 × 5 × 6</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Pošto je teme u <strong>donjem levom</strong> uglu obeleženo kao početno teme iz koga polaze ose, broj oznaka koje se prisleđuju u <code>axis</code> mora da bude odgovarajući.
+Počev od donjeg levog ugla, u smeru kazaljke na satu, nailazimo na stranice dužina 6 i 5.
+Zato prvi niz oznaka treba da sadrži <strong>6 + 5 - 1 = 10</strong> oznaka, i u ovom primeru su izabrana velika sloava abecede.
+U smeru suprotnom kretanju kazaljke na satu, nailazimo na stranice dužina 5 i 5.
+Istom logikom, drugi niz treba da ima <strong>9</strong> oznaka, i ovde su to brojevi.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_Šah_u_šahu"><a class="link" href="#_Šah_u_šahu">Šah u šahu</a></h3>
+<div class="paragraph">
+<p>Primer se nalazi u fajlu <a href="examples/chesscheck.json"><code>chesscheck.json</code></a>.</p>
+</div>
+<div class="paragraph">
+<p>Glavna postavka table (<code>board</code>) je slična kao ona iz prvog primera.
+Nizom <code>state</code> je predstavljeno stanje table iz sredine partije šaha.</p>
+</div>
+<div class="paragraph">
+<p>Niz <code>markings</code> je iskorišćen u dve svrhe:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Pre svega, polje s kog je bela kraljica došla (<strong>3-b</strong>), kao i sva polja do odredišnog, obeležena su zelenim tačkama.
+Na odredišnom polju (<strong>8-b</strong>), gde se kraljica sada nalazi, postavljena je i oznaka <code>O</code>.
+Svaki potez bi mogao da bude obeležen ovako, radi lakšeg praćena igre.
+Alternativno, može se obeležiti i samo početno polje, umesto svih među-polja.</p>
+</li>
+<li>
+<p>Isti niz je iskorišćen i da obeleži da trenutna pozicija predstavlja šah.
+Crveni niz tačaka iskorišćen je da ukaže na putanju odakle potiče napad, a suparnički kralj je posebno naznačen oznakom <code>crosshairs</code> kako bi se jasno stavilo do znanja da je u pitanju šah-pozicija.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Pored ovoga, popunjen je i niz <code>removed</code> figurama koje su izbačene sa table.
+Igrač je postavio i poruku na <code>Šah!</code>.</p>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-06-21 22:23:33 Central Europe Daylight Time
+Last updated 2016-06-22 15:15:32 Central Europe Daylight Time
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">

@@ -71,7 +71,8 @@ Instalirati chrome plugin: <code><a href="https://chrome.google.com/webstore/det
 <div class="sect2">
 <h3 id="_pokretanje_servera"><a class="link" href="#_pokretanje_servera">Pokretanje servera</a></h3>
 <div class="paragraph">
-<p>Najpre je potrebno kompajlrati i učitati fajl <code>setup.cl</code> (on pribavlja neophodne biblioteke), zatim fajl <code>server.cl</code> koji je sam veb api.</p>
+<p>Najpre je potrebno kompajlrati i učitati fajl <code>setup.cl</code> (on pribavlja neophodne biblioteke), zatim fajl <code>server.cl</code> koji je sam veb api.
+Ukoliko dodje do greške prilikom učitavanja fajla izabrati opciju <code>skip</code>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -107,7 +108,7 @@ Zatim izvršava potez igrača i vraća novo stanje table.</p>
 <div class="sect2">
 <h3 id="_port"><a class="link" href="#_port">Port</a></h3>
 <div class="paragraph">
-<p>Na kraju fajla <code>server.cl</code> se nalazi komanda <code>(defparameter <strong>server</strong> (start (make-instance 'easy-acceptor :address "localhost" :port 8081)))</code> na kraju koje se definiše port na kome server radi.
+<p>Na kraju fajla <code>server.cl</code> se nalazi komanda <code>(defparameter *server\* (start (make-instance 'easy-acceptor :address "localhost" :port 8081)))</code> na kraju koje se definiše port na kome server radi.
 Jako je važno da broj porta na serveru bude isti kao broj porta koji se nalazi na samoj aplikaciji kako biste komunicirali baš sa vašim serverom.</p>
 </div>
 <div class="admonitionblock note">
@@ -223,7 +224,7 @@ Dat je primer njegove implementacije čiji cilj nije odigravanje poteza već uka
 <div class="sect2">
 <h3 id="_server"><a class="link" href="#_server">Server</a></h3>
 <div class="paragraph">
-<p>Kreirati ajax funkciju po uzoru na ostale <code>(defun-ajax odigraj-potez (data)(<strong>ajax-processor</strong> :method :post :callback-data :response-text)</code>.
+<p>Kreirati ajax funkciju po uzoru na ostale <code>(defun-ajax odigraj-potez (data)(*ajax-processor\* :method :post :callback-data :response-text)</code>.
 Ukoliko želimo da obrađuje <code>GET</code> zahteve uklonimo <code>:method :post</code>.
 Rezultat funkcije je string koji se dobija <code>(fromat nil &#8230;&#8203; )</code> naredbom.</p>
 </div>
@@ -247,7 +248,7 @@ Dodati funckiju <code>smackjack</code> objektu: <code>smackjack.reset = reset</c
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-06-21 20:08:30 Central Europe Daylight Time
+Last updated 2016-06-21 22:37:08 Central Europe Daylight Time
 </div>
 </div>
 </body>
