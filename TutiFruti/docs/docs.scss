@@ -6,6 +6,10 @@ $font-stack: Roboto, Noto, sans-serif;
 $font-stack-mono: Consolas, monospace;
 $color: palette($green);
 
+$background-color: mix(black, white, 5%);
+$selection-color: rgba(palette($yellow), .5);
+$text-color: rgba(black, 0.86);
+
 @mixin icon($name) {
   &::before {
     font-family: FontAwesome, sans-serif;
@@ -20,10 +24,18 @@ body {
   width: 100%;
   max-width: 960px;
   margin: auto;
-  background-color: rgba(black, 0.05);
-  color: rgba(black, 0.86);
+  background-color: $background-color;
+  color: $text-color;
   padding: 0 1em;
   box-sizing: border-box;
+}
+
+::selection {
+  background: $selection-color;
+}
+
+::-moz-selection {
+  background: $selection-color;
 }
 
 a {
@@ -108,10 +120,16 @@ h6 {
 
 code {
   font-family: $font-stack-mono;
-  background-color: rgba($color, 0.1);
+  background-color: tint($color, 75%);
   padding: .1em .2em;
   border-radius: .3em;
   color: shade($color, 30%);
+}
+
+a code {
+  padding: 0 .2em;
+  font-weight: bold;
+  @include link-underline(tint($color, 75%), shade($color, 30%), $selection-color);
 }
 
 .admonitionblock {
@@ -124,6 +142,10 @@ code {
   p {
     margin: 0;
     padding: 0;
+  }
+
+  .paragraph:not(:first-child) p {
+    margin-top: 1em;
   }
 
   table tr {

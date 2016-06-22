@@ -633,7 +633,7 @@ const _boardModeRectangular = temp;
 const _boardSize = ["xxs", "xs", "s", "m", "l", "xl", "xxl"];
 
 const _styleColor = ["red", "pink", "purple", "deep-purple", "indigo", "blue",
-    "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow", "amber",
+    "light-blue", "cyan", "teal", "green", "light-green", "lime", "yellow", "amber", "orange",
     "deep-orange", "brown", "grey", "blue-grey", "black", "white"].map(i => i.trim());
 var ___stateShape = ["O", "X", "circle", "square", "star", "circle-outline", "square-outline",
     "arrow-left", "arrow-right", "arrow-up", "arrow-down",
@@ -644,7 +644,8 @@ var ___stateShape = ["O", "X", "circle", "square", "star", "circle-outline", "sq
     "suit-diamond-fill", "suit-diamond-outline", "suit-club-fill", "suit-club-outline",
     "chess-king-outline", "chess-king-fill", "chess-queen-outline", "chess-queen-fill",
     "chess-rook-outline", "chess-rook-fill", "chess-bishop-outline", "chess-bishop-fill",
-    "chess-knight-outline", "chess-knight-fill", "chess-pawn-outline", "chess-pawn-fill"].map(i => i.trim());
+    "chess-knight-outline", "chess-knight-fill", "chess-pawn-outline", "chess-pawn-fill",
+    "bullet", "dot"].map(i => i.trim());
 const _stateShape = ___stateShape
     .concat((new Array(99)).fill(1).map((e, i) => e + i).map(String).map(i => "number-" + i))
     .concat((new Array(26)).fill(0x41).map((e, i) => e + i).map(i => String.fromCharCode(i)).map(i => "letter-" + i))
@@ -996,7 +997,9 @@ var drawAxis = function (type, dimensions, axis, corner) {
                     cornerMirrorYCols = -1;
                     break;
                 default:
-                    displayWarning("Dobijeno " + corner + " za početni ugao. Očekuje se bottom-left, bottom-right, top-left ili top-right. Ignoriše se.");
+                    displayWarning("Neočekivana greška. Dobijeno " +
+                        corner + " za početni ugao. Očekuje se bottom-left, " +
+                        "bottom-right, top-left ili top-right. Ignoriše se.");
             }
             var totalFieldSize = fieldSize + 2 * fieldMargin;
             var j = 0;
@@ -1832,7 +1835,7 @@ $(document).bind("keyup", "q", dismissAllMessages);
 
 $(document).ready(function () {
     //displayMessage("TutiFruti :: version 0.0");
-    displayData(example.chess);
+    displayData(example.chessCheck);
 });
 
 var example = {};
@@ -2142,17 +2145,6 @@ example.hexaChess = {
                 shape: "chess-king-fill"
             }
         }
-    ],
-    markings: [
-        {
-            fields: [
-                ["F", "5"]
-            ],
-            style: {
-                color: "pink",
-                shape: "star"
-            }
-        }
     ]
 };
 example.gomokuWestern = {
@@ -2265,7 +2257,228 @@ example.gomokuEastern = {
         }
     ]
 };
-
+example.chessCheck = {
+    board: {
+        type: "rectangular",
+        dimensions: [8, 8],
+        corner: "bottom-left",
+        axis: [
+            "1 2 3 4 5 6 7 8",
+            "a b c d e f g h"
+        ],
+        coloring: "chess",
+        mode: "classic",
+        size: "xxl"
+    },
+    player: {
+        name: "Igrač 1",
+        order: 1,
+        message: "Šah!"
+    },
+    state: [
+        {
+            fields: [
+                ["8", "b"]
+            ],
+            style: {
+                shape: "chess-queen-fill",
+                color: "white"
+            }
+        },
+        {
+            fields: [
+                ["8", "e"]
+            ],
+            style: {
+                shape: "chess-king-fill",
+                color: "black"
+            }
+        },
+        {
+            fields: [
+                ["8", "f"]
+            ],
+            style: {
+                shape: "chess-bishop-fill",
+                color: "black"
+            }
+        },
+        {
+            fields: [
+                ["8", "h"]
+            ],
+            style: {
+                shape: "chess-rook-fill",
+                color: "black"
+            }
+        },
+        {
+            fields: [
+                ["7", "a"], ["7", "f"], ["7", "g"], ["7", "h"], ["5", "e"]
+            ],
+            style: {
+                shape: "chess-pawn-fill",
+                color: "black"
+            }
+        },
+        {
+            fields: [
+                ["7", "d"]
+            ],
+            style: {
+                shape: "chess-knight-fill",
+                color: "black"
+            }
+        },
+        {
+            fields: [
+                ["6", "e"]
+            ],
+            style: {
+                shape: "chess-queen-fill",
+                color: "black"
+            }
+        },
+        {
+            fields: [
+                ["5", "g"]
+            ],
+            style: {
+                shape: "chess-bishop-fill",
+                color: "white"
+            }
+        },
+        {
+            fields: [
+                ["4", "e"], ["2", "a"], ["2", "b"], ["2", "c"],
+                ["2", "f"], ["2", "g"], ["2", "h"]
+            ],
+            style: {
+                shape: "chess-pawn-fill",
+                color: "white"
+            }
+        },
+        {
+            fields: [
+                ["1", "c"]
+            ],
+            style: {
+                shape: "chess-king-fill",
+                color: "white"
+            }
+        },
+        {
+            fields: [
+                ["1", "d"]
+            ],
+            style: {
+                shape: "chess-rook-fill",
+                color: "white"
+            }
+        }
+    ],
+    removed: [
+        [
+            {
+                number: 1,
+                style: {
+                    shape: "chess-pawn-fill",
+                    color: "white"
+                }
+            },
+            {
+                number: 1,
+                style: {
+                    shape: "chess-rook-fill",
+                    color: "white"
+                }
+            },
+            {
+                number: 1,
+                style: {
+                    shape: "chess-bishop-fill",
+                    color: "white"
+                }
+            },
+            {
+                number: 2,
+                style: {
+                    shape: "chess-knight-fill",
+                    color: "white"
+                }
+            }
+        ],
+        [
+            {
+                number: 3,
+                style: {
+                    shape: "chess-pawn-fill",
+                    color: "black"
+                }
+            },
+            {
+                number: 1,
+                style: {
+                    shape: "chess-rook-fill",
+                    color: "black"
+                }
+            },
+            {
+                number: 1,
+                style: {
+                    shape: "chess-bishop-fill",
+                    color: "black"
+                }
+            },
+            {
+                number: 1,
+                style: {
+                    shape: "chess-knight-fill",
+                    color: "black"
+                }
+            }
+        ]
+    ],
+    markings: [
+        {
+            fields: [
+                ["8", "e"]
+            ],
+            style: {
+                color: "red",
+                shape: "crosshairs"
+            }
+        },
+        {
+            fields: [
+                ["8", "b"]
+            ],
+            style: {
+                color: "lime",
+                shape: "O"
+            }
+        },
+        {
+            fields: [
+                ["8", "c"], ["8", "d"]
+            ],
+            style: {
+                color: "red",
+                shape: "dot"
+            }
+        },
+        {
+            fields: [
+                ["7", "b"], ["6", "b"], ["5", "b"], ["4", "b"], ["3", "b"]
+            ],
+            style: {
+                color: "lime",
+                shape: "dot"
+            }
+        }
+    ],
+    report: "foobar"
+};
 
 //TODO pomeri odavde
 $('#button').click(function () {

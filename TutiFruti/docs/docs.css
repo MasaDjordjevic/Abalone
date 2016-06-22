@@ -1,4 +1,9 @@
 @charset "UTF-8";
+/*
+a {
+  @include link-underline(#fff, #333, #0CBF);
+}
+*/
 /*!
  *  Font Awesome 4.6.3 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -2192,10 +2197,16 @@ body {
   width: 100%;
   max-width: 960px;
   margin: auto;
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: #f2f2f2;
   color: rgba(0, 0, 0, 0.86);
   padding: 0 1em;
   box-sizing: border-box; }
+
+::selection {
+  background: rgba(255, 235, 59, 0.5); }
+
+::-moz-selection {
+  background: rgba(255, 235, 59, 0.5); }
 
 a {
   text-decoration: none;
@@ -2267,10 +2278,33 @@ h6 {
 
 code {
   font-family: Consolas, monospace;
-  background-color: rgba(76, 175, 80, 0.1);
+  background-color: #d2ebd3;
   padding: .1em .2em;
   border-radius: .3em;
   color: #357b38; }
+
+a code {
+  padding: 0 .2em;
+  font-weight: bold;
+  text-shadow: 0.03em 0 #d2ebd3, -0.03em 0 #d2ebd3, 0 0.03em #d2ebd3, 0 -0.03em #d2ebd3, 0.06em 0 #d2ebd3, -0.06em 0 #d2ebd3, 0.09em 0 #d2ebd3, -0.09em 0 #d2ebd3, 0.12em 0 #d2ebd3, -0.12em 0 #d2ebd3, 0.15em 0 #d2ebd3, -0.15em 0 #d2ebd3;
+  background-image: linear-gradient(#357b38, #357b38);
+  background-size: 1px 1px;
+  background-repeat: repeat-x;
+  background-position: 0% 95%;
+  color: #357b38;
+  text-decoration: none; }
+  a code::selection {
+    text-shadow: 0.03em 0 rgba(255, 235, 59, 0.5), -0.03em 0 rgba(255, 235, 59, 0.5), 0 0.03em rgba(255, 235, 59, 0.5), 0 -0.03em rgba(255, 235, 59, 0.5), 0.06em 0 rgba(255, 235, 59, 0.5), -0.06em 0 rgba(255, 235, 59, 0.5), 0.09em 0 rgba(255, 235, 59, 0.5), -0.09em 0 rgba(255, 235, 59, 0.5), 0.12em 0 rgba(255, 235, 59, 0.5), -0.12em 0 rgba(255, 235, 59, 0.5), 0.15em 0 rgba(255, 235, 59, 0.5), -0.15em 0 rgba(255, 235, 59, 0.5);
+    background: rgba(255, 235, 59, 0.5); }
+  a code::-moz-selection {
+    text-shadow: 0.03em 0 rgba(255, 235, 59, 0.5), -0.03em 0 rgba(255, 235, 59, 0.5), 0 0.03em rgba(255, 235, 59, 0.5), 0 -0.03em rgba(255, 235, 59, 0.5), 0.06em 0 rgba(255, 235, 59, 0.5), -0.06em 0 rgba(255, 235, 59, 0.5), 0.09em 0 rgba(255, 235, 59, 0.5), -0.09em 0 rgba(255, 235, 59, 0.5), 0.12em 0 rgba(255, 235, 59, 0.5), -0.12em 0 rgba(255, 235, 59, 0.5), 0.15em 0 rgba(255, 235, 59, 0.5), -0.15em 0 rgba(255, 235, 59, 0.5);
+    background: rgba(255, 235, 59, 0.5); }
+  a code *,
+  a code *:after, a code:after,
+  a code *:before, a code:before {
+    text-shadow: none; }
+  a code:visited {
+    color: #357b38; }
 
 .admonitionblock {
   margin: 1em 0;
@@ -2281,6 +2315,8 @@ code {
   .admonitionblock p {
     margin: 0;
     padding: 0; }
+  .admonitionblock .paragraph:not(:first-child) p {
+    margin-top: 1em; }
   .admonitionblock table tr {
     display: flex;
     align-items: stretch; }

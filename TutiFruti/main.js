@@ -240,7 +240,7 @@ options._playerOrder = [1, 2];
 options._playerMessage = "Zdravo deco";
 
 options._stateColor = ["red", "pink", "purple", "deep-purple", "indigo", "blue", "light-blue", "cyan", "teal", "green",
-    "light-green", "lime", "yellow", "amber", "deep-orange", "brown", "grey", "blue-grey", "black ", "white"];
+    "light-green", "lime", "yellow", "amber", "orange", "deep-orange", "brown", "grey", "blue-grey", "black ", "white"];
 options._stateShape = ["O", "X", "circle", "square", "star", "arrow-left", "arrow-right", "arrow-up", "arrow-down",
     "angle-left", "angle-right", "angle-up", "angle-down", "angle-double-left", "angle-double-right",
     "angle-double-up", "angle-double-down", "crosshairs", "bullseye", "check", "check-circle", "minus", "plus",

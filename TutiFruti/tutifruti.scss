@@ -362,6 +362,7 @@ body {
 
         $shapes-unicode: (
                 bullet: "•",
+                dot: "·",
           // znaci sa karata (suites)
                 suit-spade-fill: "\2660",
                 suit-spade-outline: "\2664",
@@ -447,7 +448,7 @@ body {
       .marking {
         @extend .piece;
         opacity: .66;
-        transform: scale(0.75);
+        transform: scale(1.5);
       }
 
     }
