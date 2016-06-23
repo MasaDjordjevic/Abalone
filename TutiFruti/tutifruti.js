@@ -466,6 +466,10 @@ var validate = function (data) {
             throw "Dobijena vrednost svojstva `mode` je `" + data.board.mode + "`. " +
             "Očekivane vrednosti su `" + _boardModeHexagonal.join("`, `") + "`."
         }
+        // Do not allow hexagonal-flat or hexagonal-pointy to combine with go mode
+        if (data.board.mode === "go") {
+            throw "Mod `go` nije podržan na šestougaonim tablama."
+        }
     } else if (isRectangular(data)) {
         if ($.inArray(data.board.mode, _boardModeRectangular) === -1) {
             throw "Dobijena vrednost svojstva `mode` je `" + data.board.mode + "`. " +

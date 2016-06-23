@@ -4,7 +4,7 @@
 
 $font-stack: Roboto, Noto, sans-serif;
 $font-stack-mono: Consolas, monospace;
-$color: palette($green, 900);
+$color: shade(palette($green, 900), 10%);
 
 $background-color: mix(black, white, 5%);
 $selection-color: rgba(palette($yellow), .5);
@@ -120,7 +120,7 @@ h6 {
 
 code {
   font-family: $font-stack-mono;
-  background-color: tint($color, 75%);
+  background-color: tint($color, 85%);
   padding: .1em .2em;
   border-radius: .3em;
   color: shade($color, 30%);
@@ -144,7 +144,7 @@ code {
 a code {
   padding: 0 .2em;
   font-weight: bold;
-  @include link-underline(tint($color, 75%), shade($color, 30%), $selection-color);
+  @include link-underline(tint($color, 85%), shade($color, 30%), $selection-color);
 }
 
 .admonitionblock {
@@ -190,7 +190,7 @@ a code {
     width: 2em;
 
     &::before {
-      color: shade(#4caf50, 20%);
+      color: shade($color, 20%);
       font-size: 2em;
       text-align: center;
       height: 2em;

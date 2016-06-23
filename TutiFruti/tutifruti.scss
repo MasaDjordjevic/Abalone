@@ -196,6 +196,10 @@ body {
           .piece {
             //left: - $s / 4 / $sqrt3;
             font-size: $s * 0.66 !important;
+            width: $s / 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
         }
       }
@@ -424,6 +428,7 @@ body {
         }
 
         // Shogi-specific shapes
+        // A possible improvement for future versions
         &.shape--shogi-king-black.color--black {
           &::before {
             content: "\2617";
