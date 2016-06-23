@@ -106,7 +106,7 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>Podobjekat <code>board</code> u sebi sadrži osnovne informacije o tipu, veličini i izgledu table.
-Ovaj objekat u skoro svim igrama ostaje nepromenjen dokom trajanja partije.
+Ovaj objekat u skoro svim igrama ostaje nepromenjen tokom trajanja partije.
 Sadrži svojstva <code>type</code>, <code>dimensions</code>, <code>corner</code>, <code>axis</code>, <code>coloring</code>, <code>mode</code> i <code>size</code>.</p>
 </div>
 <div class="admonitionblock caution">
@@ -267,7 +267,7 @@ Inače će se pri svakom novom potezu tabla predstaviti na drugačiji način, š
 <pre class="highlightjs highlight"><code>{
     "board": {
         "type": "rectangular",
-        "dimensions": [8, 8]
+        "dimensions": [4, 6]
     }
 }</code></pre>
 </div>
@@ -316,6 +316,9 @@ Ukoliko <code>type</code> ima vrednost <code>hexagonal-pointy</code>, pored osno
 <div class="paragraph">
 <p>String <code>bottom-left</code> (nezavisno od vrednosti svojstva <code>type</code>).</p>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_opis_3"><a class="link" href="#_opis_3">Opis</a></h4>
 <div class="paragraph">
 <p>Daje informaciju o tome iz kog ugla počinje označavanje polja tabele (same oznake se određuju na osnovu svojstva <code>axis</code>).</p>
 </div>
@@ -342,7 +345,7 @@ Ukoliko je <code>type</code> podešeno na <code>hexagonal-flat</code> ili <code>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_opis_3"><a class="link" href="#_opis_3">Opis</a></h4>
+<h4 id="_opis_4"><a class="link" href="#_opis_4">Opis</a></h4>
 <div class="paragraph">
 <p>Kada je <code>type</code> podešeno na <code>rectangular</code>, broj oznaka prvog stringa mora biti isti kao prva dimenzija, a broj oznaka drugog stringa mora biti isti kao druga dimenzija.</p>
 </div>
@@ -409,7 +412,7 @@ Zato nije neophodno stalno "tempiranje" ovih vrednosti tokom razvitka agenata, v
 </div>
 </div>
 <div class="sect3">
-<h4 id="_opis_4"><a class="link" href="#_opis_4">Opis</a></h4>
+<h4 id="_opis_5"><a class="link" href="#_opis_5">Opis</a></h4>
 <div class="paragraph">
 <p>Definiše način bojenja polja.
 Ukoliko je podešeno na <code>classic</code>, polja će dobiti podrazumevanu boju u skladu s temom aplikacije.
@@ -434,7 +437,7 @@ Ako je <code>type</code> podešeno na <code>rectangular</code>, podržana je i v
 </div>
 </div>
 <div class="sect3">
-<h4 id="_opis_5"><a class="link" href="#_opis_5">Opis</a></h4>
+<h4 id="_opis_6"><a class="link" href="#_opis_6">Opis</a></h4>
 <div class="paragraph">
 <p>Definiše način prikazivanja polja.</p>
 </div>
@@ -574,7 +577,7 @@ U tom slučaju se mreža naizgled smanjuje, i ima po jedno polje manje u obe dim
 </div>
 </div>
 <div class="sect3">
-<h4 id="_opis_6"><a class="link" href="#_opis_6">Opis</a></h4>
+<h4 id="_opis_7"><a class="link" href="#_opis_7">Opis</a></h4>
 <div class="paragraph">
 <p>Govori o fizičkoj veličini polja.
 <code>xxs</code> je najmanja, a <code>xxl</code> je najveća veličina.</p>
@@ -604,7 +607,7 @@ U tom slučaju se mreža naizgled smanjuje, i ima po jedno polje manje u obe dim
 </div>
 </div>
 <div class="sect3">
-<h4 id="_opis_7"><a class="link" href="#_opis_7">Opis</a></h4>
+<h4 id="_opis_8"><a class="link" href="#_opis_8">Opis</a></h4>
 <div class="paragraph">
 <p>Koristi se da bi se prikazalo ime igrača, tima ili agenta koji stoji iza poteza.</p>
 </div>
@@ -626,7 +629,7 @@ Program prijavljuje grešku ukoliko dobije objekat koji sadrži nevalidnu vredno
 </div>
 </div>
 <div class="sect3">
-<h4 id="_opis_8"><a class="link" href="#_opis_8">Opis</a></h4>
+<h4 id="_opis_9"><a class="link" href="#_opis_9">Opis</a></h4>
 <div class="paragraph">
 <p>Koristi se da bi se identifikovao igrač koji šalje prikaz stanja table.</p>
 </div>
@@ -647,7 +650,7 @@ Program prijavljuje grešku ukoliko dobije objekat koji sadrži nevalidnu vredno
 </div>
 </div>
 <div class="sect3">
-<h4 id="_opis_9"><a class="link" href="#_opis_9">Opis</a></h4>
+<h4 id="_opis_10"><a class="link" href="#_opis_10">Opis</a></h4>
 <div class="paragraph">
 <p>Može se koristiti za bilo koju svrhu.
 Služi za komunikaciju između mašine i čoveka.
@@ -1100,7 +1103,7 @@ Igrač je postavio i poruku na <code>Šah!</code>.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-06-22 21:54:19 Central Europe Daylight Time
+Last updated 2016-06-23 12:19:19 Central Europe Daylight Time
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/monokai.min.css">
